@@ -33,10 +33,10 @@ public class PageDto {
     public static final String P = "p";
     public static final String S = "s";
 
-    public static final Integer DEFAULT_PAGE_SIZE = GojaConfig.getPropertyToInt(InitConst.PAGE_SIZE, 10);
+    public static final Integer DEFAULT_PAGE_SIZE = GojaConfig.getPropertyToInt("app.page.defaultsize", 10);
 
-    public static final String APP_PAGE_ORDER = GojaConfig.getProperty("app.page.order", "direction");
     public static final String APP_PAGE       = GojaConfig.getProperty("app.page", P);
+    public static final String APP_PAGE_ORDER = GojaConfig.getProperty("app.page.order", "direction");
     public static final String APP_PAGE_SIZE  = GojaConfig.getProperty("app.page.size", S);
     public static final String APP_PAGE_SORT  = GojaConfig.getProperty("app.page.sort", "sort");
 

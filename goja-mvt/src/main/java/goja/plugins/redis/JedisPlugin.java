@@ -13,19 +13,10 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.Protocol;
 
+import static goja.GojaConfig.getProperty;
 import static goja.GojaConfig.getPropertyToBoolean;
 import static goja.GojaConfig.getPropertyToInt;
 import static goja.GojaConfig.getPropertyToLong;
-import static goja.init.InitConst.REDIS_MAXIDLE;
-import static goja.init.InitConst.REDIS_MAXTOTAL;
-import static goja.init.InitConst.REDIS_MINEVICTABLEIDLETIMEMILLIS;
-import static goja.init.InitConst.REDIS_MINIDLE;
-import static goja.init.InitConst.REDIS_NUMTESTSPEREVICTIONRUN;
-import static goja.init.InitConst.REDIS_SOFTMINEVICTABLEIDLETIMEMILLIS;
-import static goja.init.InitConst.REDIS_TESTONBORROW;
-import static goja.init.InitConst.REDIS_TESTONRETURN;
-import static goja.init.InitConst.REDIS_TESTWHILEIDLE;
-import static goja.init.InitConst.REDIS_TIMEBETWEENEVICTIONRUNSMILLIS;
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
@@ -43,12 +34,11 @@ public class JedisPlugin implements IPlugin {
     public static final String DEFAULT_HOST = StringPool.LOCAL_HOST;
     public static final int    DEFAULT_PORT = Protocol.DEFAULT_PORT;
 
-    private final String    host;
-    private final int       port;
-    private final int       timeout;
+    private final String host;
+    private final int    port;
+    private final int    timeout;
 
-    public        JedisPool pool;
-    private       String    password;
+    public JedisPool pool;
 
 
     public JedisPlugin() {
@@ -80,27 +70,24 @@ public class JedisPlugin implements IPlugin {
     public boolean start() {
 
         JedisShardInfo shardInfo = new JedisShardInfo(host, port, timeout);
+        final String password = getProperty("redis.password");
         if (StringUtils.isNotBlank(password)) {
             shardInfo.setPassword(password);
         }
         JedisPoolConfig poolConfig = new JedisPoolConfig();
 
-        poolConfig.setMaxIdle(getPropertyToInt(REDIS_MAXIDLE, DEFAULT_MAX_IDLE));
-        poolConfig.setMaxTotal(getPropertyToInt(REDIS_MAXTOTAL, DEFAULT_MAX_TOTAL));
-        poolConfig.setMinEvictableIdleTimeMillis(getPropertyToLong(REDIS_MINEVICTABLEIDLETIMEMILLIS, DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
-        poolConfig.setMinIdle(getPropertyToInt(REDIS_MINIDLE, DEFAULT_MIN_IDLE));
-        poolConfig.setNumTestsPerEvictionRun(getPropertyToInt(REDIS_NUMTESTSPEREVICTIONRUN, DEFAULT_NUM_TESTS_PER_EVICTION_RUN));
-        poolConfig.setSoftMinEvictableIdleTimeMillis(getPropertyToLong(REDIS_SOFTMINEVICTABLEIDLETIMEMILLIS, DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
-        poolConfig.setTimeBetweenEvictionRunsMillis(getPropertyToLong(REDIS_TIMEBETWEENEVICTIONRUNSMILLIS, DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS));
-        poolConfig.setTestWhileIdle(getPropertyToBoolean(REDIS_TESTWHILEIDLE, DEFAULT_TEST_WHILE_IDLE));
-        poolConfig.setTestOnReturn(getPropertyToBoolean(REDIS_TESTONRETURN, DEFAULT_TEST_ON_RETURN));
-        poolConfig.setTestOnBorrow(getPropertyToBoolean(REDIS_TESTONBORROW, DEFAULT_TEST_ON_BORROW));
+        poolConfig.setMaxIdle(getPropertyToInt("redis.maxidle", DEFAULT_MAX_IDLE));
+        poolConfig.setMaxTotal(getPropertyToInt("redis.maxtotal", DEFAULT_MAX_TOTAL));
+        poolConfig.setMinEvictableIdleTimeMillis(getPropertyToLong("redis.minevictableidletimemillis", DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
+        poolConfig.setMinIdle(getPropertyToInt("redis.minidle", DEFAULT_MIN_IDLE));
+        poolConfig.setNumTestsPerEvictionRun(getPropertyToInt("redis.numtestsperevictionrun", DEFAULT_NUM_TESTS_PER_EVICTION_RUN));
+        poolConfig.setSoftMinEvictableIdleTimeMillis(getPropertyToLong("redis.softminevictableidletimemillis", DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
+        poolConfig.setTimeBetweenEvictionRunsMillis(getPropertyToLong("redis.timebetweenevictionrunsmillis", DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS));
+        poolConfig.setTestWhileIdle(getPropertyToBoolean("redis.testwhileidle", DEFAULT_TEST_WHILE_IDLE));
+        poolConfig.setTestOnReturn(getPropertyToBoolean("redis.testonreturn", DEFAULT_TEST_ON_RETURN));
+        poolConfig.setTestOnBorrow(getPropertyToBoolean("redis.testonborrow", DEFAULT_TEST_ON_BORROW));
 
-        pool = new JedisPool(poolConfig
-                , shardInfo.getHost()
-                , shardInfo.getPort()
-                , shardInfo.getTimeout(),
-                shardInfo.getPassword());
+        pool = new JedisPool(poolConfig, shardInfo.getHost(), shardInfo.getPort(), shardInfo.getTimeout(), shardInfo.getPassword());
         JedisKit.init(pool);
         return true;
     }

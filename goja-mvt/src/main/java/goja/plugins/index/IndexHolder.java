@@ -68,7 +68,7 @@ public class IndexHolder {
      * @throws IOException
      */
     protected static IndexHolder init(String idx_path) throws IOException {
-        ANALYZER.setUseSmart(GojaConfig.getPropertyToBoolean(InitConst.INDEX_SMART, false));
+        ANALYZER.setUseSmart(GojaConfig.getPropertyToBoolean("index.smart", true));
         IndexHolder holder = new IndexHolder();
         idx_path = FilenameUtils.normalize(idx_path);
         File file = new File(idx_path);

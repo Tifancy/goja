@@ -185,4 +185,31 @@ public class GojaConfig {
         Boolean result = getPropertyToBoolean(key);
         return result != null ? result : defaultValue;
     }
+
+
+    public static boolean isDev() {
+        return getPropertyToBoolean("dev.mode", false);
+    }
+
+    public static boolean enable_security() {
+        return getPropertyToBoolean("security", true);
+    }
+
+    public static String appVersion() {
+        return getProperty("app.version", "0.0.1");
+    }
+
+    public static String appName(){
+        return getProperty("app", "application");
+    }
+
+    public static String dbUrl(){
+        return getProperty("db.url");
+    }
+    public static String dbUsername(){
+        return getProperty("db.username");
+    }
+    public static String dbPwd(){
+        return getProperty("db.password");
+    }
 }
