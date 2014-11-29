@@ -32,7 +32,7 @@ public class ShiroKit {
 
     static AuthzHandler getAuthzHandler(String actionKey) {
         /*
-		if(authzMaps.containsKey(controllerClassName)){
+        if(authzMaps.containsKey(controllerClassName)){
 			return true;
 		}*/
         return authzMaps.get(actionKey);

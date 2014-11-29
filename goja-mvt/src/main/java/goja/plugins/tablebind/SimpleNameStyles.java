@@ -5,8 +5,8 @@
  */
 package goja.plugins.tablebind;
 
-import goja.StringPool;
 import com.jfinal.kit.StrKit;
+import goja.StringPool;
 
 public class SimpleNameStyles {
     public static final INameStyle DEFAULT = new INameStyle() {

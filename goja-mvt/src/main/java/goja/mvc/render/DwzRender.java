@@ -16,13 +16,13 @@ import java.text.MessageFormat;
 @SuppressWarnings("serial")
 public class DwzRender extends Render {
     private static final String CONTENT_TYPE = "text/html;charset=" + getEncoding();
-    private String callbackType = "";
-    private String confirmMsg = "";
-    private String forwardUrl = "";
-    private String message = "";
-    private String navTabId = "";
-    private String rel = "";
-    private String statusCode = "200";
+    private              String callbackType = "";
+    private              String confirmMsg   = "";
+    private              String forwardUrl   = "";
+    private              String message      = "";
+    private              String navTabId     = "";
+    private              String rel          = "";
+    private              String statusCode   = "200";
 
     public DwzRender() {
     }

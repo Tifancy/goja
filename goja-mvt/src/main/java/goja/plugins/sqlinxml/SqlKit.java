@@ -55,7 +55,8 @@ public class SqlKit {
         initScanFiles(resource);
     }
 
-    private static void initScanFiles(String resource) {FluentIterable<File> iterable = Files.fileTreeTraverser().breadthFirstTraversal(new File(resource));
+    private static void initScanFiles(String resource) {
+        FluentIterable<File> iterable = Files.fileTreeTraverser().breadthFirstTraversal(new File(resource));
         final List<File> files = Lists.newArrayList();
         for (File f : iterable) {
             if (f.getName().endsWith(CONFIG_SUFFIX)) {
@@ -92,7 +93,7 @@ public class SqlKit {
         }
     }
 
-    static void initWithTest(){
+    static void initWithTest() {
 
         final String resource = PathKit.getRootClassPath();
         if (Strings.isNullOrEmpty(resource)) {

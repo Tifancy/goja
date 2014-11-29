@@ -14,7 +14,7 @@ public class GojaServerTest {
     @Test
     public void testStart() throws Exception {
 
-        GojaServer.start();
+      new  GojaServer().start();
 
     }
 }

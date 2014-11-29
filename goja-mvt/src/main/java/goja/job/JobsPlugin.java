@@ -18,7 +18,6 @@ import goja.annotation.OnApplicationStart;
 import goja.annotation.OnApplicationStop;
 import goja.exceptions.GojaException;
 import goja.exceptions.UnexpectedException;
-import goja.init.InitConst;
 import goja.init.ctxbox.ClassBox;
 import goja.init.ctxbox.ClassType;
 import goja.lang.Lang;

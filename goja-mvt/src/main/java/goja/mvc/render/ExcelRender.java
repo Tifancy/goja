@@ -6,11 +6,11 @@
 
 package goja.mvc.render;
 
-import goja.kits.PoiKit;
 import com.google.common.base.Strings;
 import com.jfinal.render.Render;
 import com.jfinal.render.RenderException;
 import goja.Logger;
+import goja.kits.PoiKit;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -29,8 +29,8 @@ import java.util.List;
  * @since JDK 1.6
  */
 public class ExcelRender extends Render {
-    private static final long serialVersionUID = -3568563627255175353L;
-    private final static String CONTENT_TYPE = "application/msexcel;charset=" + getEncoding();
+    private static final long   serialVersionUID = -3568563627255175353L;
+    private final static String CONTENT_TYPE     = "application/msexcel;charset=" + getEncoding();
     private final List<?>  data;
     private       String[] headers;
     private String sheetName = "sheet1";

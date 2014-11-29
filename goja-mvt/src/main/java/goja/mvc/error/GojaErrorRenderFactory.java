@@ -18,7 +18,7 @@ import com.jfinal.render.Render;
  * @version 1.0 2014-11-08 20:48
  * @since JDK 1.6
  */
-public class GojaErrorRenderFactory  implements IErrorRenderFactory {
+public class GojaErrorRenderFactory implements IErrorRenderFactory {
 
 
     @Override

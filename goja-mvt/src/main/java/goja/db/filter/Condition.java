@@ -24,8 +24,8 @@ import java.util.List;
 public class Condition {
 
     public static final String PARAM_CHAR = "?{";
-    private String name;
-    private Object value;
+    private String   name;
+    private Object   value;
     private Operator operator;
 
     /**

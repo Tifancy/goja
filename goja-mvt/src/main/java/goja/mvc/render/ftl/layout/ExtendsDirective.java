@@ -43,7 +43,7 @@ public class ExtendsDirective implements TemplateDirectiveModel {
         String name = DirectiveKit.getRequiredParam(params, "name");
         params.remove("name");
 
-        if(!name.endsWith(".ftl")){
+        if (!name.endsWith(".ftl")) {
             name = name + ".ftl";
         }
         String encoding = DirectiveKit.getParam(params, "encoding", StringPool.UTF_8);

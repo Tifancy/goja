@@ -5,12 +5,12 @@
  */
 package goja.mvc;
 
-import goja.annotation.Path;
 import com.google.common.base.Preconditions;
 import com.jfinal.config.Routes;
 import com.jfinal.kit.StrKit;
 import goja.Logger;
 import goja.StringPool;
+import goja.annotation.Path;
 import goja.init.ctxbox.ClassBox;
 import goja.init.ctxbox.ClassType;
 import org.apache.commons.lang3.StringUtils;

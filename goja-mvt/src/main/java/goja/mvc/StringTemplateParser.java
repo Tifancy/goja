@@ -16,15 +16,15 @@ import java.util.Map;
 public class StringTemplateParser {
 
     public static final String DEFAULT_MACRO_START = "${";
-    protected String macroStart = DEFAULT_MACRO_START;
+    protected           String macroStart          = DEFAULT_MACRO_START;
 
     // ---------------------------------------------------------------- properties
-    public static final String DEFAULT_MACRO_END = "}";
-    protected String macroEnd = DEFAULT_MACRO_END;
-    protected boolean replaceMissingKey = true;
+    public static final String  DEFAULT_MACRO_END = "}";
+    protected           String  macroEnd          = DEFAULT_MACRO_END;
+    protected           boolean replaceMissingKey = true;
     protected String missingKeyReplacement;
     protected boolean resolveEscapes = true;
-    protected char escapeChar = '\\';
+    protected char    escapeChar     = '\\';
     protected boolean parseValues;
 
     /**

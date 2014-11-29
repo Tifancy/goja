@@ -30,7 +30,7 @@ public class UserTag extends SecureTag {
     public void render(Environment env, Map params, TemplateDirectiveBody body) throws IOException, TemplateException {
         final Subject subject = getSubject();
         if (subject != null && subject.getPrincipal() != null) {
-//			_logger.debug("Subject has known identity (aka 'principal'). Tag body will be evaluated.");
+            //			_logger.debug("Subject has known identity (aka 'principal'). Tag body will be evaluated.");
             renderBody(env, body);
         } else {
             _logger.debug("Subject does not exist or have a known identity (aka 'principal'). Tag body will not be evaluated.");

@@ -11,7 +11,6 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import goja.Func;
 import goja.StringPool;
 import goja.mvc.datatables.core.ColumnDef;
 import goja.mvc.datatables.core.DatatablesCriterias;
@@ -33,11 +32,11 @@ import java.util.List;
  * @since JDK 1.6
  */
 public class DaoKit {
-    private static final Logger logger             = LoggerFactory.getLogger(DaoKit.class);
+    private static final Logger logger = LoggerFactory.getLogger(DaoKit.class);
 
-    public static final  String SQL_PIRFIX_WHERE   = ".where";
-    public static final  String SQL_PIRFIX_COLUMNS = ".column";
-    public static final  String SQL_PIRFIX_ORDERS  = ".order";
+    public static final String SQL_PIRFIX_WHERE   = ".where";
+    public static final String SQL_PIRFIX_COLUMNS = ".column";
+    public static final String SQL_PIRFIX_ORDERS  = ".order";
 
     /**
      * 根据默认主键<code>id</code>和实体判断是否为新构成的实体。
