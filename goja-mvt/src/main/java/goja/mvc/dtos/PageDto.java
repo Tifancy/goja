@@ -12,7 +12,6 @@ import com.google.common.collect.Maps;
 import goja.GojaConfig;
 import goja.StringPool;
 import goja.db.DaoKit;
-import goja.init.InitConst;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Enumeration;

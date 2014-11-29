@@ -6,13 +6,13 @@
 
 package goja.mvc.security;
 
-import goja.Goja;
-import goja.encry.DigestsKit;
-import goja.encry.EncodeKit;
 import com.google.common.base.Function;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.ehcache.CacheKit;
+import goja.Goja;
 import goja.StringPool;
+import goja.encry.DigestsKit;
+import goja.encry.EncodeKit;
 import goja.mvc.kit.Requests;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;

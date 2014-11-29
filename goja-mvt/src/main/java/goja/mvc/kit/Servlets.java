@@ -5,9 +5,9 @@
  */
 package goja.mvc.kit;
 
+import com.google.common.net.HttpHeaders;
 import goja.StringPool;
 import goja.encry.EncodeKit;
-import com.google.common.net.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 

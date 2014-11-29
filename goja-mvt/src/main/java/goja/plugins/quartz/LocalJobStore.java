@@ -30,6 +30,7 @@ public class LocalJobStore extends JobStoreCMT {
     /**
      * Name used for the transactional ConnectionProvider for Quartz.
      * This provider will delegate to the local Spring-managed DataSource.
+     *
      * @see org.quartz.utils.DBConnectionManager#addConnectionProvider
      */
     public static final String TX_DATA_SOURCE_PREFIX = "gojaTxDataSource.";
@@ -37,10 +38,10 @@ public class LocalJobStore extends JobStoreCMT {
     /**
      * Name used for the non-transactional ConnectionProvider for Quartz.
      * This provider will delegate to the local Spring-managed DataSource.
+     *
      * @see org.quartz.utils.DBConnectionManager#addConnectionProvider
      */
     public static final String NON_TX_DATA_SOURCE_PREFIX = "gojaNonTxDataSource.";
-
 
 
     @Override
@@ -61,9 +62,11 @@ public class LocalJobStore extends JobStoreCMT {
                         // Return a transactional Connection, if any.
                         return DbKit.getConfig().getConnection();
                     }
+
                     @Override
                     public void shutdown() {
                     }
+
                     public void initialize() {
                     }
                 }
@@ -81,9 +84,11 @@ public class LocalJobStore extends JobStoreCMT {
                         // Always return a non-transactional Connection.
                         return DbKit.getConfig().getDataSource().getConnection();
                     }
+
                     @Override
                     public void shutdown() {
                     }
+
                     public void initialize() {
                     }
                 }

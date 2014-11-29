@@ -7,15 +7,15 @@ package goja.mvc.interceptor.syslog;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import goja.StringPool;
-import goja.mvc.interceptor.syslog.config.LogPathConfig;
-import goja.mvc.kit.Servlets;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.core.ActionInvocation;
 import com.jfinal.core.Controller;
+import goja.StringPool;
+import goja.mvc.interceptor.syslog.config.LogPathConfig;
+import goja.mvc.kit.Servlets;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;

@@ -95,7 +95,7 @@ public class ShiroPlugin implements IPlugin {
                     //获取方法的所有Shiro注解。
                     List<Annotation> methodAnnotations = getAuthzAnnotations(method);
                     //依据Controller的注解和方法的注解来生成访问控制处理器。
-                    AuthzHandler authzHandler = createAuthzHandler( controllerAnnotations, methodAnnotations);
+                    AuthzHandler authzHandler = createAuthzHandler(controllerAnnotations, methodAnnotations);
                     //生成访问控制处理器成功。
                     if (authzHandler != null) {
                         //构建ActionKey，参考ActionMapping中实现

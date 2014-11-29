@@ -39,13 +39,13 @@ public class Freemarkers {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Freemarkers.class);
 
     //配置
-    private static Configuration appConfig = null;
+    private static Configuration appConfig    = null;
     private static Configuration stringConfig = null;
 
     public static final String UPDATE_RESPONSE_TEMPLATE = "__updateResponseTemplate";
 
 
-   private static final  StringTemplateLoader stringLoader = new StringTemplateLoader();
+    private static final StringTemplateLoader stringLoader = new StringTemplateLoader();
 
     static {
         getAppConfiguration();

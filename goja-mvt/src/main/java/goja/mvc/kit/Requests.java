@@ -369,7 +369,7 @@ public abstract class Requests {
         if (isIPAddr(host))
             return null;
         String[] names = StringUtils.split(host, '.');
-        if(names == null) return null;
+        if (names == null) return null;
         int len = names.length;
         if (len == 1) return null;
         if (len == 3) {

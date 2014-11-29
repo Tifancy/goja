@@ -14,8 +14,8 @@ import com.jfinal.handler.Handler;
 import com.jfinal.plugin.IPlugin;
 import com.jfinal.plugin.activerecord.Model;
 import goja.init.AppLoadEvent;
-import goja.mvc.interceptor.syslog.LogProcessor;
 import goja.job.Job;
+import goja.mvc.interceptor.syslog.LogProcessor;
 import goja.mvc.security.SecurityUserData;
 
 import java.util.List;

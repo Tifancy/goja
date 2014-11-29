@@ -10,7 +10,11 @@ import goja.Logger;
 import goja.annotation.On;
 import goja.init.ctxbox.ClassBox;
 import goja.init.ctxbox.ClassType;
-import org.quartz.*;
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;

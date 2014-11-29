@@ -12,7 +12,6 @@ import goja.annotation.TableBind;
 import goja.init.ctxbox.ClassBox;
 import goja.init.ctxbox.ClassType;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 public class AutoTableBindPlugin extends ActiveRecordPlugin {

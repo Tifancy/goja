@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CacheControlHeaderHandler extends Handler {
     private static final int invalidExpirationTime = -1;
-    public final int expires_hour = 60;
-    public final int expires_day  = expires_hour * 24;
-    public final int expires_week    = expires_day * 7;
-    public final int expires_nocache = -1;
+    public final         int expires_hour          = 60;
+    public final         int expires_day           = expires_hour * 24;
+    public final         int expires_week          = expires_day * 7;
+    public final         int expires_nocache       = -1;
     /** 缓存分钟数 */
     private final int expirationMinutes;
 

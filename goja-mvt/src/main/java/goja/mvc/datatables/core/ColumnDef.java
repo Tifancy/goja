@@ -7,7 +7,6 @@
 package goja.mvc.datatables.core;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 
 /**
  * <p>

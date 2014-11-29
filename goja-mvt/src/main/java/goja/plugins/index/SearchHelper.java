@@ -9,7 +9,6 @@ package goja.plugins.index;
 import com.google.common.collect.Lists;
 import goja.StringPool;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.lucene.analysis.TokenStream;
@@ -38,7 +37,6 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

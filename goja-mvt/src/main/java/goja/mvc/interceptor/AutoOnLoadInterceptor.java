@@ -1,11 +1,11 @@
 package goja.mvc.interceptor;
 
-import goja.annotation.AppInterceptor;
-import goja.init.ctxbox.ClassBox;
-import goja.init.ctxbox.ClassType;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.config.Interceptors;
 import goja.Logger;
+import goja.annotation.AppInterceptor;
+import goja.init.ctxbox.ClassBox;
+import goja.init.ctxbox.ClassType;
 
 import java.util.List;
 

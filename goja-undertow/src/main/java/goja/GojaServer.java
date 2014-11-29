@@ -8,7 +8,6 @@ package goja;
 
 import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import com.jfinal.core.JFinalFilter;
-import goja.init.InitConst;
 import goja.init.ctxbox.ClassFinder;
 import io.undertow.Handlers;
 import io.undertow.Undertow;

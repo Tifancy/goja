@@ -70,7 +70,7 @@ public class QuartzCore {
 
 
     public void start() {
-//        addJob(AJob.class, "* * * * * ?", "test job");
+        //        addJob(AJob.class, "* * * * * ?", "test job");
     }
 
 
