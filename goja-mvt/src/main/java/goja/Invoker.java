@@ -9,9 +9,8 @@ package goja;
 import goja.exceptions.GojaException;
 import goja.exceptions.UnexpectedException;
 import goja.i18n.I18n;
-import goja.init.InitConst;
-import goja.libs.PThreadFactory;
 import goja.libs.Action;
+import goja.libs.PThreadFactory;
 import goja.libs.Promise;
 import org.slf4j.LoggerFactory;
 
@@ -313,8 +312,8 @@ public class Invoker {
      * Init executor at load time.
      */
     static {
-        int core = Integer.parseInt(Goja.configuration.getProperty(InitConst.POOL, Goja.mode == Goja.Mode.DEV ? "1" : ((Runtime.getRuntime().availableProcessors() + 1) + "")));
-        executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("japp"), new ThreadPoolExecutor.AbortPolicy());
+        int core = GojaConfig.getPropertyToInt("app.pool", GojaConfig.isDev() ? 1 : (Runtime.getRuntime().availableProcessors() + 1));
+        executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("goja"), new ThreadPoolExecutor.AbortPolicy());
     }
 
     /**

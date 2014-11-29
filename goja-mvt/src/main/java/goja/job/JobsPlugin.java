@@ -27,7 +27,6 @@ import goja.libs.PThreadFactory;
 import goja.libs.Time;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -53,7 +52,7 @@ public class JobsPlugin implements IPlugin {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JobsPlugin.class);
 
     public JobsPlugin() {
-        int core = Integer.parseInt(GojaConfig.getProperty(InitConst.JOB_POOL_SIZE, "10"));
+        int core = Integer.parseInt(GojaConfig.getProperty("app.jobs.pool", "10"));
         executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("goja-jobs"), new ThreadPoolExecutor.AbortPolicy());
         final List<Class> job_classes = ClassBox.getInstance().getClasses(ClassType.JOB);
         if (Lang.isEmpty(job_classes)) {

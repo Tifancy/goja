@@ -8,9 +8,9 @@ package goja.i18n;
 
 import com.google.common.base.Strings;
 import goja.Goja;
+import goja.GojaConfig;
 import goja.Logger;
 import goja.mvc.kit.Requests;
-import goja.init.InitConst;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -157,7 +157,7 @@ public final class I18n {
      */
     private static void resolvefrom(HttpServletRequest request, HttpServletResponse response) {
         // Check a cookie
-        String cn = Goja.configuration.getProperty(InitConst.APP_I18N_COOKIE, Goja.appName + ".lang");
+        String cn = GojaConfig.getProperty("app.i18n.cookie", Goja.appName + ".lang");
         final Cookie locale_cookie = Requests.getCookie(request, cn);
         if (locale_cookie != null) {
             final String localeFromCookie = locale_cookie.getValue();

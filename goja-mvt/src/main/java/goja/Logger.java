@@ -10,14 +10,10 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.status.OnConsoleStatusListener;
 import ch.qos.logback.core.status.StatusManager;
 import com.jfinal.kit.PathKit;
-import goja.init.InitConst;
 import goja.logging.AppLogConfigurator;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-
-import static goja.init.InitConst.APP;
-import static goja.init.InitConst.APP_VERSION;
 
 /**
  * <p>
@@ -47,10 +43,10 @@ public class Logger {
      * Try to init stuff.
      */
     public static void init() {
-        String slf4jPath = GojaConfig.getProperty(InitConst.LOGGER_PATH, "/logback.xml");
+        String slf4jPath = GojaConfig.getProperty("logger.config", "/logback.xml");
         URL slf4jConf = Logger.class.getResource(slf4jPath);
-        final String app_name = GojaConfig.getProperty(APP, "app");
-        final String app_version = GojaConfig.getProperty(APP_VERSION, "0.0.1");
+        final String app_name = GojaConfig.appName();
+        final String app_version = GojaConfig.appVersion();
         if (slf4jConf == null) {
             LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 

@@ -10,7 +10,6 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.druid.wall.WallFilter;
-import com.jfinal.plugin.activerecord.DbKit;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
 import com.jfinal.plugin.activerecord.dialect.OracleDialect;
 import com.jfinal.plugin.activerecord.dialect.PostgreSqlDialect;
@@ -19,10 +18,8 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import goja.Goja;
 import goja.GojaConfig;
 import goja.exceptions.DatabaseException;
-import goja.init.InitConst;
 import goja.init.ctxbox.ClassFinder;
 import goja.kits.reflect.Reflect;
-import goja.plugins.sqlinxml.SqlInXmlPlugin;
 import goja.plugins.sqlinxml.SqlKit;
 import goja.plugins.tablebind.AutoTableBindPlugin;
 import goja.plugins.tablebind.SimpleNameStyles;
@@ -33,8 +30,6 @@ import org.junit.BeforeClass;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
-
-import static goja.init.InitConst.DB_SQLINXML;
 
 /**
  * <p>
@@ -63,15 +58,14 @@ public abstract class ModelTestCase {
             final Properties db_props = dbConfig.get(db_config);
             if (db_props != null && !db_props.isEmpty()) {
                 configDatabasePlugins(db_config,
-                        db_props.getProperty(InitConst.DB_URL),
-                        db_props.getProperty(InitConst.DB_USERNAME),
-                        db_props.getProperty(InitConst.DB_PASSWORD));
+                        GojaConfig.dbUrl(),
+                        GojaConfig.dbUsername(),
+                        GojaConfig.dbPwd());
             }
         }
 
 
-        if (GojaConfig.getPropertyToBoolean(DB_SQLINXML, true)) {
-
+        if (GojaConfig.getPropertyToBoolean("db.sqlinxml", true)) {
             Reflect.on(SqlKit.class).call("initWithTest");
         }
     }
@@ -96,14 +90,6 @@ public abstract class ModelTestCase {
                 , db_username
                 , db_password
                 , driverClassName);
-
-
-        dp.setInitialSize(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_SIZE, 10));
-        dp.setMinIdle(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_MINIDLE, 10));
-        dp.setMaxActive(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_ACTIVE, 100));
-        dp.setMaxWait(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_MAXWAIT, 60000));
-        dp.setTimeBetweenEvictionRunsMillis(GojaConfig.getPropertyToInt(InitConst.DB_TIMEBETWEENEVICTIONRUNSMILLIS, 120000));
-        dp.setMinEvictableIdleTimeMillis(GojaConfig.getPropertyToInt(InitConst.DB_MINEVICTABLEIDLETIMEMILLIS, 120000));
 
         dp.addFilter(new StatFilter());
         WallFilter wall = new WallFilter();

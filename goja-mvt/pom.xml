@@ -32,12 +32,13 @@
             <groupId>com.github.sogyf</groupId>
             <artifactId>goja-lucene</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.sogyf</groupId>
             <artifactId>goja-wxchat</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.sogyf</groupId>

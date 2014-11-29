@@ -7,12 +7,9 @@
 package goja.plugins.index;
 
 import com.jfinal.plugin.IPlugin;
-import goja.GojaConfig;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-
-import static goja.init.InitConst.INDEX_PATH;
 
 /**
  * <p>
@@ -28,10 +25,15 @@ public class IndexPlugin implements IPlugin {
 
     protected static IndexHolder holder;
 
+    private final String index_path;
+
+    public IndexPlugin(String index_path) {this.index_path = index_path;}
+
+
     @Override
     public boolean start() {
         try {
-            holder = IndexHolder.init(GojaConfig.getProperty(INDEX_PATH));
+            holder = IndexHolder.init(index_path);
         } catch (IOException e) {
             logger.error("the index plugin has error!", e);
             return false;

@@ -12,6 +12,7 @@ import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.druid.wall.WallFilter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -37,7 +38,6 @@ import goja.annotation.HandlerBind;
 import goja.annotation.PluginBind;
 import goja.exceptions.DatabaseException;
 import goja.init.AppLoadEvent;
-import goja.init.InitConst;
 import goja.init.ctxbox.ClassBox;
 import goja.init.ctxbox.ClassType;
 import goja.job.JobsPlugin;
@@ -72,34 +72,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static goja.init.InitConst.APP;
-import static goja.init.InitConst.APP_VERSION;
-import static goja.init.InitConst.CACHE;
-import static goja.init.InitConst.DB_SQLINXML;
-import static goja.init.InitConst.DB_STAT_VIEW;
-import static goja.init.InitConst.DEV_MODE;
-import static goja.init.InitConst.DOMAIN;
-import static goja.init.InitConst.INDEX_PATH;
-import static goja.init.InitConst.JOB;
-import static goja.init.InitConst.JOB_QUARTZ;
-import static goja.init.InitConst.MONGO_DB;
-import static goja.init.InitConst.MONGO_HOST;
-import static goja.init.InitConst.MONGO_MORIPH;
-import static goja.init.InitConst.MONGO_MORIPH_PKGS;
-import static goja.init.InitConst.MONGO_PORT;
-import static goja.init.InitConst.MONGO_URL;
-import static goja.init.InitConst.REDIS_HOST;
-import static goja.init.InitConst.REDIS_PORT;
-import static goja.init.InitConst.SECURITY;
-import static goja.init.InitConst.VIEW_404;
-import static goja.init.InitConst.VIEW_500;
-import static goja.init.InitConst.VIEW_PATH;
-import static goja.init.InitConst.VIEW_TYPE;
-import static goja.init.InitConst.WX_APPID;
-import static goja.init.InitConst.WX_SECRET;
-import static goja.init.InitConst.WX_TOKEN;
-import static goja.init.InitConst.WX_URL;
-
 /**
  * <p> The core of goja. </p>
  *
@@ -111,7 +83,7 @@ public class Goja extends JFinalConfig {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Goja.class);
 
-    private static final String DEFAULT_DOMAIN = "http://127.0.0.1:8080/app";
+    private static final String DEFAULT_DOMAIN = "http://127.0.0.1:8080/";
 
     public static final String FTL_HTML_PREFIX = ".ftl.html";
 
@@ -156,7 +128,7 @@ public class Goja extends JFinalConfig {
         initlization = true;
 
         // dev_mode
-        mode =Mode.DEV ;
+        mode = Mode.DEV;
         Logger.init();
     }
 
@@ -170,31 +142,30 @@ public class Goja extends JFinalConfig {
         initlization = true;
 
         // dev_mode
-        final boolean dev_mode = GojaConfig.getPropertyToBoolean(DEV_MODE, false);
-        mode = dev_mode ? Mode.DEV : Mode.PROD;
-        constants.setDevMode(dev_mode);
+        mode = GojaConfig.isDev() ? Mode.DEV : Mode.PROD;
+        constants.setDevMode(mode.isDev());
         // fixed: render view has views//xxx.ftl
-        viewPath = GojaConfig.getProperty(VIEW_PATH, File.separator + "WEB-INF" + File.separator + "views");
+        viewPath = GojaConfig.getProperty("app.viewpath", File.separator + "WEB-INF" + File.separator + "views");
         constants.setBaseViewPath(viewPath);
 
-        appName = GojaConfig.getProperty(APP, "app");
-        appVersion = GojaConfig.getProperty(APP_VERSION, "0.0.1");
+        appName = GojaConfig.appName();
+        appVersion = GojaConfig.appVersion();
 
         // init logger.
         Logger.init();
 
         // init wxchat config
-        final String wx_url = GojaConfig.getProperty(WX_URL);
+        final String wx_url = GojaConfig.getProperty("wx.url");
         if (!Strings.isNullOrEmpty(wx_url)) {
             // Config Wx Api
-            ApiConfig.setDevMode(dev_mode);
+            ApiConfig.setDevMode(mode.isDev());
             ApiConfig.setUrl(wx_url);
-            ApiConfig.setToken(GojaConfig.getProperty(WX_TOKEN));
-            ApiConfig.setAppId(GojaConfig.getProperty(WX_APPID));
-            ApiConfig.setAppSecret(GojaConfig.getProperty(WX_SECRET));
+            ApiConfig.setToken(GojaConfig.getProperty("wx.token"));
+            ApiConfig.setAppId(GojaConfig.getProperty("wx.appid"));
+            ApiConfig.setAppSecret(GojaConfig.getProperty("wx.secret"));
         }
 
-        if (GojaConfig.getPropertyToBoolean(SECURITY, true)) {
+        if (GojaConfig.enable_security()) {
             final List<Class> security_user = ClassBox.getInstance().getClasses(ClassType.SECURITY_DATA);
             if (security_user != null && security_user.size() == 1) {
                 try {
@@ -207,8 +178,8 @@ public class Goja extends JFinalConfig {
             }
         }
 
-        domain = GojaConfig.getProperty(DOMAIN, DEFAULT_DOMAIN);
-        String view_type = GojaConfig.getProperty(VIEW_TYPE);
+        domain = GojaConfig.getProperty("domain", DEFAULT_DOMAIN + appName);
+        String view_type = GojaConfig.getProperty("app.viewtype");
         if (!StrKit.isBlank(view_type)) {
             setViewType(constants, view_type);
         } else {
@@ -229,43 +200,43 @@ public class Goja extends JFinalConfig {
         // fixed: https://github.com/GojaFramework/goja/issues/4
         started = true;
 
-        if (GojaConfig.getPropertyToBoolean(CACHE, false)) {
+        plugins.add(new JobsPlugin());
+
+        if (GojaConfig.getPropertyToBoolean("cache", true)) {
             plugins.add(new EhCachePlugin());
         }
 
         initDataSource(plugins);
 
-        if (GojaConfig.getPropertyToBoolean(SECURITY, true)) {
+        if (GojaConfig.enable_security()) {
             plugins.add(new ShiroPlugin(this._routes));
         }
 
-        if (GojaConfig.getPropertyToBoolean(JOB_QUARTZ, false)) {
+        if (GojaConfig.getPropertyToBoolean("job", false)) {
             plugins.add(new QuartzPlugin());
         }
 
-        if (GojaConfig.getPropertyToBoolean(JOB, false)) {
-            plugins.add(new JobsPlugin());
+
+        final String index_path = GojaConfig.getProperty("index.path");
+        if (!Strings.isNullOrEmpty(index_path)) {
+            plugins.add(new IndexPlugin(index_path));
         }
 
-        if (!Strings.isNullOrEmpty(GojaConfig.getProperty(INDEX_PATH))) {
-            plugins.add(new IndexPlugin());
-        }
-
-        final String mongo_host = GojaConfig.getProperty(MONGO_HOST, MongoPlugin.DEFAULT_HOST);
-        final String mongo_url = GojaConfig.getProperty(MONGO_URL, StringUtils.EMPTY);
+        final String mongo_host = GojaConfig.getProperty("mongo.host", MongoPlugin.DEFAULT_HOST);
+        final String mongo_url = GojaConfig.getProperty("mongo.url", StringUtils.EMPTY);
         if (!Strings.isNullOrEmpty(mongo_host) || !Strings.isNullOrEmpty(mongo_url)) {
-            int mongo_port = GojaConfig.getPropertyToInt(MONGO_PORT, MongoPlugin.DEFAUL_PORT);
-            String mongo_db = GojaConfig.getProperty(MONGO_DB, "test");
-            boolean moriph = GojaConfig.getPropertyToBoolean(MONGO_MORIPH, false);
-            String pkgs = GojaConfig.getProperty(MONGO_MORIPH_PKGS, MongoPlugin.DEFAULT_PKGS);
+            int mongo_port = GojaConfig.getPropertyToInt("mongo.port", MongoPlugin.DEFAUL_PORT);
+            String mongo_db = GojaConfig.getProperty("mongo.db", "test");
+            boolean moriph = GojaConfig.getPropertyToBoolean("mongo.moriph", false);
+            String pkgs = GojaConfig.getProperty("mongo.moriph.entitys", MongoPlugin.DEFAULT_PKGS);
             final MongoPlugin mongodb = new MongoPlugin(mongo_host, mongo_port, mongo_db, moriph, pkgs);
             plugins.add(mongodb);
         }
 
-        final String redis_host = GojaConfig.getProperty(REDIS_HOST, StringUtils.EMPTY);
+        final String redis_host = GojaConfig.getProperty("redis.host", StringUtils.EMPTY);
         if (!Strings.isNullOrEmpty(redis_host)) {
-            int port = GojaConfig.getPropertyToInt(REDIS_PORT, JedisPlugin.DEFAULT_PORT);
-            final JedisPlugin jedis = new JedisPlugin(redis_host, port, 2000);
+            int port = GojaConfig.getPropertyToInt("redis.port", JedisPlugin.DEFAULT_PORT);
+            final JedisPlugin jedis = new JedisPlugin(redis_host, port, GojaConfig.getPropertyToInt("redis.timeout", 5000));
             plugins.add(jedis);
         }
 
@@ -319,7 +290,7 @@ public class Goja extends JFinalConfig {
     public void configHandler(Handlers handlers) {
         //访问路径是/druid/monitor
 
-        final String view_url = GojaConfig.getProperty(DB_STAT_VIEW, "/druid/monitor");
+        final String view_url = GojaConfig.getProperty("db.monitor", "/druid/monitor");
 
         final DruidStatViewHandler dvh = new DruidStatViewHandler(view_url, new IDruidStatViewAuth() {
             @Override
@@ -387,13 +358,13 @@ public class Goja extends JFinalConfig {
             final Properties db_props = dbConfig.get(db_config);
             if (db_props != null && !db_props.isEmpty()) {
                 configDatabasePlugins(db_config, plugins,
-                        GojaConfig.getProperty(InitConst.DB_URL),
-                        GojaConfig.getProperty(InitConst.DB_USERNAME),
-                        GojaConfig.getProperty(InitConst.DB_PASSWORD));
+                        GojaConfig.dbUrl(),
+                        GojaConfig.dbUsername(),
+                        GojaConfig.dbPwd());
             }
         }
 
-        if (GojaConfig.getPropertyToBoolean(DB_SQLINXML, false)) {
+        if (GojaConfig.getPropertyToBoolean("db.sqlinxml", true)) {
             plugins.add(new SqlInXmlPlugin());
         }
 
@@ -420,16 +391,35 @@ public class Goja extends JFinalConfig {
             final DruidPlugin druidPlugin = new DruidPlugin(db_url, username, password, driverClassName);
             druidPlugin.addFilter(new StatFilter());
 
+            final String initialSize = GojaConfig.getProperty("db.initial.size");
+            if (!Strings.isNullOrEmpty(initialSize)) {
+                druidPlugin.setInitialSize(Ints.tryParse(initialSize));
+            }
+            final String initial_minidle = GojaConfig.getProperty("db.initial.minidle");
+            if (!Strings.isNullOrEmpty(initial_minidle)) {
+                druidPlugin.setMinIdle(Ints.tryParse(initial_minidle));
+            }
 
-            druidPlugin.setInitialSize(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_SIZE, 10));
-            druidPlugin.setMinIdle(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_MINIDLE, 10));
-            druidPlugin.setMaxActive(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_ACTIVE, 100));
-            druidPlugin.setMaxWait(GojaConfig.getPropertyToInt(InitConst.DB_INITIAL_MAXWAIT, 60000));
-            druidPlugin.setTimeBetweenEvictionRunsMillis(GojaConfig.getPropertyToInt(InitConst.DB_TIMEBETWEENEVICTIONRUNSMILLIS, 120000));
-            druidPlugin.setMinEvictableIdleTimeMillis(GojaConfig.getPropertyToInt(InitConst.DB_MINEVICTABLEIDLETIMEMILLIS, 120000));
+            final String initial_maxwait = GojaConfig.getProperty("db.initial.maxwait");
+            if (!Strings.isNullOrEmpty(initial_maxwait)) {
+                druidPlugin.setMaxWait(Ints.tryParse(initial_maxwait));
+            }
+            final String initial_active = GojaConfig.getProperty("db.initial.active");
+            if (!Strings.isNullOrEmpty(initial_active)) {
+                druidPlugin.setMaxActive(Ints.tryParse(initial_active));
+            }
+            final String timeBetweenEvictionRunsMillis = GojaConfig.getProperty("db.timeBetweenEvictionRunsMillis");
+            if (!Strings.isNullOrEmpty(timeBetweenEvictionRunsMillis)) {
+                druidPlugin.setTimeBetweenEvictionRunsMillis(Ints.tryParse(timeBetweenEvictionRunsMillis));
+            }
+            final String minEvictableIdleTimeMillis = GojaConfig.getProperty("db.minEvictableIdleTimeMillis");
+            if (!Strings.isNullOrEmpty(minEvictableIdleTimeMillis)) {
+                druidPlugin.setMinEvictableIdleTimeMillis(Ints.tryParse(minEvictableIdleTimeMillis));
+            }
+
 
             final WallFilter wall = new WallFilter();
-            wall.setDbType(JdbcConstants.MYSQL);
+            wall.setDbType(dbtype);
             druidPlugin.addFilter(wall);
             plugins.add(druidPlugin);
 
@@ -482,7 +472,7 @@ public class Goja extends JFinalConfig {
         config.setSharedVariable("super", new SuperDirective());
         // 增加日期美化指令（类似 几分钟前）
         config.setSharedVariable("prettytime", new PrettyTimeDirective());
-        if (GojaConfig.getPropertyToBoolean(InitConst.SECURITY, true)) {
+        if (GojaConfig.enable_security()) {
             config.setSharedVariable("shiro", new ShiroTags(config.getObjectWrapper()));
         }
     }
