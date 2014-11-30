@@ -7,6 +7,7 @@
 package goja.kits;
 
 
+import goja.IntPool;
 import goja.StringPool;
 
 import java.math.BigDecimal;
@@ -21,8 +22,6 @@ import java.math.BigDecimal;
  * @since JDK 1.6
  */
 public class ArithKit {
-    /** 默认除法运算精度 * */
-    private static final int DEF_DIV_SCALE = 10;
 
     private ArithKit() {
 
@@ -75,7 +74,7 @@ public class ArithKit {
      * @return 两个参数的商
      */
     public static double div(double v1, double v2) {
-        return div(v1, v2, DEF_DIV_SCALE);
+        return div(v1, v2, IntPool.TEN);
     }
 
     /**

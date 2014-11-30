@@ -10,7 +10,7 @@ import com.google.common.base.Strings;
 import com.jfinal.render.Render;
 import com.jfinal.render.RenderException;
 import goja.Logger;
-import goja.kits.PoiKit;
+import goja.kits.io.PoiKit;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

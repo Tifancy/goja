@@ -23,6 +23,9 @@ import goja.GojaConfig;
 import goja.StringPool;
 import goja.init.ctxbox.ClassFinder;
 import goja.kits.reflect.Reflect;
+import goja.test.mock.MockHttpServletRequest;
+import goja.test.mock.MockHttpServletResponse;
+import goja.test.mock.MockServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.SQLExec;
@@ -36,22 +39,22 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-public abstract class ControllerTestCase<T extends Goja> {
+import static goja.StringPool.*;
+
+public abstract class ControllerTestCase {
     protected static final Logger logger = LoggerFactory.getLogger(ControllerTestCase.class);
 
     protected static ServletContext servletContext = new MockServletContext();
 
 
-    protected static MockHttpRequest  request;
-    protected static MockHttpResponse response;
-    protected static Handler          handler;
+    protected static MockHttpServletRequest  request;
+    protected static MockHttpServletResponse response;
+    protected static Handler                 handler;
 
     private static boolean configStarted = false;
 
@@ -63,17 +66,10 @@ public abstract class ControllerTestCase<T extends Goja> {
     private File bodyFile;
     private File responseFile;
 
-    private Class<? extends JFinalConfig> config;
+    private final Class<? extends JFinalConfig> config = Goja.class;
 
-    @SuppressWarnings("unchecked")
-    public ControllerTestCase() {
-        Type genericSuperclass = getClass().getGenericSuperclass();
-        Preconditions.checkArgument(genericSuperclass instanceof ParameterizedType,
-                "Your ControllerTestCase must have genericType");
-        config = (Class<? extends JFinalConfig>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-    }
 
-    private static void initConfig(Class<JFinal> clazz, JFinal me, ServletContext servletContext, JFinalConfig config) {
+    private static void initConfig(JFinal me, ServletContext servletContext, JFinalConfig config) {
         Reflect.on(me).call("init", config, servletContext);
     }
 
@@ -86,10 +82,9 @@ public abstract class ControllerTestCase<T extends Goja> {
         //Before starting JFinal, lookup class file on the classpath.
         ClassFinder.findWithTest();
 
-        Class<JFinal> clazz = JFinal.class;
         JFinal me = JFinal.me();
         configInstance = configClass.newInstance();
-        initConfig(clazz, me, servletContext, configInstance);
+        initConfig(me, servletContext, configInstance);
         handler = Reflect.on(me).get("handler");
         configStarted = true;
         configInstance.afterJFinalStart();
@@ -100,8 +95,7 @@ public abstract class ControllerTestCase<T extends Goja> {
         try {
 
             String script_path = p.getProperty("db.script.path", "misc/sql/");
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(script_path)
-                    , "The Database init database script init!");
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(script_path), "The Database init database script init!");
             final String real_script_path = PathKit.getRootClassPath() + File.separator + script_path;
             if (logger.isDebugEnabled()) {
                 logger.debug("init db script with {}", real_script_path);
@@ -146,12 +140,12 @@ public abstract class ControllerTestCase<T extends Goja> {
         return request.getAttribute(key);
     }
 
-    private String getTarget(String url, MockHttpRequest request) {
+    private String getTarget(String url, MockHttpServletRequest request) {
         String target = url;
-        if (url.contains(StringPool.QUESTION_MARK)) {
-            target = url.substring(0, url.indexOf(StringPool.QUESTION_MARK));
-            String queryString = url.substring(url.indexOf(StringPool.QUESTION_MARK) + 1);
-            String[] keyVals = queryString.split(StringPool.AMPERSAND);
+        if (url.contains(QUESTION_MARK)) {
+            target = url.substring(0, url.indexOf(QUESTION_MARK));
+            String queryString = url.substring(url.indexOf(QUESTION_MARK) + 1);
+            String[] keyVals = queryString.split(AMPERSAND);
             for (String keyVal : keyVals) {
                 int i = keyVal.indexOf('=');
                 String key = keyVal.substring(0, i);
@@ -176,11 +170,13 @@ public abstract class ControllerTestCase<T extends Goja> {
             } catch (IOException e) {
                 Throwables.propagate(e);
             }
-            bodyData = Joiner.on("").join(req);
+            if (req != null) {
+                bodyData = Joiner.on(EMPTY).join(req);
+            }
         }
         StringWriter resp = new StringWriter();
-        request = new MockHttpRequest(bodyData);
-        response = new MockHttpResponse(resp);
+        request = new MockHttpServletRequest(new MockServletContext());
+        response = new MockHttpServletResponse();
         Reflect.on(handler).call("handle", getTarget(actionUrl, request), request, response, new boolean[]{true});
         String response = resp.toString();
         if (responseFile != null) {
@@ -194,22 +190,22 @@ public abstract class ControllerTestCase<T extends Goja> {
     }
 
 
-    public ControllerTestCase<T> bodyFile(File bodyFile) {
+    public ControllerTestCase post(File bodyFile) {
         this.bodyFile = bodyFile;
         return this;
     }
 
-    public ControllerTestCase<T> bodyData(String bodyData) {
+    public ControllerTestCase post(String bodyData) {
         this.bodyData = bodyData;
         return this;
     }
 
-    public ControllerTestCase<T> use(String actionUrl) {
+    public ControllerTestCase use(String actionUrl) {
         this.actionUrl = actionUrl;
         return this;
     }
 
-    public ControllerTestCase<T> writeTo(File responseFile) {
+    public ControllerTestCase writeTo(File responseFile) {
         this.responseFile = responseFile;
         return this;
     }

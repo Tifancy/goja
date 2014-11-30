@@ -13,7 +13,7 @@ import com.google.common.io.Files;
 import com.jfinal.kit.PathKit;
 import goja.Goja;
 import goja.StringPool;
-import goja.kits.map.JaxbKit;
+import goja.kits.JaxbKit;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;

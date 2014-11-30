@@ -25,6 +25,7 @@ import goja.plugins.tablebind.AutoTableBindPlugin;
 import goja.plugins.tablebind.SimpleNameStyles;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.sql.SQLException;
@@ -119,7 +120,7 @@ public abstract class ModelTestCase {
 
     }
 
-    @After
+    @AfterClass
     public void tearDown() throws Exception {
         activeRecord.stop();
         dp.stop();

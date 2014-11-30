@@ -24,7 +24,7 @@ import java.util.Map;
  * @since JDK 1.6
  */
 @SuppressWarnings("UnusedDeclaration")
-public class IdCardKit {
+public abstract class IdCardKit {
 
     /** 中国公民身份证号码最小长度。 */
     public static final int CHINA_ID_MIN_LENGTH = 15;
@@ -52,11 +52,11 @@ public class IdCardKit {
     /** 最低年限 */
     public static final int MIN = 1930;
 
-    public static Map<String, String>  cityCodes   = Maps.newHashMap();
+    public static final Map<String, String>  cityCodes   = Maps.newHashMap();
     /** 台湾身份首字母对应数字 */
-    public static Map<String, Integer> twFirstCode = Maps.newHashMap();
+    public static final Map<String, Integer> twFirstCode = Maps.newHashMap();
     /** 香港身份首字母对应数字 */
-    public static Map<String, Integer> hkFirstCode = Maps.newHashMap();
+    public static final Map<String, Integer> hkFirstCode = Maps.newHashMap();
 
     static {
         cityCodes.put("11", "北京");

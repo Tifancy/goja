@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
-package goja.test;
+package goja.test.mock;
 
 
 import goja.StringPool;

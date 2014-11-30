@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @version 1.0 2014-11-08 17:35
  * @since JDK 1.6
  */
-public class Duration  implements Comparable<Duration>{
+public final class Duration  implements Comparable<Duration>{
     private static final Pattern DURATION_PATTERN = Pattern.compile("(\\d+)\\s*(\\S+)");
 
     private static final Map<String, TimeUnit> SUFFIXES = new ImmutableMap.Builder<String, TimeUnit>()
