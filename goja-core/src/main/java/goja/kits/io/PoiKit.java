@@ -4,11 +4,12 @@
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
 
-package goja.kits;
+package goja.kits.io;
 
 import com.google.common.base.Preconditions;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
+import goja.IntPool;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -31,8 +32,6 @@ import java.util.Set;
 public class PoiKit {
 
 
-    private static final int HEADER_ROW = 1;
-    private static final int MAX_ROWS   = 65536;
 
     private final List<?> data;
 
@@ -122,9 +121,9 @@ public class PoiKit {
         if (headers.length > 0) {
             row = sheet.createRow(0);
             if (headerRow <= 0) {
-                headerRow = HEADER_ROW;
+                headerRow = IntPool.ONE;
             }
-            headerRow = Math.min(headerRow, MAX_ROWS);
+            headerRow = Math.min(headerRow, IntPool.MAX_ROWS);
             for (int h = 0, lenH = headers.length; h < lenH; h++) {
                 CellRangeAddress region = new CellRangeAddress(0, (short) h, (short) headerRow - 1, (short) h);// 合并从第rowFrom行columnFrom列
                 sheet.addMergedRegion(region);// 到rowTo行columnTo的区域

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
-package goja.kits.map;
+package goja.kits;
 
 import com.google.common.base.Throwables;
 

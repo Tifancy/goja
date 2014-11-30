@@ -6,23 +6,14 @@
 
 package goja.validator;
 
-import goja.StringPool;
 import com.google.common.base.Strings;
+import goja.IntPool;
+import goja.StringPool;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
-import static goja.Constants.FLOAT_NEGATIVE;
-import static goja.Constants.FLOAT_NORMAL;
-import static goja.Constants.FLOAT_POSITIVE;
-import static goja.Constants.FLOAT_UNNEGATIVE;
-import static goja.Constants.FLOAT_UNPOSITIVE;
-import static goja.Constants.INTEGER_NEGATIVE;
-import static goja.Constants.INTEGER_NORMAL;
-import static goja.Constants.INTEGER_POSITIVE;
-import static goja.Constants.INTEGER_UNNEGATIVE;
-import static goja.Constants.INTEGER_UNPOSITIVE;
-import static goja.Constants.ValidatorRegex.*;
+import static goja.validator.RegexPool.*;
 
 /**
  * <p>
@@ -35,6 +26,16 @@ import static goja.Constants.ValidatorRegex.*;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class ValidatorKit {
+
+    /**
+     * 负整数常量
+     */
+    private static final int INTEGER_NEGATIVE   = -1;
+
+    /**
+     * 非正整数常量
+     */
+    private static final int INTEGER_UNPOSITIVE = -10;
 
     private ValidatorKit() {
 
@@ -343,15 +344,15 @@ public class ValidatorKit {
     public static boolean isInteger(String str, int valueRange) {
         if (!Strings.isNullOrEmpty(str)) {
             switch (valueRange) {
-                case INTEGER_NORMAL:
+                case IntPool.ZERO:
                     return str.matches(INTEGER);
-                case INTEGER_POSITIVE:
+                case IntPool.ONE:
                     return str.matches(POSITIVEINTEGER);
                 case INTEGER_UNPOSITIVE:
                     return str.matches(UNPOSITIVEINTEGER);
                 case INTEGER_NEGATIVE:
                     return str.matches(NEGATIVEINTEGER);
-                case INTEGER_UNNEGATIVE:
+                case IntPool.TEN:
                     return str.matches(UNNEGATIVEINTEGER);
                 default:
                     return false;
@@ -400,15 +401,15 @@ public class ValidatorKit {
     public static boolean isFloat(String str, int valueRange) {
         if (!Strings.isNullOrEmpty(str)) {
             switch (valueRange) {
-                case FLOAT_NORMAL:
+                case IntPool.ZERO:
                     return str.equals("0") || str.equals("-0") || str.equals("+0") || str.matches(FLOAT);
-                case FLOAT_POSITIVE:
+                case IntPool.ONE:
                     return str.equals("0") || str.endsWith("+0") || str.matches(POSITIVEFLOAT);
-                case FLOAT_UNPOSITIVE:
+                case INTEGER_UNPOSITIVE:
                     return str.equals("0") || str.equals("-0") || str.matches(UNPOSITIVEFLOAT);
-                case FLOAT_NEGATIVE:
+                case INTEGER_NEGATIVE:
                     return str.equals("0") || str.equals("-0") || str.matches(NEGATIVEFLOAT);
-                case FLOAT_UNNEGATIVE:
+                case IntPool.TEN:
                     return str.equals("0") || str.equals("-0") || str.matches(UNNEGATIVEFLOAT);
                 default:
                     return false;

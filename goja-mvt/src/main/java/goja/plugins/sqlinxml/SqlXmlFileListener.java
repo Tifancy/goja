@@ -7,7 +7,7 @@
 package goja.plugins.sqlinxml;
 
 import goja.StringPool;
-import goja.kits.map.JaxbKit;
+import goja.kits.JaxbKit;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
