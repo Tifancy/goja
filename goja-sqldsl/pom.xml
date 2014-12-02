@@ -16,10 +16,24 @@
         <version>0.1.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>goja-jetty</artifactId>
+    <artifactId>goja-sqldsl</artifactId>
 
     <build>
-        <finalName>goja-jetty</finalName>
+        <finalName>goja-sqldsl</finalName>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>goja-jfinal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>goja-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     
 </project>

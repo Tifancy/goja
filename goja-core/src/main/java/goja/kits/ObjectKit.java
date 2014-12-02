@@ -407,7 +407,7 @@ public abstract class ObjectKit {
         if (obj instanceof short[]) {
             return nullSafeToString((short[]) obj);
         }
-        return (obj.toString())
+        return obj.toString();
     }
 
     /**

@@ -114,12 +114,12 @@
     <modules>
         <module>goja-jfinal</module>
         <module>goja-core</module>
-        <module>goja-test</module>
+        <module>goja-mvt</module>
+        <module>goja-sqldsl</module>
         <module>goja-lucene</module>
         <module>goja-qrcode</module>
-        <module>goja-mvt</module>
         <module>goja-wxchat</module>
-        <module>goja-jetty</module>
+        <module>goja-test</module>
     </modules>
 
     <build>
