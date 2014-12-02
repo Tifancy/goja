@@ -8,8 +8,6 @@ package goja.test.ci;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.core.ActionInvocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * @since JDK 1.6
  */
 public class ProfilerInterceptor implements Interceptor {
-    private static final Logger logger = LoggerFactory.getLogger(ProfilerInterceptor.class);
 
     @Override
     public void intercept(ActionInvocation ai) {
@@ -33,7 +30,7 @@ public class ProfilerInterceptor implements Interceptor {
 
         } finally {
             Profiler.release();
-            logger.info(Profiler.dump());
+            goja.Logger.info(Profiler.dump());
         }
     }
 }
