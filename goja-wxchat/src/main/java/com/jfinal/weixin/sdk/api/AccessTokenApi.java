@@ -17,29 +17,36 @@ import java.util.Map;
  */
 public class AccessTokenApi {
 
-    // "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-    private static String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
+	// "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
+	private static String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
 
-    private static AccessToken accessToken;
+	private static AccessToken accessToken;
 
-    public static AccessToken getAccessToken() {
-        if (accessToken != null && accessToken.isAvailable())
-            return accessToken;
+	public static AccessToken getAccessToken() {
+		if (accessToken != null && accessToken.isAvailable())
+			return accessToken;
 
-        for (int i = 0; i < 3; i++) {
-            accessToken = requestAccesToken();
-            if (accessToken.isAvailable())
-                break;
-        }
-        return accessToken;
-    }
+		refreshAccessToken();
+		return accessToken;
+	}
 
-    private static AccessToken requestAccesToken() {
-        final String appId = ApiConfig.getAppId();
-        final String appSecret = ApiConfig.getAppSecret();
-        Map<String, String> queryParas = ParaMap.create("appid", appId).put("secret", appSecret).getData();
-        String json = HttpKit.get(url, queryParas);
-        return new AccessToken(json);
-    }
+	public static void refreshAccessToken() {
+		accessToken = requestAccessToken();
+	}
+
+	private static synchronized AccessToken requestAccessToken() {
+		AccessToken result = null;
+		for (int i = 0; i < 3; i++) {
+			String appId = ApiConfig.getAppId();
+			String appSecret = ApiConfig.getAppSecret();
+			Map<String, String> queryParas = ParaMap.create("appid", appId).put("secret", appSecret).getData();
+			String json = HttpKit.get(url, queryParas);
+			result = new AccessToken(json);
+
+			if (result.isAvailable())
+				break;
+		}
+		return result;
+	}
 
 }

@@ -14,6 +14,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Ordering;
 import com.jfinal.kit.PathKit;
 import goja.GojaConfig;
+import goja.cache.Cache;
 import goja.init.ctxbox.ClassFinder;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.Project;
@@ -50,8 +51,8 @@ public class GojaInitializer implements ServletContainerInitializer {
     @Override
     public void onStartup(Set<Class<?>> classSet, ServletContext ctx)
             throws ServletException {
-
-        final Properties p = GojaConfig.getConfigProps();
+        // 初始化缓存
+        Cache.init();
 
         if (GojaConfig.enable_security()) {
             ctx.addListener("org.apache.shiro.web.env.EnvironmentLoaderListener");
@@ -77,15 +78,15 @@ public class GojaInitializer implements ServletContainerInitializer {
 
         System.out.println("initializer " + app_name + " Application ok!");
         if (GojaConfig.isDev()) {
-            runScriptInitDb(p);
+            runScriptInitDb();
         }
     }
 
 
-    private void runScriptInitDb(final Properties p) {
+    private void runScriptInitDb() {
         try {
 
-            String script_path = p.getProperty("db.script.path", "misc/sql/");
+            String script_path = GojaConfig.getProperty("db.script.path", "misc/sql/");
             Preconditions.checkArgument(!Strings.isNullOrEmpty(script_path)
                     , "The Database init database script init!");
             final String real_script_path = PathKit.getRootClassPath() + File.separator + script_path;

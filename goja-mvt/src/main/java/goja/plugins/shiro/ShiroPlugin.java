@@ -114,7 +114,7 @@ public class ShiroPlugin implements IPlugin {
     /**
      * 从Controller方法中构建出需要排除的方法列表
      *
-     * @return
+     * @return 排除的方法列表
      */
     private Set<String> buildExcludedMethodName() {
         Set<String> excludedMethodName = new HashSet<String>();

@@ -179,40 +179,6 @@ public class InMsgParaser {
 		
 		throw new RuntimeException("无法识别的事件类型，请查阅微信公众平台开发文档");
 	}
-	
-	@SuppressWarnings("unused")
-	public static void main(String[] args) throws DocumentException {
-		String xml = 
-			"<xml>\n" +
-				"<ToUserName><![CDATA[James]]></ToUserName>\n" +
-				"<FromUserName><![CDATA[JFinal]]></FromUserName>\n" +
-				"<CreateTime>1348831860</CreateTime>\n" +
-				"<MsgType><![CDATA[text]]></MsgType>\n" +
-					"<Content><![CDATA[this is a test]]></Content>\n" +
-					"<MsgId>1234567890123456</MsgId>\n" +
-			"</xml>";
-		
-//		InTextMsg msg = (InTextMsg)parse(xml);
-//		System.out.println(msg.getToUserName());
-//		System.out.println(msg.getFromUserName());
-//		System.out.println(msg.getContent());
-		
-		
-		String xml_2 = 
-				"<xml>\n" +
-					"<ToUserName><![CDATA[James]]></ToUserName>\n" +
-					"<FromUserName><![CDATA[JFinal]]></FromUserName>\n" +
-					"<CreateTime>1348831860</CreateTime>\n" +
-					"<MsgType><![CDATA[text]]></MsgType>\n" +
-						"<Content><![CDATA[this is a test]]></Content>\n" +
-						"<MsgId>1234567890123456</MsgId>\n" +
-				"</xml>";
-		
-		Document doc = DocumentHelper.parseText(xml_2);
-        Element root = doc.getRootElement();
-        String value = root.elementText("abc");
-        System.out.println(value);
-	}
 }
 
 
