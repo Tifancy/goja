@@ -6,12 +6,18 @@
 
 package com.jfinal.weixin.sdk.api;
 
+/**
+ * 支持多公众账号使用 ThreadLocal<ApiConfig> 与 全局 Interceptor 
+ * 中动态操作此 ThreadLocal 即可
+ */
 public class ApiConfig {
 	
 	private static String url = null;
 	private static String token = null;
 	private static String appId = null;
 	private static String appSecret = null;
+	private static String encodingAesKey = null;
+	private static boolean messageEncrypt = false;	// 消息加密与否
 	
 	// 开发模式将输出消息交互 xml 到控制台
 	private static boolean devMode = false;
@@ -83,8 +89,34 @@ public class ApiConfig {
 			throw new IllegalArgumentException("appSecret can not be null");
 		ApiConfig.appSecret = appSecret;
 	}
+	
+	public static String getEncodingAesKey() {
+		return encodingAesKey;
+	}
+	
+	public static void setEncodingAesKey(String encodingAesKey) {
+		if (encodingAesKey == null)
+			throw new IllegalArgumentException("encodingAesKey can not be null");
+		ApiConfig.encodingAesKey = encodingAesKey;
+	}
+	
+	public static boolean isEncryptMessage() {
+		return messageEncrypt;
+	}
+	
+	public static boolean getMessageEncrypt() {
+		return messageEncrypt;
+	}
+	
+	/**
+	 *  是否对消息进行加密，对应于微信平台的消息加解密方式：
+	 *  1：true进行加密且必须配置 encodingAesKey
+	 *  2：false采用明文模式，同时也支持混合模式
+	 */
+	public static void setEncryptMessage(boolean messageEncrypt) {
+		ApiConfig.messageEncrypt = messageEncrypt;
+	}
 }
-
 
 
 

@@ -15,8 +15,8 @@ import com.jfinal.weixin.sdk.kit.ParaMap;
  */
 public class UserApi {
 	
-	private static final String getUserInfo = "https://api.weixin.qq.com/cgi-bin/user/info";
-	private static final String getFollowers = "https://api.weixin.qq.com/cgi-bin/user/get";
+	private static String getUserInfo = "https://api.weixin.qq.com/cgi-bin/user/info";
+	private static String getFollowers = "https://api.weixin.qq.com/cgi-bin/user/get";
 	
 	public static ApiResult getUserInfo(String openId) {
 		ParaMap pm = ParaMap.create("access_token", AccessTokenApi.getAccessToken().getAccessToken()).put("openid", openId).put("lang", "zh_CN");

@@ -13,12 +13,7 @@ import com.alibaba.druid.wall.WallFilter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
-import com.jfinal.config.Constants;
-import com.jfinal.config.Handlers;
-import com.jfinal.config.Interceptors;
-import com.jfinal.config.JFinalConfig;
-import com.jfinal.config.Plugins;
-import com.jfinal.config.Routes;
+import com.jfinal.config.*;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
@@ -36,6 +31,8 @@ import com.jfinal.weixin.sdk.api.ApiConfig;
 import freemarker.template.Configuration;
 import goja.annotation.HandlerBind;
 import goja.annotation.PluginBind;
+import goja.cache.Cache;
+import goja.cache.EhCacheImpl;
 import goja.exceptions.DatabaseException;
 import goja.init.AppLoadEvent;
 import goja.init.ctxbox.ClassBox;
@@ -81,40 +78,28 @@ import java.util.Properties;
  */
 public class Goja extends JFinalConfig {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Goja.class);
-
-    private static final String DEFAULT_DOMAIN = "http://127.0.0.1:8080/";
-
     public static final String FTL_HTML_PREFIX = ".ftl.html";
-
+    public static final String VERSION = "v0.1";
+    /**
+     * The list of supported locales
+     */
+    public static final List<String> langs = Lists.newArrayListWithCapacity(16);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Goja.class);
+    private static final String DEFAULT_DOMAIN = "http://127.0.0.1:8080/";
     public static boolean initlization = false;
     public static boolean started      = false;
-
-    public static final String VERSION = "v0.1";
-
     // the application configuration.
     public static Properties configuration;
-
     // run mode.
     public static Mode mode;
-
     // the application view path.
     public static String viewPath;
     public static String domain;
     public static String appName;
     public static String appVersion;
-
-    private Routes _routes;
-
     public static SecurityUserData securityUserData;
-
-
-    /**
-     * The list of supported locales
-     */
-    public static final List<String> langs = Lists.newArrayListWithCapacity(16);
-
     public static File applicationPath = null;
+    private Routes _routes;
 
     /**
      * 为方便测试用例的使用，这个提供一个手动初始化的方法为测试用例使用,调用采用反射机制
@@ -163,6 +148,13 @@ public class Goja extends JFinalConfig {
             ApiConfig.setToken(GojaConfig.getProperty("wx.token"));
             ApiConfig.setAppId(GojaConfig.getProperty("wx.appid"));
             ApiConfig.setAppSecret(GojaConfig.getProperty("wx.secret"));
+            /**
+             *  是否对消息进行加密，对应于微信平台的消息加解密方式：
+             *  1：true进行加密且必须配置 encodingAesKey
+             *  2：false采用明文模式，同时也支持混合模式
+             */
+            ApiConfig.setEncryptMessage(GojaConfig.getPropertyToBoolean("wx.encryptMessage", false));
+            ApiConfig.setEncodingAesKey(GojaConfig.getProperty("wx.encodingAesKey", "setting it in config file"));
         }
 
         if (GojaConfig.enable_security()) {
@@ -199,13 +191,10 @@ public class Goja extends JFinalConfig {
     public void configPlugin(Plugins plugins) {
         // fixed: https://github.com/GojaFramework/goja/issues/4
         started = true;
-
+        // 系统本身的任务标志，默认启动
         plugins.add(new JobsPlugin());
 
-        if (GojaConfig.getPropertyToBoolean("cache", true)) {
-            plugins.add(new EhCachePlugin());
-        }
-
+        plugins.add(new EhCachePlugin(EhCacheImpl.getInstance().getCacheManager()));
         initDataSource(plugins);
 
         if (GojaConfig.enable_security()) {
@@ -343,6 +332,7 @@ public class Goja extends JFinalConfig {
     @Override
     public void beforeJFinalStop() {
         ClassBox.getInstance().clearBox();
+        Cache.stop();
         started = false;
     }
 

@@ -212,4 +212,12 @@ public class GojaConfig {
     public static String dbPwd(){
         return getProperty("db.password");
     }
+
+    public static boolean containsKey(String key) {
+        return configProps.get().containsKey(key);
+    }
+
+    public static Object get(String key) {
+        return configProps.get().get(key);
+    }
 }

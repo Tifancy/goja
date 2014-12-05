@@ -51,12 +51,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>goja-core</artifactId>
+            <artifactId>goja-jfinal</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>goja-jfinal</artifactId>
+            <artifactId>goja-core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
