@@ -77,14 +77,13 @@ public class AppLogConfigurator {
 
         final Level config_level = Level.toLevel(GojaConfig.getProperty("logger"), Level.INFO);
         final boolean mode = GojaConfig.isDev();
-        final Level default_level = mode ? Level.DEBUG : config_level;
         Logger rootLogger = lc.getLogger(Logger.ROOT_LOGGER_NAME);
-        rootLogger.setLevel(default_level);
+        rootLogger.setLevel(config_level);
         rootLogger.addAppender(ca);
         rootLogger.addAppender(asyncAppender);
 
         Logger appLogger = lc.getLogger("app");
-        appLogger.setLevel(default_level);
+        appLogger.setLevel(mode ? Level.DEBUG : config_level);
         appLogger.addAppender(ca);
         appLogger.addAppender(asyncAppender);
 
