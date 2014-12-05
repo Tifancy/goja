@@ -100,6 +100,7 @@ public class GojaInitializer implements ServletContainerInitializer {
                         = Ordering.natural()
                         .sortedCopy(FileUtils.listFiles(script_dir, new String[]{"sql"}, false));
                 for (File list_script_file : list_script_files) {
+                    logger.debug("run db script file is {}", list_script_file);
                     final SQLExec sql_exec = new SQLExec();
                     final String driverClassName = JdbcUtils.getDriverClassName(db_url);
                     sql_exec.setDriver(driverClassName);
@@ -116,7 +117,7 @@ public class GojaInitializer implements ServletContainerInitializer {
                     try {
                         sql_exec.execute();
                     } catch (Exception e) {
-                        logger.error("the init database has already ok!", e);
+                        logger.error("the init database has already ok!, ", e);
                     }
                 }
             }

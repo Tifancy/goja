@@ -32,7 +32,10 @@ import java.util.Map;
 public class GojaShiroFilter extends AbstractShiroFilter {
     private static final Logger logger = LoggerFactory.getLogger(GojaShiroFilter.class);
 
-    public GojaShiroFilter() {
+
+    @Override
+    public void init() throws Exception {
+        super.init();
         WebSecurityManager webSecurityManager = initSecurityManager();
         FilterChainManager manager = createFilterChainManager();
 
@@ -44,12 +47,6 @@ public class GojaShiroFilter extends AbstractShiroFilter {
 
         setSecurityManager(webSecurityManager);
         setFilterChainResolver(chainResolver);
-    }
-
-    @Override
-    public void init() throws Exception {
-        super.init();
-
 
     }
 
