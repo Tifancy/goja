@@ -30,10 +30,20 @@ public interface Func {
      */
     Splitter COMMA_SPLITTER = Splitter.on(StringPool.COMMA).trimResults().omitEmptyStrings();
 
+    /**
+     *
+     */
     Joiner DOT_JOINER = Joiner.on(StringPool.DOT).skipNulls();
 
 
     Splitter DOT_SPLITTER = Splitter.on(StringPool.DOT).trimResults().omitEmptyStrings();
+    /**
+     *
+     */
+    Joiner EQUALS_JOINER = Joiner.on(StringPool.EQUALS).skipNulls();
+
+
+    Splitter EQUALS_SPLITTER = Splitter.on(StringPool.EQUALS).trimResults().omitEmptyStrings();
 
 
     Joiner DASH_JOINER = Joiner.on(StringPool.DASH).skipNulls();

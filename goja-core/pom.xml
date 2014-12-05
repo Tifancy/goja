@@ -10,7 +10,6 @@
     <packaging>jar</packaging>
 
     <name>goja-core</name>
-    <url>http://sogyf.github.io</url>
 
 
     <dependencies>

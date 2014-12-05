@@ -1,16 +1,20 @@
 package goja;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.jfinal.plugin.activerecord.DbKit;
 import goja.kits.io.ResourceKit;
 import goja.lang.Lang;
+import goja.tuples.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -171,7 +175,7 @@ public class GojaConfig {
             return null;
         }
         String resultStr = _p.getProperty(key);
-        boolean resultBool = false;
+        Boolean resultBool = null;
         if (resultStr != null) {
             if (resultStr.trim().equalsIgnoreCase("true"))
                 resultBool = true;
@@ -215,6 +219,19 @@ public class GojaConfig {
 
     public static boolean containsKey(String key) {
         return configProps.get().containsKey(key);
+    }
+
+
+    public static List<Pair<String,String>> chainConfig(){
+        List<Pair<String,String>> chains = Lists.newArrayList();
+        Enumeration<?> enumeration = configProps.get().propertyNames();
+        while (enumeration.hasMoreElements()) {
+            String key = (String) enumeration.nextElement();
+            if(StringUtils.startsWithIgnoreCase(key,"security.chain.")){
+                chains.add(Pair.with(key.replace("security.chain.", StringPool.EMPTY), getProperty(key)));
+            }
+        }
+        return chains;
     }
 
     public static Object get(String key) {
