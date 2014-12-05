@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.sf.ehcache.config.PersistenceConfiguration.Strategy.LOCALRESTARTABLE;
 import static net.sf.ehcache.config.PersistenceConfiguration.Strategy.LOCALTEMPSWAP;
 
 /**
@@ -53,7 +52,7 @@ public class EhCacheImpl implements CacheImpl {
         defaultCacheConfiguration.memoryStoreEvictionPolicy("LRU");
 
         configuration.setDefaultCacheConfiguration(defaultCacheConfiguration);
-
+        // shiro cache configuration.
         CacheConfiguration shiroRealmConfig = new CacheConfiguration("gojaRealm_authorizationCache", 10000);
         shiroRealmConfig.eternal(true);
         shiroRealmConfig.timeToLiveSeconds(0);
@@ -69,7 +68,7 @@ public class EhCacheImpl implements CacheImpl {
         shiroActiveSessionCache.timeToLiveSeconds(0);
         shiroActiveSessionCache.timeToIdleSeconds(0);
         PersistenceConfiguration shiroActiveSessionConfiguration = new PersistenceConfiguration();
-        // 使用交换区，系统重启后，自动清楚
+        // 使用交换区，系统重启后，自动清除
         shiroActiveSessionConfiguration.strategy(LOCALTEMPSWAP);
         shiroActiveSessionCache.persistence(shiroActiveSessionConfiguration);
         shiroActiveSessionCache.diskExpiryThreadIntervalSeconds(600);
