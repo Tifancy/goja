@@ -4,7 +4,7 @@
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
 
-package goja.mvc.security.shiro;
+package goja.security.shiro;
 
 
 import com.jfinal.plugin.activerecord.Model;
@@ -27,9 +27,9 @@ public class Securitys {
      *
      * @return the login user.
      */
-    public static <L extends Model, U extends Model> AppUser<L, U> getLogin() {
+    public static <U extends Model> AppUser<U> getLogin() {
 
-        return (AppUser<L, U>) getSubject().getPrincipal();
+        return (AppUser< U>) getSubject().getPrincipal();
     }
 
     /**

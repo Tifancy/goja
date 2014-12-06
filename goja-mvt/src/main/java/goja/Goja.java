@@ -49,7 +49,7 @@ import goja.mvc.render.ftl.layout.ExtendsDirective;
 import goja.mvc.render.ftl.layout.OverrideDirective;
 import goja.mvc.render.ftl.layout.SuperDirective;
 import goja.mvc.render.ftl.shiro.ShiroTags;
-import goja.mvc.security.SecurityUserData;
+import goja.security.shiro.SecurityUserData;
 import goja.plugins.index.IndexPlugin;
 import goja.plugins.monogo.MongoPlugin;
 import goja.plugins.quartz.QuartzPlugin;

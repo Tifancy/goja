@@ -1,8 +1,7 @@
-package goja.shiro;
+package goja.security.shiro;
 
 import goja.GojaConfig;
 import goja.lang.Lang;
-import goja.mvc.security.AppDbRealm;
 import goja.tuples.Pair;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;

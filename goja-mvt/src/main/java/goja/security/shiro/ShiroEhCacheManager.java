@@ -1,4 +1,4 @@
-package goja.shiro;
+package goja.security.shiro;
 
 import goja.cache.EhCacheImpl;
 import org.apache.shiro.ShiroException;

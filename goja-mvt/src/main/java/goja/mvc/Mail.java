@@ -46,7 +46,10 @@ public class Mail {
     private static final Logger logger = LoggerFactory.getLogger(Mail.class);
     public static Session session;
     public static boolean         asynchronousSend = true;
-    static        ExecutorService executor         = Executors.newCachedThreadPool();
+    public static ExecutorService executor = Executors.newCachedThreadPool();
+
+    private Mail() {
+    }
 
     /**
      * Send an email
