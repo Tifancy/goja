@@ -540,13 +540,12 @@ public class Controller extends com.jfinal.core.Controller {
      * <p/>
      * If it opens the secruity function can call this method to obtain the logged in user.
      *
-     * @param <L> Generic parameter.
      * @param <U> Generic parameter.
      * @return Shiro login user.
      */
-    protected <L extends Model, U extends Model> Optional<AppUser<L, U>> getPrincipal() {
+    protected <U extends Model> Optional<AppUser<U>> getPrincipal() {
         if (Securitys.isLogin()) {
-            final AppUser<L, U> appUser = Securitys.getLogin();
+            final AppUser<U> appUser = Securitys.getLogin();
             return Optional.of(appUser);
         }
         return Optional.absent();
