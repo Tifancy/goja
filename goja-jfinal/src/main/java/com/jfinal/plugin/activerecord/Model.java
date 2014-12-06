@@ -38,7 +38,7 @@ import static com.jfinal.plugin.activerecord.DbKit.NULL_PARA_ARRAY;
  * A wise person avoids it.
  * A stupid person makes it.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "UnusedDeclaration"})
 public abstract class Model<M extends Model> implements Serializable {
 	
 	private static final long serialVersionUID = -990334519496260591L;
@@ -245,8 +245,8 @@ public abstract class Model<M extends Model> implements Serializable {
 		if (config.dialect.isTakeOverModelPaginate())
 			return config.dialect.takeOverModelPaginate(conn, getClass(), pageNumber, pageSize, select, sqlExceptSelect, paras);
 		
-		long totalRow = 0;
-		int totalPage = 0;
+		long totalRow;
+		int totalPage;
 		List result = Db.query(config, conn, "select count(*) " + DbKit.replaceFormatSqlOrderBy(sqlExceptSelect), paras);
 		int size = result.size();
 		if (size == 1)
@@ -307,7 +307,7 @@ public abstract class Model<M extends Model> implements Serializable {
 		// --------
 		Connection conn = null;
 		PreparedStatement pst = null;
-		int result = 0;
+		int result;
 		try {
 			conn = config.getConnection();
 			if (config.dialect.isOracle())
@@ -521,7 +521,7 @@ public abstract class Model<M extends Model> implements Serializable {
 	 * @return this Model
 	 */
 	public M setAttrs(M model) {
-		return setAttrs(model.getAttrs());
+		return (M) setAttrs(model.getAttrs());
 	}
 	
 	/**
@@ -653,11 +653,7 @@ public abstract class Model<M extends Model> implements Serializable {
 	}
 	
 	public boolean equals(Object o) {
-		if (!(o instanceof Model))
-            return false;
-		if (o == this)
-			return true;
-		return this.attrs.equals(((Model)o).attrs);
+		return o instanceof Model && (o == this || this.attrs.equals(((Model) o).attrs));
 	}
 	
 	public int hashCode() {
