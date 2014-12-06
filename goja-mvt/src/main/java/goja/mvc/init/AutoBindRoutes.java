@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
-package goja.mvc;
+package goja.mvc.init;
 
 import com.google.common.base.Preconditions;
 import com.jfinal.config.Routes;

@@ -1,4 +1,4 @@
-package goja.mvc.interceptor;
+package goja.mvc.init;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.config.Interceptors;
@@ -20,9 +20,15 @@ import java.util.List;
  */
 public class AutoOnLoadInterceptor {
 
+    /**
+     * jfinal 全局拦截器
+     */
     private final Interceptors interceptors;
 
-
+    /**
+     * 构造函数，指定全局拦截器
+     * @param interceptors jfinal 全局拦截器
+     */
     public AutoOnLoadInterceptor(Interceptors interceptors) {
         this.interceptors = interceptors;
     }
