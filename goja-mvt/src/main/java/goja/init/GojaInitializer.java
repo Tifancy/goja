@@ -55,7 +55,7 @@ public class GojaInitializer implements ServletContainerInitializer {
         Cache.init();
 
         if (GojaConfig.enable_security()) {
-            ctx.addFilter("Goja@shiroFilter", "goja.shiro.GojaShiroFilter")
+            ctx.addFilter("Goja@shiroFilter", "goja.security.shiro.GojaShiroFilter")
                     .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         }
         // init logger
