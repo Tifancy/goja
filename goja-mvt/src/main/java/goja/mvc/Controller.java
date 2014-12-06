@@ -30,9 +30,9 @@ import goja.mvc.render.BadRequest;
 import goja.mvc.render.CaptchaRender;
 import goja.mvc.render.JxlsRender;
 import goja.mvc.render.NotModified;
-import goja.mvc.security.SecurityKit;
-import goja.mvc.security.shiro.AppUser;
-import goja.mvc.security.shiro.Securitys;
+import goja.security.goja.SecurityKit;
+import goja.security.shiro.AppUser;
+import goja.security.shiro.Securitys;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 

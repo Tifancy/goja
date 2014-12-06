@@ -4,11 +4,10 @@
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
 
-package goja.mvc.security;
+package goja.security.shiro;
 
 import goja.Goja;
 import goja.encry.EncodeKit;
-import goja.mvc.security.shiro.AppUser;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -23,7 +22,7 @@ import org.apache.shiro.util.ByteSource;
 
 /**
  * <p>
- * .
+ * 用户授权信息.
  * </p>
  *
  * @author sagyf yang
@@ -44,7 +43,7 @@ public class AppDbRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        final SecurityUser.Auth auth = Goja.securityUserData.auth((AppUser) principals.getPrimaryPrincipal());
+        final UserAuth auth = Goja.securityUserData.auth((AppUser) principals.getPrimaryPrincipal());
         info.addRoles(auth.getRoles());
         info.addStringPermissions(auth.getPermissions());
         return info;
@@ -54,7 +53,7 @@ public class AppDbRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        SecurityUser.LogerUser loginUser = Goja.securityUserData.user(token.getUsername());
+        LoginUser loginUser = Goja.securityUserData.user(token.getUsername());
         if (loginUser == null) {
             return null;
         }

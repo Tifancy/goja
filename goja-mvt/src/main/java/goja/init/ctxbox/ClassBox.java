@@ -16,7 +16,7 @@ import com.jfinal.plugin.activerecord.Model;
 import goja.init.AppLoadEvent;
 import goja.job.Job;
 import goja.mvc.interceptor.syslog.LogProcessor;
-import goja.mvc.security.SecurityUserData;
+import goja.security.shiro.SecurityUserData;
 
 import java.util.List;
 import java.util.Map;

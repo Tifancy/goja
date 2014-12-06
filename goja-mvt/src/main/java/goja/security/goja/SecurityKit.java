@@ -4,7 +4,7 @@
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
 
-package goja.mvc.security;
+package goja.security.goja;
 
 import com.google.common.base.Function;
 import com.jfinal.plugin.activerecord.Model;
@@ -41,6 +41,9 @@ import java.util.Enumeration;
  * @since JDK 1.6
  */
 public class SecurityKit {
+    /**
+     * 登录存储在客户端的用户Session标识
+     */
     public final static  String COOKIE_LOGIN      = Goja.appName + "_session_id";
     /**
      * 登录的SESSION。KEY
