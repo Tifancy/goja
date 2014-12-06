@@ -6,6 +6,8 @@
 
 package goja;
 
+import com.alibaba.druid.filter.logging.Log4jFilter;
+import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
@@ -411,6 +413,8 @@ public class Goja extends JFinalConfig {
             final WallFilter wall = new WallFilter();
             wall.setDbType(dbtype);
             druidPlugin.addFilter(wall);
+            // 增加 LogFilter 输出JDBC执行的日志
+            druidPlugin.addFilter(new Slf4jLogFilter());
             plugins.add(druidPlugin);
 
             //  setting db table name like 'dev_info'
