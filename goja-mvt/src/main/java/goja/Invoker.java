@@ -38,11 +38,13 @@ import java.util.concurrent.TimeUnit;
 public class Invoker {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Invoker.class);
-
     /**
      * Main executor for requests invocations.
      */
     public static ScheduledThreadPoolExecutor executor = null;
+
+    private Invoker() {
+    }
 
     /**
      * Run the code in a new thread took from a thread pool.
@@ -100,10 +102,6 @@ public class Invoker {
         private final List<Annotation> annotations;
         private final String           invocationType;
 
-        public static InvocationContext current() {
-            return current.get();
-        }
-
         public InvocationContext(String invocationType) {
             this.invocationType = invocationType;
             this.annotations = new ArrayList<Annotation>();
@@ -125,6 +123,10 @@ public class Invoker {
             for (Annotation[] some : annotations) {
                 this.annotations.addAll(Arrays.asList(some));
             }
+        }
+
+        public static InvocationContext current() {
+            return current.get();
         }
 
         public List<Annotation> getAnnotations() {

@@ -73,8 +73,11 @@ public class GojaConfig {
             if (StringUtils.startsWithIgnoreCase(_key, "db")) {
                 int last_idx = _key.lastIndexOf(StringPool.DOT);
                 if (last_idx > 2) {
+                    // like db.second.url
                     String config_name = _key.substring(_key.indexOf(StringPool.DOT) + 1, last_idx);
-                    logger.debug("the db config is {}", config_name);
+                    if(logger.isDebugEnabled()){
+                        logger.debug("the db config is {}", config_name);
+                    }
                     Properties db_config_props = DB_CONFIG.get(config_name);
                     if (db_config_props == null) {
                         db_config_props = new Properties();
