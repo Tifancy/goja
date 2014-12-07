@@ -6,7 +6,7 @@
 
 package goja.plugins.sqlinxml;
 
-import goja.StringPool;
+import com.google.common.io.Files;
 import goja.kits.JaxbKit;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Map;
+
+import static goja.StringPool.DOT;
 
 /**
  * <p>
@@ -27,24 +28,41 @@ import java.util.Map;
  */
 public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(SqlXmlFileListener.class);
-    final Map<String, String> sqlMap;
+    public static final SqlXmlFileListener me = new SqlXmlFileListener();
 
-    public SqlXmlFileListener(Map<String, String> sqlMap) {
-        this.sqlMap = sqlMap;
+    private static final Logger logger = LoggerFactory.getLogger(SqlXmlFileListener.class);
+
+    public SqlXmlFileListener() {
     }
 
+    @Override
+    public void onDirectoryCreate(File directory) {
+        logger.info("the directory {} create!", directory);
+        SqlKit.reload();
+    }
+
+    @Override
+    public void onDirectoryDelete(File directory) {
+        logger.info("the directory {} delete!", directory);
+        SqlKit.reload();
+    }
+
+    @Override
+    public void onDirectoryChange(File directory) {
+        logger.info("the directory {} change!", directory);
+        SqlKit.reload();
+    }
 
     private void reload(File change_file) {
         SqlGroup group;
-        if (change_file.isFile()) {
+        if (change_file.isFile() && Files.getFileExtension(change_file.getAbsolutePath()).endsWith(SqlKit.CONFIG_SUFFIX)) {
             group = JaxbKit.unmarshal(change_file, SqlGroup.class);
             String name = group.name;
             if (StringUtils.isBlank(name)) {
                 name = change_file.getName();
             }
             for (SqlItem sqlItem : group.sqlItems) {
-                SqlKit.putOver(name + StringPool.DOT + sqlItem.id, sqlItem.value);
+                SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
             }
             if (logger.isDebugEnabled()) {
                 logger.debug("reload file:" + change_file.getAbsolutePath());
@@ -54,14 +72,14 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
 
     private void removeFile(File remove_file) {
         SqlGroup group;
-        if (remove_file.isFile()) {
+        if (remove_file.isFile() && Files.getFileExtension(remove_file.getAbsolutePath()).endsWith(SqlKit.CONFIG_SUFFIX)) {
             group = JaxbKit.unmarshal(remove_file, SqlGroup.class);
             String name = group.name;
             if (StringUtils.isBlank(name)) {
                 name = remove_file.getName();
             }
             for (SqlItem sqlItem : group.sqlItems) {
-                SqlKit.remove(name + StringPool.DOT + sqlItem.id);
+                SqlKit.remove(name + DOT + sqlItem.id);
             }
             if (logger.isDebugEnabled()) {
                 logger.debug("delete file:" + remove_file.getAbsolutePath());
@@ -72,16 +90,19 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
 
     @Override
     public void onFileCreate(File file) {
+        logger.info("the file {} create!", file);
         reload(file);
     }
 
     @Override
     public void onFileChange(File file) {
+        logger.info("the file {} change!", file);
         reload(file);
     }
 
     @Override
     public void onFileDelete(File file) {
+        logger.info("the file {} delete!", file);
         removeFile(file);
     }
 }

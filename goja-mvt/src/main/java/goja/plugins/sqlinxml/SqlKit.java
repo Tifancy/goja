@@ -27,12 +27,25 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SqlKit {
+    /**
+     * SQL XML file suffix
+     */
+    protected static final String CONFIG_SUFFIX = "sql.xml";
     private static final Logger logger = LoggerFactory.getLogger(SqlKit.class);
-
+    /**
+     * Management of SQL set
+     */
     private static final Map<String, String> SQL_MAP = Maps.newHashMap();
 
-    private static final String CONFIG_SUFFIX = "sql.xml";
+    private SqlKit() {
+    }
 
+    /**
+     * To obtain a configuration of SQL.
+     *
+     * @param groupNameAndsqlId SQL id.
+     * @return sql script.
+     */
     public static String sql(String groupNameAndsqlId) {
 
         return SQL_MAP.get(groupNameAndsqlId);
@@ -48,10 +61,17 @@ public class SqlKit {
 
 
     static void init() {
-        final String resource = PathKit.getRootClassPath();
-        if (Strings.isNullOrEmpty(resource)) {
-            throw new NullPointerException("the resources is null.");
+        final String resource = PathKit.getRootClassPath() + File.separator + "sqlconf";
+        initScanFiles(resource);
+        if (Goja.mode.isDev()) {
+            // 启动文件监控
+            runWatch();
         }
+    }
+
+    static void reload (){
+        SQL_MAP.clear();
+        final String resource = PathKit.getRootClassPath() + File.separator + "sqlconf";
         initScanFiles(resource);
     }
 
@@ -85,12 +105,6 @@ public class SqlKit {
                 SQL_MAP.put(sql_name, _val.replace('\r', ' ').replace('\n', ' ').replaceAll(" {2,}", " "));
             }
         }
-        if (logger.isDebugEnabled())
-            logger.debug("SQL_MAP" + SQL_MAP);
-        if (Goja.mode.isDev()) {
-            // 启动文件监控
-            runWatch();
-        }
     }
 
     static void initWithTest() {
@@ -106,8 +120,7 @@ public class SqlKit {
     private static void runWatch() {
         final String path = PathKit.getRootClassPath();
         logger.info("Start the SQL configuration file scanning monitoring mechanism! path is {}", path);
-        // 轮询间隔 3 秒
-        long interval = TimeUnit.SECONDS.toMillis(3);
+        long interval = TimeUnit.SECONDS.toMillis(2);
 
         File config_file = new File(path);
         List<FileAlterationObserver> observerList = Lists.newArrayList();
@@ -119,11 +132,14 @@ public class SqlKit {
                             , FileFilterUtils.and(FileFilterUtils.fileFileFilter(), FileFilterUtils.suffixFileFilter(CONFIG_SUFFIX)
                     ), null);
 
-                    observer.addListener(new SqlXmlFileListener(SQL_MAP));
+                    observer.addListener(SqlXmlFileListener.me);
                     observerList.add(observer);
 
                 }
             }
+            final FileAlterationObserver observer = new FileAlterationObserver(config_file);
+            observer.addListener(SqlXmlFileListener.me);
+            observerList.add(observer);
         }
 
         final FileAlterationObserver[] observers = observerList.toArray(new FileAlterationObserver[observerList.size()]);
