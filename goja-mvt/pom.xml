@@ -87,7 +87,6 @@
             <artifactId>morphia</artifactId>
             <version>${morphia.version}</version>
         </dependency>
-
         <!--Jobs-->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
