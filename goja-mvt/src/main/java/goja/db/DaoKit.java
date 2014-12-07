@@ -6,6 +6,7 @@
 
 package goja.db;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
@@ -32,11 +33,10 @@ import java.util.List;
  * @since JDK 1.6
  */
 public class DaoKit {
-    private static final Logger logger = LoggerFactory.getLogger(DaoKit.class);
-
     public static final String SQL_PIRFIX_WHERE   = ".where";
     public static final String SQL_PIRFIX_COLUMNS = ".column";
     public static final String SQL_PIRFIX_ORDERS  = ".order";
+    private static final Logger logger = LoggerFactory.getLogger(DaoKit.class);
 
     /**
      * 根据默认主键<code>id</code>和实体判断是否为新构成的实体。
@@ -47,6 +47,32 @@ public class DaoKit {
      */
     public static <M extends Model> boolean isNew(M m) {
         return isNew(m, StringPool.PK_COLUMN);
+    }
+
+    /**
+     * Query the database record set.
+     *
+     * @param sqlSelect Sql Select
+     * @return query result.
+     * @see goja.db.SqlSelect
+     * @see goja.db.FindBy
+     */
+    public static List<Record> findBy(SqlSelect sqlSelect) {
+        Preconditions.checkNotNull(sqlSelect, "The Query Sql is must be not null.");
+        return Db.find(sqlSelect.toString(), sqlSelect.getParams().toArray());
+    }
+
+    /**
+     * Query a data record.
+     *
+     * @param sqlSelect Sql Select
+     * @return query result.
+     * @see goja.db.SqlSelect
+     * @see goja.db.FindBy
+     */
+    public static Record findOne(SqlSelect sqlSelect) {
+        Preconditions.checkNotNull(sqlSelect, "The Query Sql is must be not null.");
+        return Db.findFirst(sqlSelect.toString(), sqlSelect.getParams().toArray());
     }
 
 

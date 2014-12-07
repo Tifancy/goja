@@ -350,9 +350,9 @@ public class Goja extends JFinalConfig {
             final Properties db_props = dbConfig.get(db_config);
             if (db_props != null && !db_props.isEmpty()) {
                 configDatabasePlugins(db_config, plugins,
-                        GojaConfig.dbUrl(),
-                        GojaConfig.dbUsername(),
-                        GojaConfig.dbPwd());
+                        db_props.getProperty("db.url"),
+                        db_props.getProperty("db.username"),
+                        db_props.getProperty("db.password"));
             }
         }
 
