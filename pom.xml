@@ -95,6 +95,7 @@
         <h2.version>1.3.175</h2.version>
         <!-- test -->
         <junit.version>4.11</junit.version>
+        <hamcrest.version>1.3</hamcrest.version>
         <!-- servlet and shiro -->
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
         <shiro.version>1.2.3</shiro.version>
@@ -115,7 +116,6 @@
         <module>goja-jfinal</module>
         <module>goja-core</module>
         <module>goja-mvt</module>
-        <module>goja-sqldsl</module>
         <module>goja-lucene</module>
         <module>goja-qrcode</module>
         <module>goja-wxchat</module>

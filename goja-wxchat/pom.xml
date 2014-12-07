@@ -29,12 +29,6 @@
     </developers>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -58,6 +52,19 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>goja-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
