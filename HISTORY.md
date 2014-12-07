@@ -1,3 +1,10 @@
+## 0.1.2 (2014-12-07)
+
+* 修复在开发模式下，自动扫描Sql配置文件自动加载无法成功运行的问题；
+* 增加SqlSelect等工具处理的方法，具体使用可见 [goja/db](https://github.com/GojaFramework/goja/tree/master/goja-mvt/src/test/java/goja/db)
+* druid 初步尝试 logFilter 的配置
+* 去掉了 `ehcache.xml` 和 `shiro.ini`的必须，合并到`application.conf`.
+
 ## 0.1.1 (2014-11-15)
 
 * 修复错误的400和500的显示问题
