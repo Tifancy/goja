@@ -36,6 +36,7 @@ public class DaoKit {
     public static final String SQL_PIRFIX_WHERE   = ".where";
     public static final String SQL_PIRFIX_COLUMNS = ".column";
     public static final String SQL_PIRFIX_ORDERS  = ".order";
+
     private static final Logger logger = LoggerFactory.getLogger(DaoKit.class);
 
     /**
