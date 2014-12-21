@@ -19,17 +19,17 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
 import goja.Goja;
+import goja.IntPool;
 import goja.Logger;
 import goja.kits.base.DateKit;
-import goja.mvc.datatables.core.DataSet;
-import goja.mvc.datatables.core.DatatablesCriterias;
-import goja.mvc.datatables.core.DatatablesResponse;
-import goja.mvc.dtos.PageDto;
 import goja.mvc.kit.Requests;
 import goja.mvc.render.BadRequest;
 import goja.mvc.render.CaptchaRender;
 import goja.mvc.render.JxlsRender;
 import goja.mvc.render.NotModified;
+import goja.rapid.datatables.core.DTCriterias;
+import goja.rapid.datatables.core.DTResponse;
+import goja.rapid.page.PageDto;
 import goja.security.goja.SecurityKit;
 import goja.security.shiro.AppUser;
 import goja.security.shiro.Securitys;
@@ -64,26 +64,6 @@ public class Controller extends com.jfinal.core.Controller {
     public static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, Object>>() {};
 
     /**
-     * Render four string verification code.
-     */
-    protected void renderCaptcha() {
-        renderCaptcha(4);
-    }
-
-    /**
-     * Render the specified digit verification code.
-     *
-     * @param randNum The length of the verification code.
-     */
-    protected void renderCaptcha(int randNum) {
-        CaptchaRender captchaRender = new CaptchaRender(randNum);
-        if (Logger.isDebugEnabled()) {
-            Logger.debug("The Captcha char is {}", captchaRender.getMd5RandonCode());
-        }
-        render(captchaRender);
-    }
-
-    /**
      * Send a 304 Not Modified response
      */
     protected static void notModified() {
@@ -105,6 +85,26 @@ public class Controller extends com.jfinal.core.Controller {
      */
     protected static void renderExcel(String templateFile, Map<String, Object> datas) {
         (new JxlsRender(templateFile).beans(datas)).render();
+    }
+
+    /**
+     * Render four string verification code.
+     */
+    protected void renderCaptcha() {
+        renderCaptcha(4);
+    }
+
+    /**
+     * Render the specified digit verification code.
+     *
+     * @param randNum The length of the verification code.
+     */
+    protected void renderCaptcha(int randNum) {
+        CaptchaRender captchaRender = new CaptchaRender(randNum);
+        if (Logger.isDebugEnabled()) {
+            Logger.debug("The Captcha char is {}", captchaRender.getMd5RandonCode());
+        }
+        render(captchaRender);
     }
 
     @Override
@@ -381,8 +381,8 @@ public class Controller extends com.jfinal.core.Controller {
      *
      * @return jquery DataTables参数信息
      */
-    protected DatatablesCriterias getCriterias() {
-        return DatatablesCriterias.criteriasWithRequest(getRequest());
+    protected DTCriterias getCriterias() {
+        return DTCriterias.criteriasWithRequest(getRequest());
     }
 
     /**
@@ -392,10 +392,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param criterias datatable criterias.
      * @param <E>       Generic parameter.
      */
-    protected <E> void renderDataTables(Page<E> datas, DatatablesCriterias criterias) {
+    protected <E> void renderDataTables(Page<E> datas, DTCriterias criterias) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
-        DataSet<E> dataSet = DataSet.newSet(datas.getList(), datas.getTotalRow(), datas.getTotalRow());
-        DatatablesResponse<E> response = DatatablesResponse.build(dataSet, criterias);
+        DTResponse<E> response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
         renderJson(response);
     }
 
@@ -404,16 +403,11 @@ public class Controller extends com.jfinal.core.Controller {
      *
      * @param criterias datatable criterias.
      */
-    protected void renderEmptyDataTables(DatatablesCriterias criterias) {
+    protected void renderEmptyDataTables(DTCriterias criterias) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
-        DatatablesResponse response = DatatablesResponse.build(EMPTY_DATASET, criterias);
+        DTResponse response = DTResponse.build(criterias, Collections.EMPTY_LIST, IntPool.ZERO, IntPool.ZERO);
         renderJson(response);
     }
-
-    /**
-     * Empty data set.
-     */
-    private static final DataSet EMPTY_DATASET = DataSet.newSet(Collections.EMPTY_LIST, 0l, 0l);
 
     /**
      * Converting the JSON data Modal.

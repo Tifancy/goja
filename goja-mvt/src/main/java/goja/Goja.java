@@ -6,7 +6,6 @@
 
 package goja;
 
-import com.alibaba.druid.filter.logging.Log4jFilter;
 import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.util.JdbcConstants;
@@ -36,21 +35,21 @@ import goja.annotation.PluginBind;
 import goja.cache.Cache;
 import goja.cache.EhCacheImpl;
 import goja.exceptions.DatabaseException;
-import goja.init.AppLoadEvent;
-import goja.init.ctxbox.ClassBox;
-import goja.init.ctxbox.ClassType;
+import goja.initialize.AppLoadEvent;
+import goja.initialize.ctxbox.ClassBox;
+import goja.initialize.ctxbox.ClassType;
 import goja.job.JobsPlugin;
-import goja.mvc.init.AutoBindRoutes;
+import goja.mvc.auto.AutoBindRoutes;
 import goja.mvc.error.GojaErrorRenderFactory;
-import goja.mvc.init.AutoOnLoadInterceptor;
-import goja.mvc.interceptor.syslog.LogProcessor;
-import goja.mvc.interceptor.syslog.SysLogInterceptor;
+import goja.mvc.auto.AutoOnLoadInterceptor;
 import goja.mvc.render.ftl.PrettyTimeDirective;
 import goja.mvc.render.ftl.layout.BlockDirective;
 import goja.mvc.render.ftl.layout.ExtendsDirective;
 import goja.mvc.render.ftl.layout.OverrideDirective;
 import goja.mvc.render.ftl.layout.SuperDirective;
 import goja.mvc.render.ftl.shiro.ShiroTags;
+import goja.rapid.syslog.LogProcessor;
+import goja.rapid.syslog.SysLogInterceptor;
 import goja.security.shiro.SecurityUserData;
 import goja.plugins.index.IndexPlugin;
 import goja.plugins.monogo.MongoPlugin;

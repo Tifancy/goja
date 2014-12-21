@@ -114,10 +114,11 @@
     <modules>
         <module>goja-jfinal</module>
         <module>goja-core</module>
-        <module>goja-mvt</module>
         <module>goja-lucene</module>
         <module>goja-qrcode</module>
         <module>goja-wxchat</module>
+        <module>goja-rapid</module>
+        <module>goja-mvt</module>
         <module>goja-test</module>
     </modules>
 
