@@ -41,12 +41,6 @@ public class Castors {
         return one;
     }
 
-    /**
-     * @return 一个新的 Castors 实例
-     */
-    public static Castors create() {
-        return new Castors();
-    }
 
     /**
      * 如何抽取对象的类型级别
