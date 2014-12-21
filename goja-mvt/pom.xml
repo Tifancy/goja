@@ -30,6 +30,11 @@
         </dependency>
         <dependency>
             <groupId>com.github.sogyf</groupId>
+            <artifactId>goja-rapid</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.sogyf</groupId>
             <artifactId>goja-lucene</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>

@@ -9,8 +9,8 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import goja.annotation.TableBind;
-import goja.init.ctxbox.ClassBox;
-import goja.init.ctxbox.ClassType;
+import goja.initialize.ctxbox.ClassBox;
+import goja.initialize.ctxbox.ClassType;
 
 import java.util.List;
 

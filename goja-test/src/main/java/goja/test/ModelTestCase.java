@@ -18,7 +18,7 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import goja.Goja;
 import goja.GojaConfig;
 import goja.exceptions.DatabaseException;
-import goja.init.ctxbox.ClassFinder;
+import goja.initialize.ctxbox.ClassFinder;
 import goja.kits.reflect.Reflect;
 import goja.plugins.sqlinxml.SqlKit;
 import goja.plugins.tablebind.AutoTableBindPlugin;
