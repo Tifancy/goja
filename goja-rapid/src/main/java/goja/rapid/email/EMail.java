@@ -4,9 +4,9 @@
  * Copyright (c) 2013-2014 sagyf Yang. The Four Group.
  */
 
-package goja.mvc;
+package goja.rapid.email;
 
-import goja.Goja;
+import goja.GojaConfig;
 import goja.StringPool;
 import goja.exceptions.MailException;
 import org.apache.commons.lang3.StringUtils;
@@ -41,14 +41,14 @@ import java.util.concurrent.TimeoutException;
 /**
  * Mail utils
  */
-public class Mail {
+public class EMail {
 
-    private static final Logger logger = LoggerFactory.getLogger(Mail.class);
+    private static final Logger logger = LoggerFactory.getLogger(EMail.class);
     public static Session session;
     public static boolean         asynchronousSend = true;
     public static ExecutorService executor = Executors.newCachedThreadPool();
 
-    private Mail() {
+    private EMail() {
     }
 
     /**
@@ -58,7 +58,7 @@ public class Mail {
         try {
             email = buildMessage(email);
 
-            if (Goja.configuration.getProperty("mail.smtp", StringPool.EMPTY).equals("mock") && Goja.mode == Goja.Mode.DEV) {
+            if (GojaConfig.getProperty("mail.smtp", StringPool.EMPTY).equals("mock") && GojaConfig.isDev()) {
                 Mock.send(email);
                 return new Future<Boolean>() {
                     @Override
@@ -100,7 +100,7 @@ public class Mail {
      */
     public static Email buildMessage(Email email) throws EmailException {
 
-        String from = Goja.configuration.getProperty("mail.smtp.from");
+        String from = GojaConfig.getProperty("mail.smtp.from");
         if (email.getFromAddress() == null && !StringUtils.isEmpty(from)) {
             email.setFrom(from);
         } else if (email.getFromAddress() == null) {
@@ -125,14 +125,14 @@ public class Mail {
         if (session == null) {
             Properties props = new Properties();
             // Put a bogus value even if we are on dev mode, otherwise JavaMail will complain
-            props.put("mail.smtp.host", Goja.configuration.getProperty("mail.smtp.host", "localhost"));
+            props.put("mail.smtp.host", GojaConfig.getProperty("mail.smtp.host", "localhost"));
 
             String channelEncryption;
-            if (Goja.configuration.containsKey("mail.smtp.protocol") && Goja.configuration.getProperty("mail.smtp.protocol", "smtp").equals("smtps")) {
+            if (GojaConfig.containsKey("mail.smtp.protocol") && GojaConfig.getProperty("mail.smtp.protocol", "smtp").equals("smtps")) {
                 // Backward compatibility before stable5
                 channelEncryption = "starttls";
             } else {
-                channelEncryption = Goja.configuration.getProperty("mail.smtp.channel", "clear");
+                channelEncryption = GojaConfig.getProperty("mail.smtp.channel", "clear");
             }
 
             if (channelEncryption.equals("clear")) {
@@ -151,20 +151,20 @@ public class Mail {
                 // story to be continued in javamail 1.4.2 : https://glassfish.dev.java.net/issues/show_bug.cgi?id=5189
             }
 
-            if (Goja.configuration.containsKey("mail.smtp.localhost")) {
-                props.put("mail.smtp.localhost", Goja.configuration.get("mail.smtp.localhost"));            //override defaults
+            if (GojaConfig.containsKey("mail.smtp.localhost")) {
+                props.put("mail.smtp.localhost", GojaConfig.get("mail.smtp.localhost"));            //override defaults
             }
-            if (Goja.configuration.containsKey("mail.smtp.socketFactory.class")) {
-                props.put("mail.smtp.socketFactory.class", Goja.configuration.get("mail.smtp.socketFactory.class"));
+            if (GojaConfig.containsKey("mail.smtp.socketFactory.class")) {
+                props.put("mail.smtp.socketFactory.class", GojaConfig.get("mail.smtp.socketFactory.class"));
             }
-            if (Goja.configuration.containsKey("mail.smtp.port")) {
-                props.put("mail.smtp.port", Goja.configuration.get("mail.smtp.port"));
+            if (GojaConfig.containsKey("mail.smtp.port")) {
+                props.put("mail.smtp.port", GojaConfig.get("mail.smtp.port"));
             }
-            String user = Goja.configuration.getProperty("mail.smtp.user");
-            String password = Goja.configuration.getProperty("mail.smtp.pass");
+            String user = GojaConfig.getProperty("mail.smtp.user");
+            String password = GojaConfig.getProperty("mail.smtp.pass");
             if (password == null) {
                 // Fallback to old convention
-                password = Goja.configuration.getProperty("mail.smtp.password");
+                password = GojaConfig.getProperty("mail.smtp.password");
             }
             session = null;
 
@@ -178,7 +178,7 @@ public class Mail {
             }
 
 
-            if (Boolean.parseBoolean(Goja.configuration.getProperty("mail.debug", "false"))) {
+            if (Boolean.parseBoolean(GojaConfig.getProperty("mail.debug", "false"))) {
                 session.setDebug(true);
             }
         }

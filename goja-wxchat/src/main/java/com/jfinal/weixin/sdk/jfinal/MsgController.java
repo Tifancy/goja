@@ -10,6 +10,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.NotAction;
 import com.jfinal.weixin.sdk.api.ApiConfig;
+import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import com.jfinal.kit.HttpKit;
 import com.jfinal.weixin.sdk.kit.MsgEncryptKit;
 import com.jfinal.weixin.sdk.msg.InMsgParaser;
@@ -25,6 +26,7 @@ import com.jfinal.weixin.sdk.msg.in.event.InFollowEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
 import com.jfinal.weixin.sdk.msg.in.speech_recognition.InSpeechRecognitionResults;
 import com.jfinal.weixin.sdk.msg.out.OutMsg;
 import com.jfinal.weixin.sdk.msg.out.OutTextMsg;
@@ -34,65 +36,69 @@ import org.slf4j.LoggerFactory;
 /**
  * 接收微信服务器消息，自动解析成 InMsg 并分发到相应的处理方法
  */
-public abstract class WeixinController extends Controller {
-	
-	private static final Logger log =  LoggerFactory.getLogger(WeixinController.class);
-	private String inMsgXml = null;		// 本次请求 xml数据
-	private InMsg inMsg = null;			// 本次请求 xml 解析后的 InMsg 对象
-	
-	/**
-	 * weixin 公众号服务器调用唯一入口，即在开发者中心输入的 URL 必须要指向此 action
-	 */
-	@Before(WeixinInterceptor.class)
-	public void index() {
-		// 开发模式输出微信服务发送过来的  xml 消息
-		if (ApiConfig.isDevMode()) {
-			System.out.println("接收消息:");
-			System.out.println(getInMsgXml());
-		}
-		
-		// 解析消息并根据消息类型分发到相应的处理方法
-		InMsg msg = getInMsg();
-		if (msg instanceof InTextMsg)
-			processInTextMsg((InTextMsg)msg);
-		else if (msg instanceof InImageMsg)
-			processInImageMsg((InImageMsg)msg);
-		else if (msg instanceof InVoiceMsg)
-			processInVoiceMsg((InVoiceMsg)msg);
-		else if (msg instanceof InVideoMsg)
-			processInVideoMsg((InVideoMsg)msg);
-		else if (msg instanceof InLocationMsg)
-			processInLocationMsg((InLocationMsg)msg);
-		else if (msg instanceof InLinkMsg)
-			processInLinkMsg((InLinkMsg)msg);
-		else if (msg instanceof InFollowEvent)
-			processInFollowEvent((InFollowEvent)msg);
-		else if (msg instanceof InQrCodeEvent)
-			processInQrCodeEvent((InQrCodeEvent)msg);
-		else if (msg instanceof InLocationEvent)
-			processInLocationEvent((InLocationEvent)msg);
-		else if (msg instanceof InMenuEvent)
-			processInMenuEvent((InMenuEvent)msg);
-		else if (msg instanceof InSpeechRecognitionResults)
-			processInSpeechRecognitionResults((InSpeechRecognitionResults)msg);
-		else
-			log.error("未能识别的消息类型。 消息 xml 内容为：\n" + getInMsgXml());
-	}
-	
-	/**
-	 * 在接收到微信服务器的 InMsg 消息后后响应 OutMsg 消息
+public abstract class MsgController extends Controller {
+
+    private static final Logger log      = LoggerFactory.getLogger(MsgController.class);
+    private              String inMsgXml = null;        // 本次请求 xml数据
+    private              InMsg  inMsg    = null;            // 本次请求 xml 解析后的 InMsg 对象
+
+    public abstract ApiConfig getApiConfig();
+
+    /**
+     * weixin 公众号服务器调用唯一入口，即在开发者中心输入的 URL 必须要指向此 action
+     */
+    @Before(MsgInterceptor.class)
+    public void index() {
+        // 开发模式输出微信服务发送过来的  xml 消息
+        if (ApiConfigKit.isDevMode()) {
+            System.out.println("接收消息:");
+            System.out.println(getInMsgXml());
+        }
+
+        // 解析消息并根据消息类型分发到相应的处理方法
+        InMsg msg = getInMsg();
+        if (msg instanceof InTextMsg)
+            processInTextMsg((InTextMsg) msg);
+        else if (msg instanceof InImageMsg)
+            processInImageMsg((InImageMsg) msg);
+        else if (msg instanceof InVoiceMsg)
+            processInVoiceMsg((InVoiceMsg) msg);
+        else if (msg instanceof InVideoMsg)
+            processInVideoMsg((InVideoMsg) msg);
+        else if (msg instanceof InLocationMsg)
+            processInLocationMsg((InLocationMsg) msg);
+        else if (msg instanceof InLinkMsg)
+            processInLinkMsg((InLinkMsg) msg);
+        else if (msg instanceof InFollowEvent)
+            processInFollowEvent((InFollowEvent) msg);
+        else if (msg instanceof InQrCodeEvent)
+            processInQrCodeEvent((InQrCodeEvent) msg);
+        else if (msg instanceof InLocationEvent)
+            processInLocationEvent((InLocationEvent) msg);
+        else if (msg instanceof InMenuEvent)
+            processInMenuEvent((InMenuEvent) msg);
+        else if (msg instanceof InSpeechRecognitionResults)
+            processInSpeechRecognitionResults((InSpeechRecognitionResults) msg);
+        else if (msg instanceof InTemplateMsgEvent)
+            processInTemplateMsgEvent((InTemplateMsgEvent) msg);
+        else
+            log.error("未能识别的消息类型。 消息 xml 内容为：\n" + getInMsgXml());
+    }
+
+    /**
+     * 在接收到微信服务器的 InMsg 消息后后响应 OutMsg 消息
 	 */
 	public void render(OutMsg outMsg) {
 		String outMsgXml = OutMsgXmlBuilder.build(outMsg);
 		// 开发模式向控制台输出即将发送的 OutMsg 消息的 xml 内容
-		if (ApiConfig.isDevMode()) {
+		if (ApiConfigKit.isDevMode()) {
 			System.out.println("发送消息:");
 			System.out.println(outMsgXml);
 			System.out.println("--------------------------------------------------------------------------------\n");
 		}
 		
 		// 是否需要加密消息
-		if (ApiConfig.isEncryptMessage()) {
+		if (ApiConfigKit.getApiConfig().isEncryptMessage()) {
 			outMsgXml = MsgEncryptKit.encrypt(outMsgXml, getPara("timestamp"), getPara("nonce"));
 		}
 		
@@ -111,7 +117,7 @@ public abstract class WeixinController extends Controller {
 			inMsgXml = HttpKit.readIncommingRequestData(getRequest());
 			
 			// 是否需要解密消息
-			if (ApiConfig.isEncryptMessage()) {
+			if (ApiConfigKit.getApiConfig().isEncryptMessage()) {
 				inMsgXml = MsgEncryptKit.decrypt(inMsgXml, getPara("timestamp"), getPara("nonce"), getPara("msg_signature"));
 			}
 		}
@@ -157,6 +163,9 @@ public abstract class WeixinController extends Controller {
 	
 	// 处理接收到的语音识别结果
 	protected abstract void processInSpeechRecognitionResults(InSpeechRecognitionResults inSpeechRecognitionResults);
+	
+	// 处理接收到的模板消息是否送达成功通知事件
+	protected abstract void processInTemplateMsgEvent(InTemplateMsgEvent inTemplateMsgEvent);
 }
 
 

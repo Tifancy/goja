@@ -22,6 +22,8 @@ import com.jfinal.weixin.sdk.msg.in.event.InFollowEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
+import com.jfinal.weixin.sdk.msg.in.speech_recognition.InSpeechRecognitionResults;
 
 public class InMsgParaser {
 	
@@ -60,7 +62,7 @@ public class InMsgParaser {
         if ("image".equals(msgType))
         	return parseInImageMsg(root, toUserName, fromUserName, createTime, msgType);
         if ("voice".equals(msgType))
-        	return parseInVoiceMsg(root, toUserName, fromUserName, createTime, msgType);
+        	return parseInVoiceMsgAndInSpeechRecognitionResults(root, toUserName, fromUserName, createTime, msgType);
         if ("video".equals(msgType))
         	return parseInVideoMsg(root, toUserName, fromUserName, createTime, msgType);
         if ("location".equals(msgType))
@@ -87,12 +89,23 @@ public class InMsgParaser {
 		return msg;
 	}
 	
-	private static InMsg parseInVoiceMsg(Element root, String toUserName, String fromUserName, Integer createTime, String msgType) {
-		InVoiceMsg msg = new InVoiceMsg(toUserName, fromUserName, createTime, msgType);
-		msg.setMediaId(root.elementText("MediaId"));
-		msg.setFormat(root.elementText("Format"));
-		msg.setMsgId(root.elementText("MsgId"));
-		return msg;
+	private static InMsg parseInVoiceMsgAndInSpeechRecognitionResults(Element root, String toUserName, String fromUserName, Integer createTime, String msgType) {
+		String recognition = root.elementText("Recognition");
+		if (StrKit.isBlank(recognition)) {
+			InVoiceMsg msg = new InVoiceMsg(toUserName, fromUserName, createTime, msgType);
+			msg.setMediaId(root.elementText("MediaId"));
+			msg.setFormat(root.elementText("Format"));
+			msg.setMsgId(root.elementText("MsgId"));
+			return msg;
+		}
+		else {
+			InSpeechRecognitionResults msg = new InSpeechRecognitionResults(toUserName, fromUserName, createTime, msgType);
+			msg.setMediaId(root.elementText("MediaId"));
+			msg.setFormat(root.elementText("Format"));
+			msg.setMsgId(root.elementText("MsgId"));
+			msg.setRecognition(recognition);			// 与 InVoiceMsg 唯一的不同之处
+			return msg;
+		}
 	}
 	
 	private static InMsg parseInVideoMsg(Element root, String toUserName, String fromUserName, Integer createTime, String msgType) {
@@ -176,9 +189,51 @@ public class InMsgParaser {
 			e.setEventKey(eventKey);
 			return e;
 		}
+		// 模板消息是否送达成功通知事件
+		if ("TEMPLATESENDJOBFINISH".equals(event)) {
+			InTemplateMsgEvent e = new InTemplateMsgEvent(toUserName, fromUserName, createTime, msgType);
+			e.setEvent(event);
+			e.setMsgId(root.elementText("MsgID"));
+			e.setStatus(root.elementText("Status"));
+			return e;
+		}
 		
 		throw new RuntimeException("无法识别的事件类型，请查阅微信公众平台开发文档");
 	}
+//
+//	@SuppressWarnings("unused")
+//	public static void main(String[] args) throws DocumentException {
+//		String xml =
+//			"<xml>\n" +
+//				"<ToUserName><![CDATA[James]]></ToUserName>\n" +
+//				"<FromUserName><![CDATA[JFinal]]></FromUserName>\n" +
+//				"<CreateTime>1348831860</CreateTime>\n" +
+//				"<MsgType><![CDATA[text]]></MsgType>\n" +
+//					"<Content><![CDATA[this is a test]]></Content>\n" +
+//					"<MsgId>1234567890123456</MsgId>\n" +
+//			"</xml>";
+//
+////		InTextMsg msg = (InTextMsg)parse(xml);
+////		System.out.println(msg.getToUserName());
+////		System.out.println(msg.getFromUserName());
+////		System.out.println(msg.getContent());
+//
+//
+//		String xml_2 =
+//				"<xml>\n" +
+//					"<ToUserName><![CDATA[James]]></ToUserName>\n" +
+//					"<FromUserName><![CDATA[JFinal]]></FromUserName>\n" +
+//					"<CreateTime>1348831860</CreateTime>\n" +
+//					"<MsgType><![CDATA[text]]></MsgType>\n" +
+//						"<Content><![CDATA[this is a test]]></Content>\n" +
+//						"<MsgId>1234567890123456</MsgId>\n" +
+//				"</xml>";
+//
+//		Document doc = DocumentHelper.parseText(xml_2);
+//        Element root = doc.getRootElement();
+//        String value = root.elementText("abc");
+//        System.out.println(value);
+//	}
 }
 
 
