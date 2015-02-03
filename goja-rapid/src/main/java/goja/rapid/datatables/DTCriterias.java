@@ -1,4 +1,4 @@
-package goja.rapid.datatables.core;
+package goja.rapid.datatables;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -8,8 +8,6 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import goja.IntPool;
-import goja.rapid.datatables.DTConstants;
-import goja.rapid.datatables.DTDao;
 import goja.tuples.Pair;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +26,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since JDK 1.6
  */
-public class DTCriterias implements Serializable {
+public final class DTCriterias implements Serializable {
     private static final long    serialVersionUID = -4728223524642774477L;
     /**
      * 匹配中括号的正则

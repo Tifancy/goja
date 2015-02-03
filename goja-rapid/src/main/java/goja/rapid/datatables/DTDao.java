@@ -11,9 +11,6 @@ import goja.StringPool;
 import goja.db.DaoKit;
 import goja.lang.Lang;
 import goja.plugins.sqlinxml.SqlKit;
-import goja.rapid.datatables.core.DTColumn;
-import goja.rapid.datatables.core.DTCriterias;
-import goja.rapid.datatables.core.DTOrder;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ import java.util.List;
  * @version 1.0
  * @since JDK 1.6
  */
-public class DTDao {
+final class DTDao {
 
 
     /**
@@ -62,7 +59,7 @@ public class DTDao {
      */
     public static Page<Record> paginate(String where, String sql_columns, DTCriterias criterias, String default_order, List<Object> params) {
         int pageSize = criterias.getLength();
-        int start = criterias.getStart() ;
+        int start = criterias.getStart()/ pageSize + 1;
         final List<DTOrder> order = criterias.getOrder();
         if (order != null && !order.isEmpty()) {
             StringBuilder orderBy = new StringBuilder();
@@ -94,7 +91,7 @@ public class DTDao {
      */
     public static Page<Record> paginate(Class<? extends Model> model, DTCriterias criterias, List<Object> params) {
         int pageSize = criterias.getLength();
-        int start = criterias.getStart();
+        int start = criterias.getStart()/ pageSize + 1;
 
         final Table table = TableMapping.me().getTable(model);
         final String tableName = table.getName();
