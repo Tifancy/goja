@@ -79,7 +79,6 @@ import java.util.Properties;
  */
 public class Goja extends JFinalConfig {
 
-    public static final String FTL_HTML_PREFIX = ".ftl.html";
     public static final String VERSION = "v0.1";
     /**
      * The list of supported locales
@@ -176,7 +175,6 @@ public class Goja extends JFinalConfig {
         if (!StrKit.isBlank(view_type)) {
             setViewType(constants, view_type);
         } else {
-            constants.setFreeMarkerViewExtension(FTL_HTML_PREFIX);
             setFtlSharedVariable();
         }
         constants.setErrorRenderFactory(new GojaErrorRenderFactory());
@@ -447,7 +445,6 @@ public class Goja extends JFinalConfig {
     private void setViewType(Constants constants, String view_type) {
         final ViewType viewType = ViewType.valueOf(view_type.toUpperCase());
         if (viewType == ViewType.FREE_MARKER) {
-            constants.setFreeMarkerViewExtension(FTL_HTML_PREFIX);
             setFtlSharedVariable();
         }
         constants.setViewType(viewType);
