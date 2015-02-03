@@ -29,6 +29,7 @@ import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.render.FreeMarkerRender;
 import com.jfinal.render.ViewType;
 import com.jfinal.weixin.sdk.api.ApiConfig;
+import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import freemarker.template.Configuration;
 import goja.annotation.HandlerBind;
 import goja.annotation.PluginBind;
@@ -143,18 +144,7 @@ public class Goja extends JFinalConfig {
         final String wx_url = GojaConfig.getProperty("wx.url");
         if (!Strings.isNullOrEmpty(wx_url)) {
             // Config Wx Api
-            ApiConfig.setDevMode(mode.isDev());
-            ApiConfig.setUrl(wx_url);
-            ApiConfig.setToken(GojaConfig.getProperty("wx.token"));
-            ApiConfig.setAppId(GojaConfig.getProperty("wx.appid"));
-            ApiConfig.setAppSecret(GojaConfig.getProperty("wx.secret"));
-            /**
-             *  是否对消息进行加密，对应于微信平台的消息加解密方式：
-             *  1：true进行加密且必须配置 encodingAesKey
-             *  2：false采用明文模式，同时也支持混合模式
-             */
-            ApiConfig.setEncryptMessage(GojaConfig.getPropertyToBoolean("wx.encryptMessage", false));
-            ApiConfig.setEncodingAesKey(GojaConfig.getProperty("wx.encodingAesKey", "setting it in config file"));
+            ApiConfigKit.setDevMode(mode.isDev());
         }
 
         if (GojaConfig.enable_security()) {

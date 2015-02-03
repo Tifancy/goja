@@ -16,12 +16,14 @@ import com.jfinal.weixin.sdk.msg.in.event.InFollowEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
 import com.jfinal.weixin.sdk.msg.in.speech_recognition.InSpeechRecognitionResults;
 
 /**
- * WeixinControllerAdapter
+ * MsgControllerAdapter 对 MsgController 部分方法提供了默认实现，
+ * 以便开发者不去关注 MsgController 中不需要处理的抽象方法，节省代码量
  */
-public abstract class WeixinControllerAdapter extends WeixinController {
+public abstract class MsgControllerAdapter extends MsgController {
 	
 	protected abstract void processInFollowEvent(InFollowEvent inFollowEvent);
 	
@@ -60,6 +62,8 @@ public abstract class WeixinControllerAdapter extends WeixinController {
 	protected void processInSpeechRecognitionResults(InSpeechRecognitionResults inSpeechRecognitionResults) {
 		
 	}
+	
+	protected void processInTemplateMsgEvent(InTemplateMsgEvent inTemplateMsgEvent) {
+		
+	}
 }
-
-
