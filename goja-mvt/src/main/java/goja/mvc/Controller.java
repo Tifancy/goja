@@ -392,9 +392,34 @@ public class Controller extends com.jfinal.core.Controller {
      * @param criterias datatable criterias.
      * @param <E>       Generic parameter.
      */
-    protected <E> void renderDataTables(Page<E> datas, DTCriterias criterias) {
+    protected <E> void renderDataTables(DTCriterias criterias, Page<E> datas) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
         DTResponse<E> response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
+        renderJson(response);
+    }
+
+
+    /**
+     * The source of data for rendering the jQuery Datatables
+     *
+     * @param m_cls     The Model class.
+     * @param criterias datatable criterias.
+     */
+    protected void renderDataTables(DTCriterias criterias, Class<? extends Model> m_cls) {
+        Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
+        DTResponse response = criterias.response(m_cls);
+        renderJson(response);
+    }
+
+    /**
+     * The source of data for rendering the jQuery Datatables
+     *
+     * @param m_cls The Model class.
+     */
+    protected void renderDataTables(Class<? extends Model> m_cls) {
+        DTCriterias criterias = getCriterias();
+        Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
+        DTResponse response = criterias.response(m_cls);
         renderJson(response);
     }
 

@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import goja.GojaConfig;
 import goja.StringPool;
-import goja.db.DaoKit;
+import goja.rapid.db.DaoKit;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Enumeration;
