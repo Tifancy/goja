@@ -8,6 +8,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import goja.IntPool;
+import goja.rapid.db.DaoKit;
 import goja.tuples.Pair;
 import goja.tuples.Triplet;
 import org.apache.commons.lang3.BooleanUtils;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 public final class DTCriterias implements Serializable {
     private static final long    serialVersionUID = -4728223524642774477L;
     /**
-     * 匹配中括号的正则
+     * Matches the regular brackets
      */
     private static final Pattern BRACKETS_PATTERN = Pattern.compile("\\[(.*?)\\]");
 
@@ -176,38 +177,29 @@ public final class DTCriterias implements Serializable {
     public DTResponse response(String model_name) {
 
         Preconditions.checkNotNull(this, "datatable criterias is must be not null.");
-        final Page<Record> datas = DTDao.paginate(model_name, this);
+        final Page<Record> datas = DaoKit.paginate(model_name, this);
         return DTResponse.build(this, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
     }
 
     /**
-     * 支持对单个实体与Datatables插件的整合。
+     * Support for a single entity with the integration of Datatables plugin。
      *
-     * @param model 实体类
-     * @return 响应结果
+     * @param model The DB model.
+     * @return response.
      */
     public DTResponse response(Class<? extends Model> model) {
-        return response(model, null);
-    }
 
-    /**
-     * 对某个实体模型进行数据查询，并处理参数.
-     *
-     * @param model  实体类
-     * @param params 参数
-     * @return Datatables响应结果
-     */
-    public DTResponse response(Class<? extends Model> model, List<Object> params) {
 
         Preconditions.checkNotNull(this, "datatable criterias is must be not null.");
-        final Page<Record> datas = DTDao.paginate(model, this, params);
+        final Page<Record> datas = DTDao.paginate(model, this);
         return DTResponse.build(this, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
     }
+
 
     public DTResponse response(String model_name, List<Object> params) {
 
         Preconditions.checkNotNull(this, "datatable criterias is must be not null.");
-        final Page<Record> datas = DTDao.paginate(model_name, this, params);
+        final Page<Record> datas = DaoKit.paginate(model_name, this, params);
         return DTResponse.build(this, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
     }
 
