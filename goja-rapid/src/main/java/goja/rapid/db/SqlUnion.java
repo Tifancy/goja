@@ -1,4 +1,4 @@
-package goja.db;
+package goja.rapid.db;
 
 import static goja.StringPool.EMPTY;
 import static goja.StringPool.LEFT_BRACKET;
@@ -12,20 +12,20 @@ import static goja.StringPool.RIGHT_BRACKET;
  * @since JDK 1.6
  */
 public class SqlUnion extends SqlQuery {
-    private final Concat union;
-    private final Concat orderBy;
-    private final Concat limit;
+    private final SqlConcat union;
+    private final SqlConcat orderBy;
+    private final SqlConcat limit;
 
     public SqlUnion() {
-        union = new Concat(EMPTY, null);
-        orderBy = new Concat("ORDER BY ", ", ").defaultValue(null);
-        limit = new Concat("LIMIT ", null);
+        union = new SqlConcat(EMPTY, null);
+        orderBy = new SqlConcat("ORDER BY ", ", ").defaultValue(null);
+        limit = new SqlConcat("LIMIT ", null);
     }
 
     public SqlUnion(SqlUnion src) {
-        union = new Concat(src.union);
-        orderBy = new Concat(src.orderBy);
-        limit = new Concat(src.limit);
+        union = new SqlConcat(src.union);
+        orderBy = new SqlConcat(src.orderBy);
+        limit = new SqlConcat(src.limit);
 
         params.addAll(src.getParams());
     }
@@ -50,7 +50,7 @@ public class SqlUnion extends SqlQuery {
 
     @Override
     public String toString() {
-        return union.isEmpty() ? EMPTY : new Concat(EMPTY, " ").defaultValue(null)
+        return union.isEmpty() ? EMPTY : new SqlConcat(EMPTY, " ").defaultValue(null)
                 .append(union)
                 .append(orderBy)
                 .append(limit)

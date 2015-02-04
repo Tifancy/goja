@@ -1,21 +1,23 @@
 package goja.rapid.datatables;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
-import goja.StringPool;
-import goja.db.DaoKit;
 import goja.lang.Lang;
-import goja.plugins.sqlinxml.SqlKit;
+import goja.tuples.Triplet;
 
 import java.util.List;
 
+import static goja.StringPool.COMMA;
+import static goja.StringPool.SPACE;
+
 /**
- * <p> </p>
+ * <p> Jquery datatables database query retrieval </p>
  *
  * @author sogYF
  * @version 1.0
@@ -24,62 +26,6 @@ import java.util.List;
 final class DTDao {
 
 
-    /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
-     *
-     * @param model_name sql conf 中的 sqlGroup 的name
-     * @param criterias  请求参数
-     * @return 分页数据
-     */
-    public static Page<Record> paginate(String model_name, DTCriterias criterias) {
-        return paginate(model_name, criterias, null);
-    }
-
-    /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
-     *
-     * @param model_name sql conf 中的 sqlGroup 的name
-     * @param criterias  请求参数
-     * @return 分页数据
-     */
-    public static Page<Record> paginate(String model_name, DTCriterias criterias, List<Object> params) {
-        return paginate(SqlKit.sql(model_name + DaoKit.SQL_PIRFIX_WHERE)
-                , SqlKit.sql(model_name + DaoKit.SQL_PIRFIX_COLUMNS)
-                , criterias, SqlKit.sql(model_name + DaoKit.SQL_PIRFIX_ORDERS), params);
-    }
-
-    /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
-     *
-     * @param where         FROM WHERE 语句.
-     * @param sql_columns   SELECT column sql 语句
-     * @param criterias     请求参数
-     * @param default_order 默认的排序字段，类似：ORDER BY id DESC
-     * @return 分页数据
-     */
-    public static Page<Record> paginate(String where, String sql_columns, DTCriterias criterias, String default_order, List<Object> params) {
-        int pageSize = criterias.getLength();
-        int start = criterias.getStart()/ pageSize + 1;
-        final List<DTOrder> order = criterias.getOrder();
-        if (order != null && !order.isEmpty()) {
-            StringBuilder orderBy = new StringBuilder();
-            for (DTOrder _order : order)
-                orderBy.append(_order.getColumn()).append(StringPool.SPACE).append(_order.getDir());
-            final String byColumns = orderBy.toString();
-            if (!Strings.isNullOrEmpty(byColumns)) {
-                where += " ORDER BY " + byColumns;
-            }
-        }
-        if (!where.contains("ORDER")) {
-            where += (StringPool.SPACE + default_order);
-        }
-        if (params == null || params.size() == 0) {
-            return Db.paginate(start, pageSize, sql_columns, where);
-        } else {
-
-            return Db.paginate(start, pageSize, sql_columns, where, params.toArray());
-        }
-    }
 
 
     /**
@@ -89,13 +35,12 @@ final class DTDao {
      * @param criterias 请求参数
      * @return 分页数据
      */
-    public static Page<Record> paginate(Class<? extends Model> model, DTCriterias criterias, List<Object> params) {
+    public static Page<Record> paginate(Class<? extends Model> model, DTCriterias criterias) {
         int pageSize = criterias.getLength();
         int start = criterias.getStart()/ pageSize + 1;
 
         final Table table = TableMapping.me().getTable(model);
         final String tableName = table.getName();
-        String where = " FROM " + tableName + StringPool.SPACE;
 
         final List<DTColumn> columns = criterias.getColumns();
 
@@ -106,7 +51,7 @@ final class DTDao {
             for (DTColumn column : columns) {
                 if (column != null) {
                     if (first) {
-                        sql_builder.append(StringPool.COMMA).append(StringPool.SPACE).append(column.getData());
+                        sql_builder.append(COMMA).append(SPACE).append(column.getData());
                     } else {
                         sql_builder.append(column.getData());
                         first = true;
@@ -116,21 +61,35 @@ final class DTDao {
             sql_columns = sql_builder.toString();
         }
 
+        StringBuilder where = new StringBuilder(" FROM ");
+        where.append(tableName).append(SPACE);
+
+//        final DTSearch search = criterias.getSearch();
+
+        final List<Triplet<String, Condition, Object>> custom_params = criterias.getParams();
+        final List<Object> params = Lists.newArrayList();
+        if (!custom_params.isEmpty()) {
+            for (Triplet<String, Condition, Object> custom_param : custom_params) {
+                where.append(custom_param.getValue0());
+                where.append(SPACE);
+                where.append(custom_param.getValue1().condition);
+                where.append(" ? ");
+                params.add(custom_param.getValue2());
+            }
+        }
+
+
         final List<DTOrder> order = criterias.getOrder();
         if (!Lang.isEmpty(order)) {
             StringBuilder orderBy = new StringBuilder();
             for (DTOrder _order : order)
-                orderBy.append(_order.getColumn()).append(StringPool.SPACE).append(_order.getDir());
+                orderBy.append(_order.getColumn()).append(SPACE).append(_order.getDir());
             final String byColumns = orderBy.toString();
             if (!Strings.isNullOrEmpty(byColumns)) {
-                where += " ORDER BY " + byColumns;
+                where.append(" ORDER BY ").append(byColumns);
             }
         }
-        if (params == null || params.size() == 0) {
-            return Db.paginate(start, pageSize, sql_columns, where);
-        } else {
 
-            return Db.paginate(start, pageSize, sql_columns, where, params.toArray());
-        }
+        return Db.paginate(start, pageSize, sql_columns, where.toString(), params.toArray());
     }
 }

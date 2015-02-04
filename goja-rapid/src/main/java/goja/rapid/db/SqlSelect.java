@@ -1,4 +1,4 @@
-package goja.db;
+package goja.rapid.db;
 
 import java.util.List;
 
@@ -14,50 +14,50 @@ public class SqlSelect extends SqlQuery {
     /**
      * Select 语句
      */
-    protected final Concat select;
+    protected final SqlConcat select;
     /**
      * FROM 语句
      */
-    protected final Concat from;
+    protected final SqlConcat from;
     /**
      * JOIN  语句
      */
-    protected final Concat join;
+    protected final SqlConcat join;
     /**
      * Where SQL
      */
-    protected final Concat where;
+    protected final SqlConcat where;
     /**
      * Group By Sql script.
      */
-    protected final Concat groupBy;
+    protected final SqlConcat groupBy;
     /**
      * Order By Sql script.
      */
-    protected final Concat orderBy;
+    protected final SqlConcat orderBy;
     /**
      * limit sql.
      */
-    protected final Concat limit;
+    protected final SqlConcat limit;
 
     public SqlSelect() {
-        select = new Concat("SELECT ", ", ").defaultValue(null);
-        from = new Concat("FROM ", ", ").defaultValue(null);
-        join = new Concat(null, null).defaultValue(null);
-        where = new Concat("WHERE ", null).defaultValue(null);
-        groupBy = new Concat("GROUP BY ", ", ").defaultValue(null);
-        orderBy = new Concat("ORDER BY ", ", ").defaultValue(null);
-        limit = new Concat("LIMIT ", null);
+        select = new SqlConcat("SELECT ", ", ").defaultValue(null);
+        from = new SqlConcat("FROM ", ", ").defaultValue(null);
+        join = new SqlConcat(null, null).defaultValue(null);
+        where = new SqlConcat("WHERE ", null).defaultValue(null);
+        groupBy = new SqlConcat("GROUP BY ", ", ").defaultValue(null);
+        orderBy = new SqlConcat("ORDER BY ", ", ").defaultValue(null);
+        limit = new SqlConcat("LIMIT ", null);
     }
 
     public SqlSelect(SqlSelect src) {
-        select = new Concat(src.select);
-        from = new Concat(src.from);
-        join = new Concat(src.join);
-        where = new Concat(src.where);
-        groupBy = new Concat(src.groupBy);
-        orderBy = new Concat(src.orderBy);
-        limit = new Concat(src.limit);
+        select = new SqlConcat(src.select);
+        from = new SqlConcat(src.from);
+        join = new SqlConcat(src.join);
+        where = new SqlConcat(src.where);
+        groupBy = new SqlConcat(src.groupBy);
+        orderBy = new SqlConcat(src.orderBy);
+        limit = new SqlConcat(src.limit);
 
         params.addAll(src.getParams());
     }
@@ -149,7 +149,7 @@ public class SqlSelect extends SqlQuery {
     @Override
     public String toString() {
         if (select.isEmpty() || from.isEmpty()) throw new IllegalArgumentException();
-        return new Concat("", " ").defaultValue(null)
+        return new SqlConcat("", " ").defaultValue(null)
                 .append(select)
                 .append(from)
                 .append(join)
@@ -162,11 +162,11 @@ public class SqlSelect extends SqlQuery {
 
     public static class Where {
         private final SqlSelect parent;
-        private final Concat where;
+        private final SqlConcat where;
 
         private Where(SqlSelect parent) {
             this.parent = parent;
-            where = new Concat("(", null, ")").defaultValue(null);
+            where = new SqlConcat("(", null, ")").defaultValue(null);
         }
 
         public Where param(Object obj) {

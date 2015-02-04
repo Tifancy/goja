@@ -9,6 +9,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import goja.IntPool;
 import goja.tuples.Pair;
+import goja.tuples.Triplet;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,6 +41,8 @@ public final class DTCriterias implements Serializable {
     private final List<DTOrder>  order;
     private final int            draw;
 
+    private final List<Triplet<String, Condition, Object>> params;
+
     private DTCriterias(DTSearch search, int start, int length, List<DTColumn> columns, List<DTOrder> order, int draw) {
         this.search = search;
         this.start = start;
@@ -47,6 +50,7 @@ public final class DTCriterias implements Serializable {
         this.columns = columns;
         this.order = order;
         this.draw = draw;
+        this.params = Lists.newArrayListWithCapacity(1);
     }
 
 
@@ -141,6 +145,32 @@ public final class DTCriterias implements Serializable {
         } else {
             return null;
         }
+    }
+
+
+    /**
+     * Adding custom query condition and value
+     *
+     * @param field     query condition
+     * @param condition condition
+     * @param value     query condition
+     */
+    public void setParam(String field, Condition condition, Object value) {
+        this.params.add(Triplet.with(field, condition, value));
+    }
+
+    /**
+     * Adding custom query equal  value.
+     *
+     * @param field query condition
+     * @param value query condition
+     */
+    public void setParam(String field, Object value) {
+        this.setParam(field, Condition.Equal, value);
+    }
+
+    public List<Triplet<String, Condition, Object>> getParams() {
+        return params;
     }
 
     public DTResponse response(String model_name) {

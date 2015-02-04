@@ -1,4 +1,4 @@
-package goja.db;
+package goja.rapid.db;
 
 import goja.StringPool;
 
@@ -51,10 +51,10 @@ public class FindBy {
                 sql.append(prop).append(" = ?");
             } else if (part.endsWith("IsNotNull")) {
                 String prop = extractProp(part, "IsNotNull");
-                sql.append(prop).append(" is not null");
+                sql.append(prop).append(" IS NOT NULL");
             } else if (part.endsWith("IsNull")) {
                 String prop = extractProp(part, "IsNull");
-                sql.append(prop).append(" is null");
+                sql.append(prop).append(" IS NULL");
             } else if (part.endsWith("LessThan")) {
                 String prop = extractProp(part, "LessThan");
                 sql.append(prop).append(" < ?");
@@ -69,25 +69,25 @@ public class FindBy {
                 sql.append(prop).append(" >= ?");
             } else if (part.endsWith("Between")) {
                 String prop = extractProp(part, "Between");
-                sql.append(prop).append(" ?").append(" AND ").append(prop).append(" ?");
+                sql.append(prop).append(" BETWEEN ? AND ?");
             } else if (part.endsWith("Like")) {
                 String prop = extractProp(part, "Like");
                 // HSQL -> LCASE, all other dbs lower
                 if (hsql) {
-                    sql.append("LCASE(").append(prop).append(") like ?");
+                    sql.append("LCASE(").append(prop).append(") LIKE ?");
                 } else {
-                    sql.append("LOWER(").append(prop).append(") like ?");
+                    sql.append("LOWER(").append(prop).append(") LIKE ?");
                 }
             } else if (part.endsWith("Ilike")) {
                 String prop = extractProp(part, "Ilike");
                 if (hsql) {
-                    sql.append("LCASE(").append(prop).append(") like LCASE(?").append(")");
+                    sql.append("LCASE(").append(prop).append(") LIKE LCASE(?").append(")");
                 } else {
-                    sql.append("LOWER(").append(prop).append(") like LOWER(?").append(")");
+                    sql.append("LOWER(").append(prop).append(") LIKE LOWER(?").append(")");
                 }
             } else if (part.endsWith("Elike")) {
                 String prop = extractProp(part, "Elike");
-                sql.append(prop).append(" like ?");
+                sql.append(prop).append(" LIKE ?");
             } else {
                 String prop = extractProp(part, "");
                 sql.append(prop).append(" = ?");
