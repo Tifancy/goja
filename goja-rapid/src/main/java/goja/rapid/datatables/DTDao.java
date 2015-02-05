@@ -69,12 +69,17 @@ final class DTDao {
         final List<Triplet<String, Condition, Object>> custom_params = criterias.getParams();
         final List<Object> params = Lists.newArrayList();
         if (!custom_params.isEmpty()) {
+            where.append(" WHERE ");
+            boolean append_and = false;
             for (Triplet<String, Condition, Object> custom_param : custom_params) {
+                if(!append_and) {
+                    where.append(" AND ");
+                    append_and = true;
+                }
                 where.append(custom_param.getValue0());
-                where.append(SPACE);
                 where.append(custom_param.getValue1().condition);
-                where.append(" ? ");
                 params.add(custom_param.getValue2());
+
             }
         }
 
