@@ -76,16 +76,7 @@ public class Controller extends com.jfinal.core.Controller {
     protected static void badRequest() {
         new BadRequest().render();
     }
-
-    /**
-     * According to Excel template, rendering the Excel, and available to download.
-     *
-     * @param templateFile excel template.
-     * @param datas        the export data.
-     */
-    protected static void renderExcel(String templateFile, Map<String, Object> datas) {
-        (new JxlsRender(templateFile).beans(datas)).render();
-    }
+    
 
     /**
      * Render four string verification code.
@@ -105,6 +96,17 @@ public class Controller extends com.jfinal.core.Controller {
             Logger.debug("The Captcha char is {}", captchaRender.getMd5RandonCode());
         }
         render(captchaRender);
+    }
+
+    /**
+     * Set Attribute, according to the parameters of the class name lowercase as parameters
+     *
+     * @param value value .
+     * @return Controller.
+     */
+    protected com.jfinal.core.Controller setAttr(Object value) {
+        String attr_name = StrKit.firstCharToLowerCase(value.getClass().getSimpleName());
+        return setAttr(attr_name, value);
     }
 
     @Override
@@ -340,7 +342,7 @@ public class Controller extends com.jfinal.core.Controller {
     }
 
     /**
-     * Rendering todo prompt
+     * Renderingtodo prompt
      */
     protected void renderTODO() {
         renderJson(AjaxMessage.developing());
