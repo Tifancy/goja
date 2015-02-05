@@ -72,14 +72,13 @@ final class DTDao {
             where.append(" WHERE ");
             boolean append_and = false;
             for (Triplet<String, Condition, Object> custom_param : custom_params) {
-                if(!append_and) {
+                if(append_and) {
                     where.append(" AND ");
-                    append_and = true;
                 }
                 where.append(custom_param.getValue0());
                 where.append(custom_param.getValue1().condition);
                 params.add(custom_param.getValue2());
-
+                append_and = true;
             }
         }
 
