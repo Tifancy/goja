@@ -38,11 +38,11 @@ public class DaoKit {
 
 
     /**
-     * 根据默认主键<code>id</code>和实体判断是否为新构成的实体。
+     * According to the default primary key <code>id</code> is for the new data and entity.
      *
-     * @param m   实体Model
-     * @param <M> 泛型实体参数
-     * @return 如果为新构成的则返回true
+     * @param m   model
+     * @param <M> Generic entity references
+     * @return If for the new form of return true.
      */
     public static <M extends Model> boolean isNew(M m) {
         return isNew(m, StringPool.PK_COLUMN);
@@ -76,12 +76,12 @@ public class DaoKit {
 
 
     /**
-     * 根据主键和实体判断是否为新构成的实体。
+     * According to the primary key and entity determine whether for the new entity.
      *
-     * @param m         实体Model
-     * @param pk_column 主键列
-     * @param <M>       泛型实体参数
-     * @return 如果为新构成的则返回true
+     * @param m         Database model.
+     * @param pk_column PK Column.
+     * @param <M>       Generic entity references.
+     * @return If for the new form of return true.
      */
     public static <M extends Model> boolean isNew(M m, String pk_column) {
         final Number number = m.getNumber(pk_column);
@@ -89,10 +89,10 @@ public class DaoKit {
     }
 
     /**
-     * 拼接LIKE SQL 百分号
+     * Stitching LIKE SQL percent.
      *
-     * @param value 数值
-     * @return SQL LIKE表达形式
+     * @param value value
+     * @return SQL LIKE expression.
      */
     public static String like(String value) {
         return StringPool.PERCENT + Strings.nullToEmpty(value) + StringPool.PERCENT;
@@ -100,22 +100,22 @@ public class DaoKit {
 
 
     /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
+     * Paging retrieve, default sorted by id, you need to specify the datatables request parameters.
      *
-     * @param model_name sql conf 中的 sqlGroup 的name
-     * @param criterias  请求参数
-     * @return 分页数据
+     * @param model_name sql-conf sqlgroup name.
+     * @param criterias  required parameter
+     * @return Paging data.
      */
     public static Page<Record> paginate(String model_name, DTCriterias criterias) {
         return paginate(model_name, criterias, null);
     }
 
     /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
+     * Paging retrieve, default sorted by id, you need to specify the datatables request parameters.
      *
-     * @param model_name sql conf 中的 sqlGroup 的name
-     * @param criterias  请求参数
-     * @return 分页数据
+     * @param model_name sql-conf sqlgroup name.
+     * @param criterias  required parameter
+     * @return Paging data.
      */
     public static Page<Record> paginate(String model_name, DTCriterias criterias, List<Object> params) {
         return paginate(SqlKit.sql(model_name + SQL_PIRFIX_WHERE)
@@ -124,13 +124,13 @@ public class DaoKit {
     }
 
     /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
+     * Paging retrieve, default sorted by id, you need to specify the datatables request parameters.
      *
-     * @param where         FROM WHERE 语句.
-     * @param sql_columns   SELECT column sql 语句
-     * @param criterias     请求参数
-     * @param default_order 默认的排序字段，类似：ORDER BY id DESC
-     * @return 分页数据
+     * @param where         FROM WHERE SQL.
+     * @param sql_columns   SELECT column sql.
+     * @param criterias     required parameter
+     * @param default_order The default sort field, similar: ORDER BY DESC id.
+     * @return Paging data.
      */
     public static Page<Record> paginate(String where
             , String sql_columns
@@ -162,13 +162,13 @@ public class DaoKit {
 
 
     /**
-     * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
+     * Paging retrieve, default sorted by id, you need to specify the datatables request parameters.
      *
-     * @param where         FROM WHERE 语句.
-     * @param sql_columns   SELECT column sql 语句
-     * @param pageDto       请求参数\
-     * @param default_order 默认的排序字段，类似：ORDER BY id DESC
-     * @return 分页数据
+     * @param where         FROM WHERE SQL.
+     * @param sql_columns   SELECT column sql.
+     * @param pageDto       required parameter.
+     * @param default_order he default sort field, similar: ORDER BY DESC id.
+     * @return Paging data.
      */
     public static Page<Record> paginate(String where, String sql_columns, String default_order, PageDto pageDto) {
         where = Strings.nullToEmpty(where);

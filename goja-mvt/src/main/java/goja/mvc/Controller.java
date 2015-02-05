@@ -16,6 +16,7 @@ import com.jfinal.core.TypeConverter;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
 import goja.Goja;
@@ -25,10 +26,10 @@ import goja.kits.base.DateKit;
 import goja.mvc.kit.Requests;
 import goja.mvc.render.BadRequest;
 import goja.mvc.render.CaptchaRender;
-import goja.mvc.render.JxlsRender;
 import goja.mvc.render.NotModified;
 import goja.rapid.datatables.DTCriterias;
 import goja.rapid.datatables.DTResponse;
+import goja.rapid.db.DaoKit;
 import goja.rapid.page.PageDto;
 import goja.security.goja.SecurityKit;
 import goja.security.shiro.AppUser;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import static goja.StringPool.EMPTY;
@@ -76,7 +78,7 @@ public class Controller extends com.jfinal.core.Controller {
     protected static void badRequest() {
         new BadRequest().render();
     }
-    
+
 
     /**
      * Render four string verification code.
@@ -357,9 +359,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @return An Action under the full path.
      */
     protected String parsePath(String currentActionPath, String url) {
-        if (url.startsWith(SLASH)) {//完整路径
+        if (url.startsWith(SLASH)) {
             return url.split("\\?")[0];
-        } else if (!url.contains(SLASH)) {//类似于detail的路径。
+        } else if (!url.contains(SLASH)) {
             return SLASH + currentActionPath.split(SLASH)[1] + SLASH + url.split("\\?")[0];
         } else if (url.contains("http:") || url.contains("https:")) {
             return null;
@@ -381,14 +383,16 @@ public class Controller extends com.jfinal.core.Controller {
     /**
      * Get parameters from the Request and encapsulation as an object for processing。
      *
-     * @return jquery DataTables参数信息
+     * @return jquery DataTables
      */
     protected DTCriterias getCriterias() {
         return DTCriterias.criteriasWithRequest(getRequest());
     }
 
     /**
-     * The source of data for rendering the jQuery Datatables
+     * According to the request information of jquery.Datatables, the results of the query and returns the JSON data to the client.
+     *
+     * The specified query set the data.
      *
      * @param datas     The data.
      * @param criterias datatable criterias.
@@ -402,7 +406,9 @@ public class Controller extends com.jfinal.core.Controller {
 
 
     /**
-     * The source of data for rendering the jQuery Datatables
+     * According to the request information of jquery.Datatables, the results of the query and returns the JSON data to the client.
+     *
+     * Automatically according to the request to create the query SQL and encapsulating the results back to the client.
      *
      * @param m_cls     The Model class.
      * @param criterias datatable criterias.
@@ -410,6 +416,40 @@ public class Controller extends com.jfinal.core.Controller {
     protected void renderDataTables(DTCriterias criterias, Class<? extends Model> m_cls) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
         DTResponse response = criterias.response(m_cls);
+        renderJson(response);
+    }
+
+
+    /**
+     * According to the request information of jquery.Datatables, the results of the query and returns the JSON data to the client.
+     * <p/>
+     * According to the SQL configuration file,
+     * in accordance with the Convention model_name.coloumns\model_name.where\model_name.order configured SQL to query and returns the results to the client.
+     *
+     * @param model_name The Model name.
+     * @param criterias  datatable criterias.
+     */
+    protected void renderDataTables(DTCriterias criterias, String model_name) {
+        Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
+        final Page<Record> datas = DaoKit.paginate(model_name, criterias);
+        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
+        renderJson(response);
+    }
+
+
+    /**
+     * According to the request information of jquery.Datatables, the results of the query and returns the JSON data to the client.
+     * <p/>
+     * According to the SQL configuration file, in accordance with the Convention model_name.coloumns\model_name.where\model_name.order configured SQL to query and specify the parameters and return results to the client.
+     *
+     * @param criterias  datatable criterias.
+     * @param model_name The Model name.
+     * @param params     Query parameters
+     */
+    protected void renderDataTables(DTCriterias criterias, String model_name, List<Object> params) {
+        Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
+        final Page<Record> datas = DaoKit.paginate(model_name, criterias, params);
+        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
         renderJson(response);
     }
 
