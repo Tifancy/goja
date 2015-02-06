@@ -38,6 +38,7 @@ import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public class Controller extends com.jfinal.core.Controller {
     public void render(String view) {
 
         super.render((view.startsWith(SLASH))
-                ? (Goja.viewPath + SLASH + view.replaceFirst(SLASH, EMPTY))
+                ? ( SLASH + Goja.viewPath + File.separator + view.replaceFirst(SLASH, EMPTY))
                 : view);
 
     }
