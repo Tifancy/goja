@@ -7,8 +7,9 @@
 package goja.mvc;
 
 import com.alibaba.fastjson.JSON;
-import goja.StringPool;
 import org.apache.commons.lang3.StringUtils;
+
+import static goja.StringPool.EMPTY;
 
 /**
  * <p> ajax请求返回信息 </p>
@@ -19,20 +20,6 @@ import org.apache.commons.lang3.StringUtils;
  * @since JDK 1.5
  */
 public final class AjaxMessage<E> {
-
-    private static final String SUCCESS_MSG   = StringPool.EMPTY;
-    /**
-     * Don't have permission to access the clues
-     */
-    private static final String FORBIDDEN_MSG = "You have no right to access this path!";
-    /**
-     * There is no data of the clues
-     */
-    private static final String NODATA_MSG    = "Hello, what you request is empty!";
-    /**
-     * Not logged in the clues
-     */
-    private static final String NOLOGIN_MSG   = "Hello, you are not logged in? Only logged in can access.";
 
 
     /**
@@ -53,8 +40,8 @@ public final class AjaxMessage<E> {
     private final Exception     exception;
 
 
-    private static final AjaxMessage OK        = ok(SUCCESS_MSG, null);
-    private static final AjaxMessage NODATA    = nodata(NODATA_MSG, null);
+    private static final AjaxMessage OK = ok(EMPTY, null);
+    private static final AjaxMessage NODATA = nodata(EMPTY, null);
     private static final AjaxMessage FORBIDDEN = forbidden(null);
     private static final AjaxMessage ERROR     = error(null);
     private static final AjaxMessage FAILURE   = failure(null);
@@ -148,7 +135,7 @@ public final class AjaxMessage<E> {
      * @return 消息内容
      */
     public static <E> AjaxMessage nodata(E data) {
-        return new AjaxMessage<E>(data, NODATA_MSG, MessageStatus.NODATA);
+        return new AjaxMessage<E>(data, EMPTY, MessageStatus.NODATA);
     }
 
     /**
@@ -179,7 +166,7 @@ public final class AjaxMessage<E> {
      * @return 消息内容
      */
     public static <E> AjaxMessage nologin(E data) {
-        return new AjaxMessage<E>(data, NOLOGIN_MSG, MessageStatus.NOLOGIN);
+        return new AjaxMessage<E>(data, EMPTY, MessageStatus.NOLOGIN);
     }
 
     /**
@@ -199,7 +186,7 @@ public final class AjaxMessage<E> {
      * @return 消息内容
      */
     public static <E> AjaxMessage forbidden(E data) {
-        return new AjaxMessage<E>(data, FORBIDDEN_MSG, MessageStatus.FORBIDDEN);
+        return new AjaxMessage<E>(data, EMPTY, MessageStatus.FORBIDDEN);
     }
 
     /**
@@ -243,7 +230,7 @@ public final class AjaxMessage<E> {
      * @return 消息内容
      */
     public static <E> AjaxMessage error(E data) {
-        return error(StringPool.EMPTY, data, null);
+        return error(EMPTY, data, null);
     }
 
     /**
