@@ -2,13 +2,9 @@ package goja.rapid.datatables;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Model;
-import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.Table;
-import com.jfinal.plugin.activerecord.TableMapping;
+import com.jfinal.plugin.activerecord.*;
 import goja.lang.Lang;
+import goja.rapid.db.Condition;
 import goja.tuples.Triplet;
 
 import java.util.List;
@@ -76,8 +72,18 @@ final class DTDao {
                     where.append(" AND ");
                 }
                 where.append(custom_param.getValue0());
-                where.append(custom_param.getValue1().condition);
-                params.add(custom_param.getValue2());
+                final Condition con = custom_param.getValue1();
+                where.append(con.condition);
+                switch (con) {
+                    case BETWEEN:
+                        final Object[] value2 = (Object[]) custom_param.getValue2();
+                        params.add(value2[0]);
+                        params.add(value2[1]);
+                        break;
+                    default:
+                        params.add(custom_param.getValue2());
+                        break;
+                }
                 append_and = true;
             }
         }
