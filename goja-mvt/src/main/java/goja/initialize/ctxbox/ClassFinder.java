@@ -6,16 +6,19 @@
 
 package goja.initialize.ctxbox;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
-import com.google.common.io.Files;
+import com.jfinal.aop.Interceptor;
+import com.jfinal.core.Controller;
+import com.jfinal.handler.Handler;
 import com.jfinal.kit.PathKit;
+import com.jfinal.plugin.IPlugin;
+import com.jfinal.plugin.activerecord.Model;
+import goja.GojaConfig;
 import goja.StringPool;
-import goja.kits.reflect.Reflect;
-import org.apache.commons.lang3.StringUtils;
+import goja.mvc.AppLoadEvent;
+import goja.job.Job;
+import goja.rapid.syslog.LogProcessor;
+import goja.security.shiro.SecurityUserData;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -29,23 +32,19 @@ import java.util.List;
  */
 public class ClassFinder {
 
-    public static final Predicate<File> CLASS_PREDICATE = new Predicate<File>() {
-        @Override
-        public boolean apply(File input) {
-            return StringUtils.equals("class", Files.getFileExtension(input.getAbsolutePath()));
-        }
-    };
 
     /**
      * find class files.
      */
     public static void find() {
-        String class_path = PathKit.getRootClassPath();
-        FluentIterable<File> iterable = Files.fileTreeTraverser().breadthFirstTraversal(new File(class_path)).filter(CLASS_PREDICATE);
-        List<String> classFileList = findClassFile(iterable);
-        for (String classFile : classFileList) {
-            Class<?> classInFile = Reflect.on(classFile).get();
-            ClassBox.getInstance().push(classInFile);
+
+        ClassSearcher searcher = ClassSearcher.of(Model.class, Controller.class, Interceptor.class,
+                Job.class, org.quartz.Job.class, AppLoadEvent.class, IPlugin.class, Handler.class,
+                LogProcessor.class, SecurityUserData.class)
+                .inJars(GojaConfig.getProperty("app.jars"));
+        List<Class<?>> classFileList = searcher.search();
+        for (Class cls : classFileList) {
+            ClassBox.getInstance().push(cls);
         }
     }
 
@@ -53,66 +52,19 @@ public class ClassFinder {
      * find class files.
      */
     public static void findWithTest() {
+        find();
+
         String testRoolClassPath = PathKit.getRootClassPath();
-        FluentIterable<File> iterable = Files.fileTreeTraverser().breadthFirstTraversal(new File(testRoolClassPath)).filter(CLASS_PREDICATE);
-        List<String> classFileList = findTestClassFile(iterable);
-        for (String classFile : classFileList) {
-            Class<?> classInFile = Reflect.on(classFile).get();
-            ClassBox.getInstance().push(classInFile);
-        }
+        String test_classpath = testRoolClassPath.replace("test-", StringPool.EMPTY);
+        ClassSearcher test_searcher = ClassSearcher.of(Model.class, Controller.class, Interceptor.class,
+                Job.class, org.quartz.Job.class, AppLoadEvent.class, IPlugin.class, Handler.class,
+                LogProcessor.class, SecurityUserData.class).classpath(test_classpath)
+                .inJars(GojaConfig.getProperty("app.jars"));
 
-        String classPath = testRoolClassPath.replace("test-", StringPool.EMPTY);
-        iterable = Files.fileTreeTraverser().breadthFirstTraversal(new File(classPath)).filter(CLASS_PREDICATE);
-        classFileList = findClassFile(iterable);
-        for (String classFile : classFileList) {
-            Class<?> classInFile = Reflect.on(classFile).get();
-            ClassBox.getInstance().push(classInFile);
+        for (Class cls : test_searcher.search()) {
+            ClassBox.getInstance().push(cls);
         }
     }
 
-    /**
-     * Find files use Guava way to find the Class file under classpath.
-     *
-     * @param fileFluentIterable file flunent iterable.
-     * @return class file list.
-     */
-    private static List<String> findClassFile(FluentIterable<File> fileFluentIterable) {
-        final List<String> files = Lists.newArrayList();
-        for (File f : fileFluentIterable) {
-            final String absolutePath = f.getAbsoluteFile().toString();
-            if (f.exists() && !f.isDirectory() && f.getName().endsWith(StringPool.DOT_CLASS)) {
-                String tem = absolutePath.replaceAll("\\\\", StringPool.SLASH);
-                String classname = tem.substring(tem.indexOf("/classes") + "/classes".length() + 1,
-                        tem.indexOf(StringPool.DOT_CLASS));
-                if (StringUtils.startsWithIgnoreCase(classname, "app")) {
-                    // coc: application class into app package.
-                    files.add(classname.replaceAll(StringPool.SLASH, StringPool.DOT));
-                }
-            }
-        }
-        return files;
-    }
 
-    /**
-     * Find test class files use Guava way to find the Class file under classpath.
-     *
-     * @param fileFluentIterable file flunent iterable.
-     * @return class file list.
-     */
-    private static List<String> findTestClassFile(FluentIterable<File> fileFluentIterable) {
-        final List<String> files = Lists.newArrayList();
-        for (File f : fileFluentIterable) {
-            final String absolutePath = f.getAbsoluteFile().toString();
-            if (f.exists() && !f.isDirectory() && f.getName().endsWith(StringPool.DOT_CLASS)) {
-                String tem = absolutePath.replaceAll("\\\\", StringPool.SLASH);
-                String classname = tem.substring(tem.indexOf("/test-classes") + "/test-classes".length() + 1,
-                        tem.indexOf(StringPool.DOT_CLASS));
-                if (StringUtils.startsWithIgnoreCase(classname, "app")) {
-                    // coc: application class into app package.
-                    files.add(classname.replaceAll(StringPool.SLASH, StringPool.DOT));
-                }
-            }
-        }
-        return files;
-    }
 }

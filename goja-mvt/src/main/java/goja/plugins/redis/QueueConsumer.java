@@ -5,6 +5,7 @@
  */
 package goja.plugins.redis;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import goja.StringPool;
 
@@ -14,9 +15,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class QueueConsumer {
-    static final String                     PROCESSINGLIST    = StringPool.DASH + "processing";
-    static final String                     PREFIX            = "queue" + StringPool.DASH;
-    static       Map<String, QueueConsumer> existingConsumers = Maps.newHashMap();
+    static final String PROCESSINGLIST = StringPool.DASH + "processing";
+    static final String PREFIX         = "queue" + StringPool.DASH;
+
+    static Map<String, QueueConsumer> existingConsumers = Maps.newHashMap();
     int interval = 1000;
 
     boolean start = false;
@@ -46,8 +48,7 @@ public class QueueConsumer {
         try {
             TimeUnit.MILLISECONDS.sleep(interval);
         } catch (InterruptedException e) {
-            // TODO
-            e.printStackTrace();
+            throw Throwables.propagate(e);
         }
     }
 

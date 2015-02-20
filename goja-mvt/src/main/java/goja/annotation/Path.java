@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Path {
-    String controllerKey();
+    String value();
 
     String viewPath() default "";
 }

@@ -28,7 +28,6 @@ import com.jfinal.plugin.druid.IDruidStatViewAuth;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.render.FreeMarkerRender;
 import com.jfinal.render.ViewType;
-import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import freemarker.template.Configuration;
 import goja.annotation.HandlerBind;
@@ -36,7 +35,7 @@ import goja.annotation.PluginBind;
 import goja.cache.Cache;
 import goja.cache.EhCacheImpl;
 import goja.exceptions.DatabaseException;
-import goja.initialize.AppLoadEvent;
+import goja.mvc.AppLoadEvent;
 import goja.initialize.ctxbox.ClassBox;
 import goja.initialize.ctxbox.ClassType;
 import goja.job.JobsPlugin;
@@ -182,8 +181,6 @@ public class Goja extends JFinalConfig {
     public void configPlugin(Plugins plugins) {
         // fixed: https://github.com/GojaFramework/goja/issues/4
         started = true;
-        // 系统本身的任务标志，默认启动
-        plugins.add(new JobsPlugin());
 
         plugins.add(new EhCachePlugin(EhCacheImpl.getInstance().getCacheManager()));
         initDataSource(plugins);
@@ -236,6 +233,9 @@ public class Goja extends JFinalConfig {
                 }
             }
         }
+
+        // Because the system itself the task of startup tasks, so the system task plugin must be the last to join the list
+        plugins.add(new JobsPlugin());
 
     }
 
