@@ -15,7 +15,6 @@ import com.google.common.collect.Ordering;
 import com.jfinal.kit.PathKit;
 import goja.GojaConfig;
 import goja.cache.Cache;
-import goja.castor.Castor;
 import goja.castor.Castors;
 import goja.initialize.ctxbox.ClassFinder;
 import org.apache.commons.io.FileUtils;
@@ -93,13 +92,15 @@ public class GojaInitializer implements ServletContainerInitializer {
             Preconditions.checkArgument(!Strings.isNullOrEmpty(script_path)
                     , "The Database init database script init!");
             final String real_script_path = PathKit.getRootClassPath() + File.separator + script_path;
-            if (logger.isDebugEnabled()) {
-                logger.debug("init db script with {}", real_script_path);
-            }
             final File script_dir = new File(real_script_path);
             if (script_dir.exists() && script_dir.isDirectory()) {
                 final String db_url = GojaConfig.dbUrl();
                 Preconditions.checkNotNull(db_url, "The DataBase connection url is must!");
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug("init db script with {}", real_script_path);
+                }
+
                 Collection<File> list_script_files
                         = Ordering.natural()
                         .sortedCopy(FileUtils.listFiles(script_dir, new String[]{"sql"}, false));

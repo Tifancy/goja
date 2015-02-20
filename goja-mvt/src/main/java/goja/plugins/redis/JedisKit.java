@@ -15,13 +15,13 @@ import redis.clients.jedis.Tuple;
 import redis.clients.util.SafeEncoder;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+@SuppressWarnings("UnusedDeclaration")
 public class JedisKit {
     private static JedisPool pool;
 
@@ -138,9 +138,8 @@ public class JedisKit {
         return call(new JedisAction<List<Serializable>>() {
             @Override
             public List<Serializable> action(Jedis jedis) {
-                List<Serializable> result = new ArrayList<Serializable>(keys.length);
-                for (int index = 0; index < keys.length; index++)
-                    result.add(null);
+                List<Serializable> result = Lists.newArrayListWithCapacity(keys.length);
+                for (String ignored : keys) result.add(null);
                 byte[][] encodeKeys = new byte[keys.length][];
                 for (int i = 0; i < keys.length; i++)
                     encodeKeys[i] = SafeEncoder.encode(keys[i]);
@@ -174,9 +173,7 @@ public class JedisKit {
             public Boolean action(Jedis jedis) {
                 byte[][] encodeValues = new byte[values.size() * 2][];
                 int index = 0;
-                Iterator<Entry<String, Serializable>> iter = values.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Entry<String, Serializable> entry = iter.next();
+                for (Entry<String, Serializable> entry : values.entrySet()) {
                     encodeValues[index++] = entry.getKey().getBytes();
                     encodeValues[index++] = SerializableKit.toByteArray(entry.getValue());
                 }
