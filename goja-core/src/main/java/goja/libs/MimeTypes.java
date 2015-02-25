@@ -40,7 +40,7 @@ public class MimeTypes {
      * @return the mimetype or the empty string if not found
      */
     public static String getMimeType(String filename) {
-        return getMimeType(filename, "");
+        return getMimeType(filename, StringPool.EMPTY);
     }
 
     /**
@@ -52,7 +52,7 @@ public class MimeTypes {
      */
     public static String getMimeType(String filename, String defaultMimeType) {
         Matcher matcher = extPattern.matcher(filename.toLowerCase());
-        String ext = "";
+        String ext = StringPool.EMPTY;
         if (matcher.matches()) {
             ext = matcher.group(1);
         }
