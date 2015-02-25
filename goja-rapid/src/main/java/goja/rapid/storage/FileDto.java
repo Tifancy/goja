@@ -32,11 +32,15 @@ public final class FileDto {
      * 文件存储相对路径
      */
     private final String storage;
+
     /**
      * 保存后的附件表ID
      */
     private long id;
 
+    /**
+     * 显示标题
+     */
     private String title;
 
     @JSONCreator
