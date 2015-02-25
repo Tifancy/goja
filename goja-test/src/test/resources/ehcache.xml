@@ -7,7 +7,7 @@
 
 <ehcache updateCheck="true" monitoring="autodetect" dynamicConfig="true">
 
-    <diskStore path="java.io.tmpdir/jfinal-app"/>
+    <diskStore controllerBind="java.io.tmpdir/jfinal-app"/>
     <cacheManagerEventListenerFactory class="" properties=""/>
 
     <defaultCache

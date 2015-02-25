@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Path {
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface ControllerBind {
     String value();
 
     String viewPath() default "";

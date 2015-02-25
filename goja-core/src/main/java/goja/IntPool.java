@@ -43,4 +43,8 @@ public interface IntPool {
 
     int DEFAULT_PORT = 8080;
 
+    int WEB_DEFAULT_PORT = 80;
+
+
+
 }

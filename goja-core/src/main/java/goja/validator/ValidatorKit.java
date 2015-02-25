@@ -17,14 +17,13 @@ import static goja.validator.RegexPool.*;
 
 /**
  * <p>
- * .
+ * 验证帮助.
  * </p>
  *
  * @author sagyf yang
  * @version 1.0 2014-02-22 15:09
  * @since JDK 1.6
  */
-@SuppressWarnings("UnusedDeclaration")
 public class ValidatorKit {
 
     /**
@@ -148,57 +147,6 @@ public class ValidatorKit {
         return !Strings.isNullOrEmpty(str) && str.matches(CONTAINCHINESE);
     }
 
-    /**
-     * 验证字符串中不能含有中文
-     *
-     * @param str
-     *            要验证的字符串
-     * @return 如果不含有中文返回 true， 否则返回false
-     * @author dingfenghua
-     */
-    /*
-     * public static boolean isNotContainChinese(String str) { return
-	 * !(isContainChinese(str)); }
-	 */
-
-    /**
-     * 验证字符串中是否含有全角
-     *
-     * @param str
-     *            要验证的字符串
-     * @return 如果含有全角返回 true，否则返回false
-     * @author YangLijuan
-     */
-    /*
-     * public static boolean isContainFullShaped(String str) { return
-	 * Strings.isNullOrEmpty(str) ? false : str.matches(FULLSHAPED); }
-	 */
-
-    /**
-     * 验证字符串中是否含有空格
-     *
-     * @param str
-     *            要验证的字符串
-     * @return 如果字符串中含有返回 true，否则返回 false
-     * @author Yang Lijuan
-     */
-    /*
-     * public static boolean isContainSpace(String str) { return Strings.isNullOrEmpty(str) ?
-	 * false : str.matches(CONTAINSPACE); }
-	 */
-
-    /**
-     * 验证字符串中不含有空格
-     *
-     * @param str
-     *            要验证的字符串
-     * @return 如果字符串中不含有返回 true，否则返回 false
-     * @author Yang Lijuan
-     */
-    /*
-     * public static boolean isNotContainSpace(String str) { return
-	 * !(isContainSpace(str)); }
-	 */
 
     /**
      * 验证字符串中是否含有特殊字符
@@ -281,20 +229,6 @@ public class ValidatorKit {
         return !Strings.isNullOrEmpty(str) && str.trim().length() > 0;
     }
 
-    /**
-     *验证字符串的的长度是否在指定大小内
-     *
-     * @param str
-     *            要被验证的字符串
-     * @param size
-     *            指定的最大长度
-     * @return 长度在指定范围内返回 true，否则返回false
-     * @author Yang Lijuan
-     */
-    /*
-     * public static boolean isInLength(String str, int size) { return
-	 * Strings.isNullOrEmpty(str) ? false : size >= getLength(str); }
-	 */
 
     /**
      * 获取字符串长度，中文为两位以gbk读取，gbk码读取失败的以str.length()返回长度
@@ -447,22 +381,6 @@ public class ValidatorKit {
         }
         return false;
     }
-
-    /**
-     * 验证两个字符串不能相同(两个字符串均不能为空)
-     *
-     * @param strSrc
-     *            要验证的字符串
-     * @param strDes
-     *            被验证的字符串
-     * @return 如果两个字符串相同返回 true，不同或任意一字符串为null时返回false
-     * @author hhd
-     */
-    /*
-     * public static boolean isNotSameValue(String strSrc, String strDes) {
-	 * if(Strings.isNullOrEmpty(strSrc)&&Strings.isNullOrEmpty(strDes)){ return false; }else{ return
-	 * !(isSameValue(strSrc,strDes)); } }
-	 */
 
     /**
      * 验证字符串是否为合法的Email （Email格式是指：字母、数字、下划线与'@'和'.'的组合，'@'数量不得超过1；连续两位字符不能为'_'

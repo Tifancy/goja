@@ -10,7 +10,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.kit.StrKit;
 import goja.Logger;
 import goja.StringPool;
-import goja.annotation.Path;
+import goja.annotation.ControllerBind;
 import goja.initialize.ctxbox.ClassBox;
 import goja.initialize.ctxbox.ClassType;
 import org.apache.commons.lang3.StringUtils;
@@ -27,20 +27,16 @@ public class AutoBindRoutes extends Routes {
     public void config() {
         List<Class> controllerClasses = ClassBox.getInstance().getClasses(ClassType.CONTROLLER);
         if (controllerClasses != null && !controllerClasses.isEmpty()) {
-            Path path;
+            ControllerBind controllerBind;
             for (Class controller : controllerClasses) {
-                path = (Path) controller.getAnnotation(Path.class);
-                if (path == null) {
+                controllerBind = (ControllerBind) controller.getAnnotation(ControllerBind.class);
+                if (controllerBind == null) {
                     final String controllerKey = controllerKey(controller);
                     this.add(controllerKey, controller);
-                    Logger.debug("routes.add(" + controllerKey + ", " + controller.getName() + StringPool.RIGHT_BRACKET);
-                } else if (StrKit.isBlank(path.viewPath())) {
-                    this.add(path.value(), controller);
-                    Logger.debug("routes.add(" + path.value() + ", " + controller.getName() + StringPool.RIGHT_BRACKET);
+                } else if (StrKit.isBlank(controllerBind.viewPath())) {
+                    this.add(controllerBind.value(), controller);
                 } else {
-                    this.add(path.value(), controller, path.viewPath());
-                    Logger.debug("routes.add(" + path.value() + ", " + controller + StringPool.COMMA
-                            + path.viewPath() + StringPool.RIGHT_BRACKET);
+                    this.add(controllerBind.value(), controller, controllerBind.viewPath());
                 }
             }
         }
@@ -48,8 +44,7 @@ public class AutoBindRoutes extends Routes {
 
     private static String controllerKey(Class clazz) {
         final String simpleName = clazz.getSimpleName();
-        Preconditions.checkArgument(simpleName.endsWith(suffix),
-                " does not has a @Path annotation and it's name is not end with " + suffix);
+        Preconditions.checkArgument(simpleName.endsWith(suffix),  " does not has a @ControllerBind annotation and it's name is not end with " + suffix);
         String controllerKey = StringPool.SLASH + StrKit.firstCharToLowerCase(simpleName);
         controllerKey = controllerKey.substring(0, controllerKey.indexOf(suffix));
 
