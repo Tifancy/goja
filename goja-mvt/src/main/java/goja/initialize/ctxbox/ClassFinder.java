@@ -41,7 +41,7 @@ public class ClassFinder {
         ClassSearcher searcher = ClassSearcher.of(Model.class, Controller.class, Interceptor.class,
                 Job.class, org.quartz.Job.class, AppLoadEvent.class, IPlugin.class, Handler.class,
                 LogProcessor.class, SecurityUserData.class)
-                .inJars(GojaConfig.getProperty("app.jars"));
+                .inJars(GojaConfig.getAppJars());
         List<Class<?>> classFileList = searcher.search();
         for (Class cls : classFileList) {
             ClassBox.getInstance().push(cls);
@@ -59,7 +59,7 @@ public class ClassFinder {
         ClassSearcher test_searcher = ClassSearcher.of(Model.class, Controller.class, Interceptor.class,
                 Job.class, org.quartz.Job.class, AppLoadEvent.class, IPlugin.class, Handler.class,
                 LogProcessor.class, SecurityUserData.class).classpath(test_classpath)
-                .inJars(GojaConfig.getProperty("app.jars"));
+                .inJars(GojaConfig.getAppJars());
 
         for (Class cls : test_searcher.search()) {
             ClassBox.getInstance().push(cls);

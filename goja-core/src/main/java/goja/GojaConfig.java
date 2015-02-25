@@ -220,6 +220,10 @@ public class GojaConfig {
         return getProperty("db.password");
     }
 
+    public static String getAppJars(){
+        return getProperty("app.jars");
+    }
+
     public static boolean containsKey(String key) {
         return configProps.get().containsKey(key);
     }

@@ -23,6 +23,12 @@ public class SqlKitTest {
     }
 
     @Test
+    public void testSqlInJar() throws Exception {
+        assertNotNull(SqlKit.sql("app.findByUUID"));
+
+    }
+
+    @Test
     public void testSql() throws Exception {
         assertNotNull(SqlKit.sql("test.slqinxml"));
     }
