@@ -59,7 +59,6 @@ import static goja.StringPool.SLASH;
  * @version 1.0 2014-06-01 20:29
  * @since JDK 1.6
  */
-@SuppressWarnings("UnusedDeclaration")
 public class Controller extends com.jfinal.core.Controller {
 
     /**
@@ -163,7 +162,7 @@ public class Controller extends com.jfinal.core.Controller {
     /**
      * In the form of JSON rendering failure information.
      */
-    protected <T> void renderAjaxFailure() {
+    protected void renderAjaxFailure() {
         renderJson(AjaxMessage.FAILURE);
     }
 
@@ -253,78 +252,6 @@ public class Controller extends com.jfinal.core.Controller {
     protected void rendeAjaxrNodata() {
         renderJson(AjaxMessage.NODATA);
     }
-
-
-    /**
-     * Rendering errors information, in Json format.
-     *
-     * @param error error message.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(String)}
-     */
-//    protected void renderError(String error) {
-//        renderJson(AjaxMessage.error(error));
-//    }
-
-    /**
-     * Rendering errors information, in Json format.
-     *
-     * @param data error message.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(T)}
-     */
-//    protected <T> void renderError(T data) {
-//        renderJson(AjaxMessage.error(data));
-//    }
-
-    /**
-     * In the form of JSON rendering failure information.
-     *
-     * @param failure failure information.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxFailure(String)}
-     */
-//    protected void renderFailure(String failure) {
-//        renderJson(AjaxMessage.failure(failure));
-//    }
-
-    /**
-     * In the form of JSON rendering success information.
-     *
-     * @param message success information.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess(String)}
-     */
-//    protected void renderSuccess(String message) {
-//        renderJson(AjaxMessage.ok(message));
-//    }
-
-    /**
-     * In the form of JSON rendering default success information.
-     *
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess()}
-     */
-//    protected void renderSuccess() {
-//        renderJson(AjaxMessage.OK);
-//    }
-
-    /**
-     * With the success of data information.
-     *
-     * @param data the render data.
-     * @param <T>  Generic parameter.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess(T)}
-     */
-//    protected <T> void renderSuccess(T data) {
-//        renderJson(AjaxMessage.ok(data));
-//    }
-
-    /**
-     * Rendering errors information, in Json format.
-     *
-     * @param error errors information.
-     * @param e     exception.
-     * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(String, java.lang.Exception)}
-     */
-//    protected void renderError(String error, Exception e) {
-//        renderJson(AjaxMessage.error(error, e));
-//    }
 
 
     /**
@@ -450,7 +377,8 @@ public class Controller extends com.jfinal.core.Controller {
     /**
      * According to the request information of jquery.Datatables, the results of the query and returns the JSON data to the client.
      * <p/>
-     * According to the SQL configuration file, in accordance with the Convention model_name.coloumns\model_name.where\model_name.order configured SQL to query and specify the parameters and return results to the client.
+     * According to the SQL configuration file, in accordance with the Convention model_name.coloumns\model_name.where\model_name.order
+     * configured SQL to query and specify the parameters and return results to the client.
      *
      * @param criterias  datatable criterias.
      * @param model_name The Model name.
@@ -525,20 +453,14 @@ public class Controller extends com.jfinal.core.Controller {
      * @param <M>        Generic parameter.
      * @return The modeal .
      */
-    protected <M> Optional<M> getModelByRequest(Class<?> modelClass) {
+    protected <M extends Model> Optional<M> getModelByRequest(Class<? extends M> modelClass) {
         final HttpServletRequest request = getRequest();
         final Map<String, String[]> parameterMap = request.getParameterMap();
         if (parameterMap.size() > 0) {
-            Object model;
+            M model;
             try {
                 model = modelClass.newInstance();
-            } catch (Exception e) {
-                Logger.error("instance the object has error!", e);
-                return Optional.absent();
-            }
-            if (model instanceof Model) {
-                final Model db_model = (Model) model;
-                Table table = TableMapping.me().getTable(db_model.getClass());
+                Table table = TableMapping.me().getTable(modelClass);
                 if (table == null) {
                     Logger.error("the model has note found!");
                 } else {
@@ -550,16 +472,37 @@ public class Controller extends com.jfinal.core.Controller {
                         String[] paraValue = parameterMap.get(label);
                         try {
                             Object value = paraValue[0] != null ? TypeConverter.convert(column_type, param_value) : null;
-                            db_model.set(label, value);
+                            model.set(label, value);
                         } catch (Exception ex) {
                             Logger.warn("Can not convert parameter: {}, {}, {}. ", label, param_value, column_type);
-                            db_model.set(label, param_value);
+                            model.set(label, param_value);
                         }
                     }
-                    return Optional.of((M) db_model);
+                    return Optional.of(model);
                 }
-            } else {
-                Method[] methods = modelClass.getMethods();
+            } catch (Exception e) {
+                Logger.error("instance the object has error!", e);
+                return Optional.absent();
+            }
+        }
+        return Optional.absent();
+    }
+
+    /**
+     * From Request to Request access to information and converted to DTO, using reflection mechanism.
+     *
+     * @param dtoClass The convert class.
+     * @param <T>      Generic parameter.
+     * @return The modeal .
+     */
+    protected <T> Optional<T> getDtoByRequest(Class<? extends T> dtoClass) {
+        final HttpServletRequest request = getRequest();
+        final Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap.size() > 0) {
+            T model;
+            try {
+                model = dtoClass.newInstance();
+                Method[] methods = dtoClass.getMethods();
                 for (Method method : methods) {
                     String methodName = method.getName();
                     if (!methodName.startsWith("set"))    // only setter method
@@ -579,11 +522,12 @@ public class Controller extends com.jfinal.core.Controller {
                         }
                     }
                 }
-                return Optional.of((M) model);
+                return Optional.of(model);
+            } catch (Exception e) {
+                Logger.error("instance the object has error!", e);
+                return Optional.absent();
             }
-
         }
-
 
         return Optional.absent();
     }

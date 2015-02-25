@@ -14,7 +14,12 @@ import com.alibaba.druid.wall.WallFilter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
-import com.jfinal.config.*;
+import com.jfinal.config.Constants;
+import com.jfinal.config.Handlers;
+import com.jfinal.config.Interceptors;
+import com.jfinal.config.JFinalConfig;
+import com.jfinal.config.Plugins;
+import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
@@ -35,22 +40,19 @@ import goja.annotation.PluginBind;
 import goja.cache.Cache;
 import goja.cache.EhCacheImpl;
 import goja.exceptions.DatabaseException;
-import goja.mvc.AppLoadEvent;
 import goja.initialize.ctxbox.ClassBox;
 import goja.initialize.ctxbox.ClassType;
 import goja.job.JobsPlugin;
+import goja.mvc.AppLoadEvent;
 import goja.mvc.auto.AutoBindRoutes;
-import goja.mvc.error.GojaErrorRenderFactory;
 import goja.mvc.auto.AutoOnLoadInterceptor;
+import goja.mvc.error.GojaErrorRenderFactory;
 import goja.mvc.render.ftl.PrettyTimeDirective;
 import goja.mvc.render.ftl.layout.BlockDirective;
 import goja.mvc.render.ftl.layout.ExtendsDirective;
 import goja.mvc.render.ftl.layout.OverrideDirective;
 import goja.mvc.render.ftl.layout.SuperDirective;
 import goja.mvc.render.ftl.shiro.ShiroTags;
-import goja.rapid.syslog.LogProcessor;
-import goja.rapid.syslog.SysLogInterceptor;
-import goja.security.shiro.SecurityUserData;
 import goja.plugins.index.IndexPlugin;
 import goja.plugins.monogo.MongoPlugin;
 import goja.plugins.quartz.QuartzPlugin;
@@ -59,6 +61,9 @@ import goja.plugins.shiro.ShiroPlugin;
 import goja.plugins.sqlinxml.SqlInXmlPlugin;
 import goja.plugins.tablebind.AutoTableBindPlugin;
 import goja.plugins.tablebind.SimpleNameStyles;
+import goja.rapid.syslog.LogProcessor;
+import goja.rapid.syslog.SysLogInterceptor;
+import goja.security.shiro.SecurityUserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -182,7 +187,13 @@ public class Goja extends JFinalConfig {
         // fixed: https://github.com/GojaFramework/goja/issues/4
         started = true;
 
-        plugins.add(new EhCachePlugin(EhCacheImpl.getInstance().getCacheManager()));
+        if (new File(PathKit.getRootClassPath() + File.separator + "ehcache.xml").exists()) {
+            plugins.add(new EhCachePlugin());
+        } else {
+            plugins.add(new EhCachePlugin(EhCacheImpl.getInstance().getCacheManager()));
+        }
+
+
         initDataSource(plugins);
 
         if (GojaConfig.enable_security()) {
