@@ -163,14 +163,14 @@ public class Controller extends com.jfinal.core.Controller {
      * In the form of JSON rendering failure information.
      */
     protected <T> void renderAjaxFailure() {
-        renderJson(AjaxMessage.failure());
+        renderJson(AjaxMessage.FAILURE);
     }
 
     /**
      * In the form of JSON rendering forbidden information.
      */
     protected void renderAjaxForbidden() {
-        renderJson(AjaxMessage.forbidden());
+        renderJson(AjaxMessage.FORBIDDEN);
     }
 
     /**
@@ -207,7 +207,7 @@ public class Controller extends com.jfinal.core.Controller {
      * In the form of JSON rendering default success information.
      */
     protected void renderAjaxSuccess() {
-        renderJson(AjaxMessage.ok());
+        renderJson(AjaxMessage.OK);
     }
 
     /**
@@ -240,8 +240,8 @@ public class Controller extends com.jfinal.core.Controller {
     /**
      * Render the empty data.
      */
-    protected void renderNodata() {
-        renderJson(AjaxMessage.nodata());
+    protected void rendeAjaxrNodata() {
+        renderJson(AjaxMessage.NODATA);
     }
 
 
@@ -291,7 +291,7 @@ public class Controller extends com.jfinal.core.Controller {
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess()}
      */
     protected void renderSuccess() {
-        renderJson(AjaxMessage.ok());
+        renderJson(AjaxMessage.OK);
     }
 
     /**
