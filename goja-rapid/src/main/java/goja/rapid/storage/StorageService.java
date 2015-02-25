@@ -18,6 +18,7 @@ import static java.io.File.separator;
  */
 public class StorageService extends Storage {
 
+    public static final String FS_DIR = GojaConfig.getProperty("storage", "fs");
     /**
      * 资源文件
      */
@@ -33,7 +34,6 @@ public class StorageService extends Storage {
             Lists.newArrayList(ImageResize.builder(200, 200), ImageResize.builder(120, 120)));
 
 
-    public static final String FS_DIR = GojaConfig.getProperty("storage", "fs");
 
     private final String            file_path;
     private final String            file_url;

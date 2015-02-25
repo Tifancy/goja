@@ -18,7 +18,7 @@ public class UEHandler {
 
     private final Controller controller;
 
-    public UEHandler(Controller controller) {
+    private UEHandler(Controller controller) {
         this.controller = controller;
     }
 

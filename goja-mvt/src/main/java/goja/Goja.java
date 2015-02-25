@@ -63,6 +63,7 @@ import goja.plugins.tablebind.AutoTableBindPlugin;
 import goja.plugins.tablebind.SimpleNameStyles;
 import goja.rapid.syslog.LogProcessor;
 import goja.rapid.syslog.SysLogInterceptor;
+import goja.rapid.ueditor.UEHandler;
 import goja.security.shiro.SecurityUserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -314,6 +315,7 @@ public class Goja extends JFinalConfig {
 
     @Override
     public void afterJFinalStart() {
+        UEHandler.build(null);
         List<Class> appCliasses = ClassBox.getInstance().getClasses(ClassType.APP);
         if (appCliasses != null && !appCliasses.isEmpty()) {
             for (Class appCliass : appCliasses) {

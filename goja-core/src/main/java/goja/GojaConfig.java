@@ -25,7 +25,7 @@ import java.util.Properties;
  * @version 1.0 2014-01-13 10:24
  * @since JDK 1.6
  */
-public class GojaConfig {
+public final class GojaConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(GojaConfig.class);
 
@@ -45,20 +45,20 @@ public class GojaConfig {
     /**
      * 重新加载配置文件
      */
-    public static void reload() {
-        configProps.remove();
-        clear();
-        readConf();
-    }
+//    public static void reload() {
+//        configProps.remove();
+//        clear();
+//        readConf();
+//    }
 
-    public static void clear() {
-        DB_CONFIG.clear();
-    }
+//    private static void clear() {
+//        DB_CONFIG.clear();
+//    }
 
     /**
      * 读取配置文件
      */
-    private static void readConf() {
+    private synchronized static void readConf() {
         final Properties p = new Properties();
         ResourceKit.loadFileInProperties(APPLICATION_PROP, p);
         if (checkNullOrEmpty(p)) {
