@@ -8,17 +8,16 @@ package goja.mvc;
 
 import goja.StringPool;
 import goja.tuples.Pair;
-import goja.tuples.Tuple;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AjaxMessageTest {
 
     @Test
     public void testOk() throws Exception {
 
-        AjaxMessage ok = AjaxMessage.ok();
+        AjaxMessage ok = AjaxMessage.OK;
         assertEquals(ok.getMessage(), StringPool.EMPTY);
 
     }
