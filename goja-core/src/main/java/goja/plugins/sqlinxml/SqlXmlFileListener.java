@@ -55,7 +55,7 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
 
     private void reload(File change_file) {
         SqlGroup group;
-        if (change_file.isFile() && Files.getFileExtension(change_file.getAbsolutePath()).endsWith(SqlKit.CONFIG_SUFFIX)) {
+        if (change_file.isFile() && change_file.getAbsolutePath().endsWith(SqlKit.CONFIG_SUFFIX)) {
             group = JaxbKit.unmarshal(change_file, SqlGroup.class);
             String name = group.name;
             if (StringUtils.isBlank(name)) {
@@ -72,7 +72,7 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
 
     private void removeFile(File remove_file) {
         SqlGroup group;
-        if (remove_file.isFile() && Files.getFileExtension(remove_file.getAbsolutePath()).endsWith(SqlKit.CONFIG_SUFFIX)) {
+        if (remove_file.isFile() && remove_file.getAbsolutePath().endsWith(SqlKit.CONFIG_SUFFIX)) {
             group = JaxbKit.unmarshal(remove_file, SqlGroup.class);
             String name = group.name;
             if (StringUtils.isBlank(name)) {

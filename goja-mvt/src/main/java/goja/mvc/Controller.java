@@ -23,6 +23,7 @@ import goja.Goja;
 import goja.IntPool;
 import goja.Logger;
 import goja.kits.base.DateKit;
+import goja.lang.Lang;
 import goja.mvc.kit.Requests;
 import goja.mvc.render.BadRequest;
 import goja.mvc.render.CaptchaRender;
@@ -220,6 +221,15 @@ public class Controller extends com.jfinal.core.Controller {
         renderJson(AjaxMessage.ok(data));
     }
 
+
+    protected <T> void renderAjaxSuccess(List<T> list){
+        if (Lang.isEmpty(list)) {
+            renderJson(AjaxMessage.nodata());
+        } else {
+            renderJson(AjaxMessage.ok(list));
+        }
+    }
+
     /**
      * News Ajax rendering not logged in.
      */
@@ -251,9 +261,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param error error message.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(String)}
      */
-    protected void renderError(String error) {
-        renderJson(AjaxMessage.error(error));
-    }
+//    protected void renderError(String error) {
+//        renderJson(AjaxMessage.error(error));
+//    }
 
     /**
      * Rendering errors information, in Json format.
@@ -261,9 +271,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param data error message.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(T)}
      */
-    protected <T> void renderError(T data) {
-        renderJson(AjaxMessage.error(data));
-    }
+//    protected <T> void renderError(T data) {
+//        renderJson(AjaxMessage.error(data));
+//    }
 
     /**
      * In the form of JSON rendering failure information.
@@ -271,9 +281,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param failure failure information.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxFailure(String)}
      */
-    protected void renderFailure(String failure) {
-        renderJson(AjaxMessage.failure(failure));
-    }
+//    protected void renderFailure(String failure) {
+//        renderJson(AjaxMessage.failure(failure));
+//    }
 
     /**
      * In the form of JSON rendering success information.
@@ -281,18 +291,18 @@ public class Controller extends com.jfinal.core.Controller {
      * @param message success information.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess(String)}
      */
-    protected void renderSuccess(String message) {
-        renderJson(AjaxMessage.ok(message));
-    }
+//    protected void renderSuccess(String message) {
+//        renderJson(AjaxMessage.ok(message));
+//    }
 
     /**
      * In the form of JSON rendering default success information.
      *
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess()}
      */
-    protected void renderSuccess() {
-        renderJson(AjaxMessage.OK);
-    }
+//    protected void renderSuccess() {
+//        renderJson(AjaxMessage.OK);
+//    }
 
     /**
      * With the success of data information.
@@ -301,9 +311,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param <T>  Generic parameter.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxSuccess(T)}
      */
-    protected <T> void renderSuccess(T data) {
-        renderJson(AjaxMessage.ok(data));
-    }
+//    protected <T> void renderSuccess(T data) {
+//        renderJson(AjaxMessage.ok(data));
+//    }
 
     /**
      * Rendering errors information, in Json format.
@@ -312,9 +322,9 @@ public class Controller extends com.jfinal.core.Controller {
      * @param e     exception.
      * @deprecated please user {@link goja.mvc.Controller#renderAjaxError(String, java.lang.Exception)}
      */
-    protected void renderError(String error, Exception e) {
-        renderJson(AjaxMessage.error(error, e));
-    }
+//    protected void renderError(String error, Exception e) {
+//        renderJson(AjaxMessage.error(error, e));
+//    }
 
 
     /**
@@ -322,7 +332,6 @@ public class Controller extends com.jfinal.core.Controller {
      *
      * @param view view template.
      * @return the string.
-     * @deprecated please
      */
     protected String renderTpl(String view) {
         return template(view);

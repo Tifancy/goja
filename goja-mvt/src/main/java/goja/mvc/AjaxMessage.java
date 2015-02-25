@@ -77,6 +77,10 @@ public final class AjaxMessage<E> implements Serializable {
         this.exception = exception;
     }
 
+    public static AjaxMessage ok(){
+        return OK;
+    }
+
     /**
      * 返回处理正常的消息内容
      *
@@ -118,6 +122,10 @@ public final class AjaxMessage<E> implements Serializable {
     public static AjaxMessage developing() {
 
         return ok("正在开发中...", null);
+    }
+
+    public static AjaxMessage nodata(){
+        return NODATA;
     }
 
     /**
@@ -163,6 +171,10 @@ public final class AjaxMessage<E> implements Serializable {
         return nologin(null);
     }
 
+    public static AjaxMessage forbidden(){
+        return FORBIDDEN;
+    }
+
     /**
      * 返回禁止访问消息内容
      *
@@ -185,6 +197,10 @@ public final class AjaxMessage<E> implements Serializable {
         return new AjaxMessage<E>(data, message, MessageStatus.FORBIDDEN);
     }
 
+
+    public static AjaxMessage error(){
+        return ERROR;
+    }
 
     /**
      * 返回处理错误的消息内容
