@@ -210,6 +210,10 @@ public final class GojaConfig {
         return getProperty("app", "application");
     }
 
+    public static String domain() {
+        return getProperty("domain", "http://127.0.0.1:8080/" + appName());
+    }
+
     public static String dbUrl(){
         return getProperty("db.url");
     }

@@ -13,9 +13,6 @@ import goja.rapid.ueditor.define.BaseState;
  */
 public class UEHandler {
 
-
-    public static final UEConfig UE_CONFIG = UEConfig.config();
-
     private final Controller controller;
 
     private UEHandler(Controller controller) {

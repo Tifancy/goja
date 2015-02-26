@@ -20,7 +20,7 @@ public final class Base64Uploader {
 
         byte[] data = decode(content);
 
-        UEConfig config = UEHandler.UE_CONFIG;
+        UEConfig config = UEConfig.me;
 
         long maxSize = config.getScrawlMaxSize();
 

@@ -145,7 +145,8 @@ public class DaoKit {
                                         List<Object> params) {
         return paginate(SqlKit.sql(model_name + SQL_PIRFIX_WHERE)
                 , SqlKit.sql(model_name + SQL_PIRFIX_COLUMNS)
-                , criterias, SqlKit.sql(model_name + SQL_PIRFIX_ORDERS), params);
+                , SqlKit.sql(model_name + SQL_PIRFIX_ORDERS)
+                , criterias, params);
     }
 
     /**
@@ -159,8 +160,8 @@ public class DaoKit {
      */
     public static Page<Record> paginate(String where,
                                         String sql_columns,
-                                        DTCriterias criterias,
                                         String default_order,
+                                        DTCriterias criterias,
                                         List<Object> params) {
         int pageSize = criterias.getLength();
         int start = criterias.getStart() / pageSize + 1;

@@ -22,7 +22,7 @@ enum UEAction {
             {
                 @Override
                 public String invoke() {
-                    return JSON.toJSONString(UEHandler.UE_CONFIG);
+                    return JSON.toJSONString(UEConfig.me);
                 }
 
                 @Override
@@ -49,7 +49,7 @@ enum UEAction {
 
                 @Override
                 public String invoke(Controller controller) {
-                    UEConfig config = UEHandler.UE_CONFIG;
+                    UEConfig config = UEConfig.me;
                     String fieldName = config.getImageFieldName();
                     return BinaryUploader
                             .save(controller, fieldName,
@@ -70,7 +70,7 @@ enum UEAction {
 
                 @Override
                 public String invoke(Controller controller) {
-                    UEConfig config = UEHandler.UE_CONFIG;
+                    UEConfig config = UEConfig.me;
                     String fieldName = config.getFileFieldName();
                     return BinaryUploader
                             .save(controller, fieldName,
@@ -91,7 +91,7 @@ enum UEAction {
 
                 @Override
                 public String invoke(Controller controller) {
-                    UEConfig config = UEHandler.UE_CONFIG;
+                    UEConfig config = UEConfig.me;
                     String fieldName = config.getVideoFieldName();
                     return BinaryUploader
                             .save(controller, fieldName,
@@ -128,7 +128,7 @@ enum UEAction {
 
                 @Override
                 public String invoke(Controller controller) {
-                    String fieldName = UEHandler.UE_CONFIG.getScrawlFieldName();
+                    String fieldName = UEConfig.me.getScrawlFieldName();
                     return Base64Uploader
                             .save(controller.getPara(fieldName))
                             .toJSONString();
@@ -176,7 +176,7 @@ enum UEAction {
                     int index = controller.getParaToInt(UEConst.START);
                     int size = controller.getParaToInt(UEConst.SIZE);
 
-                    final UEConfig ueConfig = UEHandler.UE_CONFIG;
+                    final UEConfig ueConfig = UEConfig.me;
 
                     return new FileManager(ueConfig.getImageManagerListPath(),
                             ueConfig.getImageManagerAllowFiles(),
@@ -222,7 +222,7 @@ enum UEAction {
                     int index = controller.getParaToInt(UEConst.START);
                     int size = controller.getParaToInt(UEConst.SIZE);
 
-                    final UEConfig ueConfig = UEHandler.UE_CONFIG;
+                    final UEConfig ueConfig = UEConfig.me;
 
                     return new FileManager(
                             ueConfig.getFileManagerListPath(),

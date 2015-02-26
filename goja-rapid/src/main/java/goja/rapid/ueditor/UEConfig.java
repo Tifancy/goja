@@ -253,13 +253,14 @@ public final class UEConfig {
      */
     private List<String> fileManagerAllowFiles;
 
-    public static UEConfig config() {
+    public static UEConfig me = config();
 
-        String app_name = GojaConfig.appName();
-        String ue_foloder = app_name + separator + "efs" + separator;
+    private static UEConfig config() {
+
+        String ue_foloder = "uefs" + separator;
 
         final UEConfig config = new UEConfig();
-        final String url_prefix = GojaConfig.getProperty("domain", "http://127.0.0.1:8080/" + app_name);
+        final String url_prefix = GojaConfig.appName() ;
 
         config.imageActionName = "uploadimage";
         config.imageFieldName = "upfile";

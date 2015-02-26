@@ -381,12 +381,12 @@ public class Controller extends com.jfinal.core.Controller {
      * configured SQL to query and specify the parameters and return results to the client.
      *
      * @param criterias  datatable criterias.
-     * @param model_name The Model name.
+     * @param sqlGroupName The Model name.
      * @param params     Query parameters
      */
-    protected void renderDataTables(DTCriterias criterias, String model_name, List<Object> params) {
+    protected void renderDataTables(DTCriterias criterias, String sqlGroupName, List<Object> params) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
-        final Page<Record> datas = DaoKit.paginate(model_name, criterias, params);
+        final Page<Record> datas = DaoKit.paginate(sqlGroupName, criterias, params);
         DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
         renderJson(response);
     }
