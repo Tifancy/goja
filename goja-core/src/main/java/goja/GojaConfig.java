@@ -51,9 +51,9 @@ public final class GojaConfig {
 //        readConf();
 //    }
 
-//    private static void clear() {
-//        DB_CONFIG.clear();
-//    }
+    public static void clear() {
+        DB_CONFIG.clear();
+    }
 
     /**
      * 读取配置文件

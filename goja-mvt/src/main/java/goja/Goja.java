@@ -315,7 +315,6 @@ public class Goja extends JFinalConfig {
 
     @Override
     public void afterJFinalStart() {
-        UEHandler.build(null);
         List<Class> appCliasses = ClassBox.getInstance().getClasses(ClassType.APP);
         if (appCliasses != null && !appCliasses.isEmpty()) {
             for (Class appCliass : appCliasses) {
@@ -331,6 +330,7 @@ public class Goja extends JFinalConfig {
                 }
             }
         }
+        GojaConfig.clear();
     }
 
     @Override
