@@ -7,7 +7,7 @@ package goja.rapid.datatables;
  * @version 1.0
  * @since JDK 1.6
  */
-public interface DTConstants {
+interface DTConstants {
 
 
     String DT_DRAW    = "draw";
