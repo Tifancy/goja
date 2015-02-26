@@ -22,8 +22,6 @@ import static goja.StringPool.SPACE;
 final class DTDao {
 
 
-
-
     /**
      * 分页检索，默认按照id进行排序，需要指定datatables的请求参数。
      *

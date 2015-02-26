@@ -369,7 +369,7 @@ public class Controller extends com.jfinal.core.Controller {
     protected void renderDataTables(DTCriterias criterias, String model_name) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
         final Page<Record> datas = DaoKit.paginate(model_name, criterias);
-        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
+        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
         renderJson(response);
     }
 
@@ -387,7 +387,7 @@ public class Controller extends com.jfinal.core.Controller {
     protected void renderDataTables(DTCriterias criterias, String model_name, List<Object> params) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
         final Page<Record> datas = DaoKit.paginate(model_name, criterias, params);
-        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalPage());
+        DTResponse response = DTResponse.build(criterias, datas.getList(), datas.getTotalRow(), datas.getTotalRow());
         renderJson(response);
     }
 
