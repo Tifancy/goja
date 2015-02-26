@@ -261,7 +261,7 @@ public final class UEConfig {
         String ue_foloder = StorageService.FS_DIR + separator + "ue" + separator;
 
         final UEConfig config = new UEConfig();
-        final String url_prefix = GojaConfig.appName() ;
+        final String url_prefix = GojaConfig.domain() ;
 
         config.imageActionName = "uploadimage";
         config.imageFieldName = "upfile";

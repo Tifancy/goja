@@ -192,7 +192,19 @@ public class SqlKit {
 
         final FileAlterationObserver[] observers = observerList.toArray(new FileAlterationObserver[observerList.size()]);
         FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observers);
-        // 开始监控
+        // Monitoring the jar file
+
+        String jars = GojaConfig.getAppJars();
+        if (Strings.isNullOrEmpty(jars)) {
+            List<String> jarlist = Func.COMMA_SPLITTER.splitToList(jars);
+            String jar_path = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + "lib" + File.separator;
+            for (String jar : jarlist) {
+                final FileAlterationObserver observer = new FileAlterationObserver(jar_path + jar);
+                observer.addListener(SqlXmlFileListener.me);
+                observerList.add(observer);
+            }
+
+        }
         try {
             monitor.start();
         } catch (Exception e) {

@@ -31,7 +31,7 @@ public final class GojaConfig {
 
     private static final String APPLICATION_PROP = "application.conf";
 
-    private static final ThreadLocal<Properties> configProps = new ThreadLocal<Properties>();
+    private static final Properties configProps;
 
     /**
      * The Database Config In application.conf.
@@ -39,31 +39,16 @@ public final class GojaConfig {
     private static final Map<String, Properties> DB_CONFIG = Maps.newHashMapWithExpectedSize(1);
 
     static {
-        readConf();
-    }
-
-    /**
-     * 重新加载配置文件
-     */
-//    public static void reload() {
-//        configProps.remove();
-//        clear();
-//        readConf();
-//    }
-
-    public static void clear() {
-        DB_CONFIG.clear();
-    }
-
-    /**
-     * 读取配置文件
-     */
-    private synchronized static void readConf() {
         final Properties p = new Properties();
         ResourceKit.loadFileInProperties(APPLICATION_PROP, p);
         if (checkNullOrEmpty(p)) {
             throw new IllegalArgumentException("Properties file can not be empty. " + APPLICATION_PROP);
         }
+        loadDBConfig(p);
+        configProps = p;
+    }
+
+    private static void loadDBConfig(Properties p) {
         for (Object o : p.keySet()) {
             String _key = String.valueOf(o);
             Object value = p.get(o);
@@ -96,8 +81,21 @@ public final class GojaConfig {
                 }
             }
         }
-        configProps.set(p);
     }
+
+    /**
+     * 重新加载配置文件
+     */
+//    public static void reload() {
+//        configProps.remove();
+//        clear();
+//        readConf();
+//    }
+
+    public static void clear() {
+        DB_CONFIG.clear();
+    }
+
 
     /**
      * 如果属性文件为空或者没有内容，则返回true
@@ -115,7 +113,7 @@ public final class GojaConfig {
      * @return 系统配置信息
      */
     public static Properties getConfigProps() {
-        return configProps.get();
+        return configProps;
     }
 
 
@@ -125,28 +123,25 @@ public final class GojaConfig {
 
 
     public static String getProperty(String key) {
-        final Properties _p = configProps.get();
-        if (checkNullOrEmpty(_p)) {
+        if (checkNullOrEmpty(configProps)) {
             return StringPool.EMPTY;
         }
-        return _p.getProperty(key);
+        return configProps.getProperty(key);
     }
 
     public static String getProperty(String key, String defaultValue) {
-        final Properties _p = configProps.get();
-        if (checkNullOrEmpty(_p)) {
+        if (checkNullOrEmpty(configProps)) {
             return defaultValue;
         }
-        return _p.getProperty(key, defaultValue);
+        return configProps.getProperty(key, defaultValue);
     }
 
     public static Integer getPropertyToInt(String key) {
         Integer resultInt = null;
-        final Properties _p = configProps.get();
-        if (checkNullOrEmpty(_p)) {
+        if (checkNullOrEmpty(configProps)) {
             return null;
         }
-        String resultStr = _p.getProperty(key);
+        String resultStr = configProps.getProperty(key);
         if (resultStr != null)
             resultInt = Ints.tryParse(resultStr);
         return resultInt;
@@ -154,11 +149,10 @@ public final class GojaConfig {
 
     public static Long getPropertyToLong(String key) {
         Long resultInt = null;
-        final Properties _p = configProps.get();
-        if (checkNullOrEmpty(_p)) {
+        if (checkNullOrEmpty(configProps)) {
             return null;
         }
-        String resultStr = _p.getProperty(key);
+        String resultStr = configProps.getProperty(key);
         if (resultStr != null)
             resultInt = Longs.tryParse(resultStr);
         return resultInt;
@@ -173,11 +167,10 @@ public final class GojaConfig {
     }
 
     public static Boolean getPropertyToBoolean(String key) {
-        final Properties _p = configProps.get();
-        if (checkNullOrEmpty(_p)) {
+        if (checkNullOrEmpty(configProps)) {
             return null;
         }
-        String resultStr = _p.getProperty(key);
+        String resultStr = configProps.getProperty(key);
         Boolean resultBool = null;
         if (resultStr != null) {
             if (resultStr.trim().equalsIgnoreCase("true"))
@@ -229,13 +222,13 @@ public final class GojaConfig {
     }
 
     public static boolean containsKey(String key) {
-        return configProps.get().containsKey(key);
+        return configProps.containsKey(key);
     }
 
 
     public static List<Pair<String,String>> chainConfig(){
         List<Pair<String,String>> chains = Lists.newArrayList();
-        Enumeration<?> enumeration = configProps.get().propertyNames();
+        Enumeration<?> enumeration = configProps.propertyNames();
         while (enumeration.hasMoreElements()) {
             String key = (String) enumeration.nextElement();
             if(StringUtils.startsWithIgnoreCase(key,"security.chain.")){
@@ -246,6 +239,6 @@ public final class GojaConfig {
     }
 
     public static Object get(String key) {
-        return configProps.get().get(key);
+        return configProps.get(key);
     }
 }
