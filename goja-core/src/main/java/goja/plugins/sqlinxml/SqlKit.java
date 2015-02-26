@@ -192,14 +192,11 @@ public class SqlKit {
         // Monitoring the jar file
 
         String jars = GojaConfig.getAppJars();
-        if (Strings.isNullOrEmpty(jars)) {
-            List<String> jarlist = Func.COMMA_SPLITTER.splitToList(jars);
+        if (!Strings.isNullOrEmpty(jars)) {
             String jar_path = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + "lib" + File.separator;
-            for (String jar : jarlist) {
-                final FileAlterationObserver observer = new FileAlterationObserver(jar_path + jar);
+                final FileAlterationObserver observer = new FileAlterationObserver(jar_path);
                 observer.addListener(SqlXmlFileListener.me);
                 observerList.add(observer);
-            }
 
         }
 
