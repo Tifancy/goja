@@ -189,9 +189,6 @@ public class SqlKit {
             observer.addListener(SqlXmlFileListener.me);
             observerList.add(observer);
         }
-
-        final FileAlterationObserver[] observers = observerList.toArray(new FileAlterationObserver[observerList.size()]);
-        FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observers);
         // Monitoring the jar file
 
         String jars = GojaConfig.getAppJars();
@@ -205,6 +202,10 @@ public class SqlKit {
             }
 
         }
+
+        final FileAlterationObserver[] observers = observerList.toArray(new FileAlterationObserver[observerList.size()]);
+        FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observers);
+
         try {
             monitor.start();
         } catch (Exception e) {
