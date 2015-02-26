@@ -3,6 +3,7 @@ package goja.rapid.ueditor.kit;
 
 import com.jfinal.kit.PathKit;
 import goja.rapid.storage.PathFormat;
+import goja.rapid.ueditor.UEConfig;
 import goja.rapid.ueditor.UEConst;
 import goja.rapid.ueditor.UEHandler;
 import goja.rapid.ueditor.define.AppInfo;
@@ -34,11 +35,11 @@ public class ImageHunter {
 
     public ImageHunter() {
 
-        this.savePath = UEHandler.UE_CONFIG.getCatcherPathFormat();
+        this.savePath = UEConfig.me.getCatcherPathFormat();
         this.rootPath = PathKit.getWebRootPath() + File.separator;
-        this.maxSize = UEHandler.UE_CONFIG.getCatcherMaxSize();
-        this.allowTypes = UEHandler.UE_CONFIG.getCatcherAllowFiles();
-        this.filters = UEHandler.UE_CONFIG.getCatcherLocalDomain();
+        this.maxSize = UEConfig.me.getCatcherMaxSize();
+        this.allowTypes = UEConfig.me.getCatcherAllowFiles();
+        this.filters = UEConfig.me.getCatcherLocalDomain();
 
     }
 
