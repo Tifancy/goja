@@ -2,6 +2,7 @@ package goja.rapid.ueditor;
 
 import com.google.common.collect.Lists;
 import goja.GojaConfig;
+import goja.rapid.storage.StorageService;
 
 import java.util.List;
 
@@ -257,7 +258,7 @@ public final class UEConfig {
 
     private static UEConfig config() {
 
-        String ue_foloder = "uefs" + separator;
+        String ue_foloder = StorageService.FS_DIR + separator + "ue" + separator;
 
         final UEConfig config = new UEConfig();
         final String url_prefix = GojaConfig.appName() ;

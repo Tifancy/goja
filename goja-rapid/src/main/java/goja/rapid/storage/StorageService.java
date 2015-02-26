@@ -2,9 +2,9 @@ package goja.rapid.storage;
 
 import com.google.common.collect.Lists;
 import com.jfinal.kit.PathKit;
-import goja.GojaConfig;
 import goja.StringPool;
 
+import java.io.File;
 import java.util.List;
 
 import static java.io.File.separator;
@@ -18,7 +18,8 @@ import static java.io.File.separator;
  */
 public class StorageService extends Storage {
 
-    public static final String FS_DIR = GojaConfig.getProperty("storage", "fs");
+    public static final String FS_DIR = "files";
+
     /**
      * 资源文件
      */
@@ -32,7 +33,6 @@ public class StorageService extends Storage {
      */
     public final static StorageService IMAGE_STORAGE  = new StorageService("image",
             Lists.newArrayList(ImageResize.builder(200, 200), ImageResize.builder(120, 120)));
-
 
 
     private final String            file_path;
