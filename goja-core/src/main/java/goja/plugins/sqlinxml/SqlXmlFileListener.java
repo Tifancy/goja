@@ -63,57 +63,58 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
     }
 
     private void reload(File change_file) {
+        final String absolutePath = change_file.getAbsolutePath();
         SqlGroup group;
-        // Search Jar file xml config.
-        String jars = GojaConfig.getAppJars();
-        if (!Strings.isNullOrEmpty(jars)) {
-            List<String> jarlist = Func.COMMA_SPLITTER.splitToList(jars);
-            String file_name = change_file.getName();
-            if (jarlist.contains(file_name)) {
-                try {
-                    JarFile jarFile = new JarFile(change_file);
-                    Enumeration<JarEntry> entrys = jarFile.entries();
-                    while (entrys.hasMoreElements()) {
-                        JarEntry jarEntry = entrys.nextElement();
-                        final String jar_file_name = jarEntry.getName();
-                        if (jar_file_name.endsWith(SqlKit.CONFIG_SUFFIX)) {
-                            try {
-                                String xml_content = Resources.toString(Resources.getResource(jar_file_name), Charsets.UTF_8);
-                                group = JaxbKit.unmarshal(xml_content, SqlGroup.class);
-                                String name = group.name;
-                                if (StringUtils.isBlank(name)) {
-                                    name = change_file.getName();
+        if (change_file.isFile()) {
+            if (absolutePath.endsWith(".jar")) {
+                // Search Jar file xml config.
+                String jars = GojaConfig.getAppJars();
+                if (!Strings.isNullOrEmpty(jars)) {
+                    List<String> jarlist = Func.COMMA_SPLITTER.splitToList(jars);
+                    String file_name = change_file.getName();
+                    if (jarlist.contains(file_name)) {
+                        try {
+                            JarFile jarFile = new JarFile(change_file);
+                            Enumeration<JarEntry> entrys = jarFile.entries();
+                            while (entrys.hasMoreElements()) {
+                                JarEntry jarEntry = entrys.nextElement();
+                                final String jar_file_name = jarEntry.getName();
+                                if (jar_file_name.endsWith(SqlKit.CONFIG_SUFFIX)) {
+                                    try {
+                                        String xml_content = Resources.toString(Resources.getResource(jar_file_name), Charsets.UTF_8);
+                                        group = JaxbKit.unmarshal(xml_content, SqlGroup.class);
+                                        String name = group.name;
+                                        if (StringUtils.isBlank(name)) {
+                                            name = change_file.getName();
+                                        }
+                                        for (SqlItem sqlItem : group.sqlItems) {
+                                            SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
+                                        }
+                                    } catch (IOException e) {
+                                        logger.error("reade jar xml config has error!");
+                                    }
                                 }
-                                for (SqlItem sqlItem : group.sqlItems) {
-                                    SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
-                                }
-                            } catch (IOException e) {
-                                logger.error("reade jar xml config has error!");
                             }
+                        } catch (IOException e) {
+                            logger.error("Error in finding {} the SQL configuration file", file_name);
                         }
                     }
-                } catch (IOException e) {
-                    logger.error("Error in finding {} the SQL configuration file", file_name);
-                    return;
                 }
-
-            }
-
-        }
-
-        if (change_file.isFile() && change_file.getAbsolutePath().endsWith(SqlKit.CONFIG_SUFFIX)) {
-            group = JaxbKit.unmarshal(change_file, SqlGroup.class);
-            String name = group.name;
-            if (StringUtils.isBlank(name)) {
-                name = change_file.getName();
-            }
-            for (SqlItem sqlItem : group.sqlItems) {
-                SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
-            }
-            if (logger.isDebugEnabled()) {
-                logger.debug("reload file:" + change_file.getAbsolutePath());
+            } else if (absolutePath.endsWith(SqlKit.CONFIG_SUFFIX)) {
+                group = JaxbKit.unmarshal(change_file, SqlGroup.class);
+                String name = group.name;
+                if (StringUtils.isBlank(name)) {
+                    name = change_file.getName();
+                }
+                for (SqlItem sqlItem : group.sqlItems) {
+                    SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("reload file:" + absolutePath);
+                }
             }
         }
+
     }
 
     private void removeFile(File remove_file) {

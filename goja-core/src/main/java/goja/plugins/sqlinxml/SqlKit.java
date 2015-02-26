@@ -106,9 +106,9 @@ public class SqlKit {
 
             String lib_path = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + "lib" + File.separator;
 
+            JarFile jarFile;
             for (String jar : jarlist) {
                 String jar_path = lib_path + jar;
-                JarFile jarFile;
                 try {
                     jarFile = new JarFile(jar_path);
                 } catch (IOException e) {
