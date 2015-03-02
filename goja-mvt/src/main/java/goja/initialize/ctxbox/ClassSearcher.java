@@ -18,6 +18,7 @@ package goja.initialize.ctxbox;
 import com.google.common.collect.Lists;
 import com.jfinal.kit.PathKit;
 import goja.kits.reflect.Reflect;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,8 @@ public class ClassSearcher {
      */
     private static List<String> findFiles(String baseDirName, String targetFileName) {
         /**
-         * 算法简述： 从某个给定的需查找的文件夹出发，搜索该文件夹的所有子文件夹及文件， 若为文件，则进行匹配，匹配成功则加入结果集，若为子文件夹，则进队列。 队列不空，重复上述操作，队列为空，程序结束，返回结果。
+         * 算法简述： 从某个给定的需查找的文件夹出发，搜索该文件夹的所有子文件夹及文件，
+         * 若为文件，则进行匹配，匹配成功则加入结果集，若为子文件夹，则进队列。 队列不空，重复上述操作，队列为空，程序结束，返回结果。
          */
         List<String> classFiles = Lists.newArrayList();
         File baseDir = new File(baseDirName);
@@ -100,7 +102,8 @@ public class ClassSearcher {
                         fileName = file.getAbsolutePath();
                         start = fileName.indexOf(open);
                         end = fileName.indexOf(close, start + open.length());
-                        String className = fileName.substring(start + open.length(), end).replaceAll(File.separator, ".");
+                        // window 下会出现问题,正则替换问题
+                        String className = StringUtils.replace(fileName.substring(start + open.length(), end), File.separator, ".");
                         classFiles.add(className);
                     }
                 }
