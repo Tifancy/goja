@@ -16,9 +16,8 @@ import java.util.Date;
  * @since JDK 1.6
  */
 public class Model<M extends Model> extends com.jfinal.plugin.activerecord.Model<M> {
-
-
     private static final long serialVersionUID = -4236614897933149382L;
+
 
 
     public <T> T getData(String attr, Class<T> cls) {

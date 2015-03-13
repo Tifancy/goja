@@ -53,8 +53,12 @@ public class RecordBuilder {
 					value = ModelBuilder.handleBlob(rs.getBlob(i));
 				else
 					value = rs.getObject(i);
-				
-				columns.put(labelNames[i], value);
+
+				/* # edit by sogyf. */
+				/* @description:  labelNames[i] lowcase*/
+                columns.put(labelNames[i].toLowerCase(), value);
+				/* # end edited. */
+//				columns.put(labelNames[i], value);
 			}
 			result.add(record);
 		}
