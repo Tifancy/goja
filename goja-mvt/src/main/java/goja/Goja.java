@@ -210,7 +210,7 @@ public class Goja extends JFinalConfig {
             plugins.add(new IndexPlugin(index_path));
         }
 
-        final String mongo_host = GojaConfig.getProperty("mongo.host", MongoPlugin.DEFAULT_HOST);
+        final String mongo_host = GojaConfig.getProperty("mongo.host", StringUtils.EMPTY);
         final String mongo_url = GojaConfig.getProperty("mongo.url", StringUtils.EMPTY);
         if (!Strings.isNullOrEmpty(mongo_host) || !Strings.isNullOrEmpty(mongo_url)) {
             int mongo_port = GojaConfig.getPropertyToInt("mongo.port", MongoPlugin.DEFAUL_PORT);
