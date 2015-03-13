@@ -91,7 +91,7 @@ public class ClassSearcher {
         } else {
             String[] files = baseDir.list();
             File file;
-            String fileName, open = PathKit.getRootClassPath() + File.separator, close = ".class";
+            String fileName, open = classpath + File.separator, close = ".class";
             int start, end;
             for (String file_path : files) {
                 file = new File(baseDirName + File.separator + file_path);
