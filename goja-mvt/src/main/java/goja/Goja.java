@@ -63,7 +63,6 @@ import goja.plugins.tablebind.AutoTableBindPlugin;
 import goja.plugins.tablebind.SimpleNameStyles;
 import goja.rapid.syslog.LogProcessor;
 import goja.rapid.syslog.SysLogInterceptor;
-import goja.rapid.ueditor.UEHandler;
 import goja.security.shiro.SecurityUserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -383,6 +382,17 @@ public class Goja extends JFinalConfig {
                 throw new DatabaseException(e.getMessage(), e);
             }
             final DruidPlugin druidPlugin = new DruidPlugin(db_url, username, password, driverClassName);
+
+            // set validator
+            if (!StringUtils.equals(JdbcConstants.MYSQL, dbtype)) {
+                if (StringUtils.equals(JdbcConstants.ORACLE, dbtype)) {
+                    druidPlugin.setValidationQuery("SELECT 1 FROM dual");
+                } else if (StringUtils.equals(JdbcConstants.HSQL, dbtype)) {
+                    druidPlugin.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+                } else if (StringUtils.equals(JdbcConstants.DB2, dbtype)) {
+                    druidPlugin.setValidationQuery("SELECT 1 FROM sysibm.sysdummy1");
+                }
+            }
             druidPlugin.addFilter(new StatFilter());
 
             final String initialSize = GojaConfig.getProperty("db.initial.size");
