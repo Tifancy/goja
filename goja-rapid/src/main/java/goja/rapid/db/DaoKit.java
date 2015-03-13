@@ -15,6 +15,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import goja.StringPool;
 import goja.castor.Castors;
+import goja.lang.Lang;
 import goja.plugins.sqlinxml.SqlKit;
 import goja.rapid.datatables.DTCriterias;
 import goja.rapid.datatables.DTOrder;
@@ -37,7 +38,6 @@ public class DaoKit {
 
     public static final String SQL_PIRFIX_WHERE   = ".where";
     public static final String SQL_PIRFIX_COLUMNS = ".column";
-    public static final String SQL_PIRFIX_ORDERS  = ".order";
 
     /**
      * Gets the data values by specifying the data type, and automatically convert types
@@ -123,7 +123,7 @@ public class DaoKit {
      * @return SQL LIKE expression.
      */
     public static String llike(String value) {
-        return  StringPool.PERCENT +Strings.nullToEmpty(value) ;
+        return StringPool.PERCENT + Strings.nullToEmpty(value);
     }
 
     /**
@@ -133,7 +133,7 @@ public class DaoKit {
      * @return SQL LIKE expression.
      */
     public static String rlike(String value) {
-        return  Strings.nullToEmpty(value) + StringPool.PERCENT;
+        return Strings.nullToEmpty(value) + StringPool.PERCENT;
     }
 
 
@@ -161,22 +161,19 @@ public class DaoKit {
                                         List<Object> params) {
         return paginate(SqlKit.sql(model_name + SQL_PIRFIX_WHERE)
                 , SqlKit.sql(model_name + SQL_PIRFIX_COLUMNS)
-                , SqlKit.sql(model_name + SQL_PIRFIX_ORDERS)
                 , criterias, params);
     }
 
     /**
      * Paging retrieve, default sorted by id, you need to specify the datatables request parameters.
      *
-     * @param where         FROM WHERE SQL.
-     * @param sql_columns   SELECT column sql.
-     * @param criterias     required parameter
-     * @param default_order The default sort field, similar: ORDER BY DESC id.
+     * @param where       FROM WHERE SQL.
+     * @param sql_columns SELECT column sql.
+     * @param criterias   required parameter
      * @return Paging data.
      */
     public static Page<Record> paginate(String where,
                                         String sql_columns,
-                                        String default_order,
                                         DTCriterias criterias,
                                         List<Object> params) {
         int pageSize = criterias.getLength();
@@ -187,11 +184,11 @@ public class DaoKit {
         final List<Triplet<String, Condition, Object>> custom_params = criterias.getParams();
         if (!custom_params.isEmpty()) {
             boolean append_and = StringUtils.containsIgnoreCase(where, "WHERE");
-            if(!append_and){
+            if (!append_and) {
                 where_sql.append(" WHERE ");
             }
             for (Triplet<String, Condition, Object> custom_param : custom_params) {
-                if(append_and) {
+                if (append_and) {
                     where_sql.append(" AND ");
                 }
                 where_sql.append(custom_param.getValue0());
@@ -211,23 +208,18 @@ public class DaoKit {
             }
         }
 
-        if(Strings.isNullOrEmpty(default_order)){
-
-            final List<DTOrder> order = criterias.getOrder();
-            if (order != null && !order.isEmpty()) {
-                StringBuilder orderBy = new StringBuilder();
-                for (DTOrder _order : order)
-                    orderBy.append(_order.getColumn()).append(StringPool.SPACE).append(_order.getDir());
-                final String byColumns = orderBy.toString();
-                if (!Strings.isNullOrEmpty(byColumns)) {
-                    where_sql.append(" ORDER BY ").append(byColumns);
-                }
+        final List<DTOrder> order = criterias.getOrder();
+        if (!Lang.isEmpty(order)) {
+            StringBuilder orderBy = new StringBuilder();
+            for (DTOrder _order : order)
+                orderBy.append(_order.getColumn()).append(StringPool.SPACE).append(_order.getDir());
+            final String byColumns = orderBy.toString();
+            if (!Strings.isNullOrEmpty(byColumns)) {
+                where_sql.append(" ORDER BY ").append(byColumns);
             }
-        } else {
-            where_sql.append(StringPool.SPACE).append(default_order);
         }
 
-        if (params == null || params.size() == 0) {
+        if (Lang.isEmpty(params)) {
             return Db.paginate(start, pageSize, sql_columns, where_sql.toString());
         } else {
 
@@ -242,12 +234,10 @@ public class DaoKit {
      * @param where         FROM WHERE SQL.
      * @param sql_columns   SELECT column sql.
      * @param pageDto       required parameter.
-     * @param default_order he default sort field, similar: ORDER BY DESC id.
      * @return Paging data.
      */
     public static Page<Record> paginate(String where,
                                         String sql_columns,
-                                        String default_order,
                                         PageDto pageDto) {
         where = Strings.nullToEmpty(where);
         int pageSize = pageDto.pageSize;
@@ -265,7 +255,7 @@ public class DaoKit {
                 where += param.toSql();
             }
 
-            return Db.paginate(start, pageSize, sql_columns, where + default_order, query_params.toArray());
+            return Db.paginate(start, pageSize, sql_columns, where, query_params.toArray());
         }
     }
 
