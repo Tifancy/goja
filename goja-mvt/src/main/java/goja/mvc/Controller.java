@@ -249,7 +249,7 @@ public class Controller extends com.jfinal.core.Controller {
     /**
      * Render the empty data.
      */
-    protected void rendeAjaxrNodata() {
+    protected void renderAjaxNodata() {
         renderJson(AjaxMessage.NODATA);
     }
 
@@ -572,7 +572,7 @@ public class Controller extends com.jfinal.core.Controller {
      *
      * @return To get custom paging object
      */
-    protected PageDto getPage() {
+    protected PageDto getQueryPage() {
         return PageDto.create(this);
     }
 
