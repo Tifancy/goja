@@ -19,7 +19,6 @@ public class Model<M extends Model> extends com.jfinal.plugin.activerecord.Model
     private static final long serialVersionUID = -4236614897933149382L;
 
 
-
     public <T> T getData(String attr, Class<T> cls) {
         Object value = get(attr);
         return Castors.me().castTo(value, cls);
