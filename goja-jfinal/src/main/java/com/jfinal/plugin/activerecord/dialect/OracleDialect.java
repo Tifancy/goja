@@ -31,13 +31,13 @@ import com.jfinal.plugin.activerecord.Table;
 public class OracleDialect extends Dialect {
 	
 	public String forTableBuilderDoBuild(String tableName) {
-		return "select * from " + tableName + " where rownum < 1";
+		return "SELECT * FROM " + tableName + " where rownum < 1";
 	}
 	
 	// insert into table (id,name) values(seq.nextval, ？)
 	public void forModelSave(Table table, Map<String, Object> attrs, StringBuilder sql, List<Object> paras) {
-		sql.append("insert into ").append(table.getName()).append("(");
-		StringBuilder temp = new StringBuilder(") values(");
+		sql.append("INSERT INTO ").append(table.getName()).append("(");
+		StringBuilder temp = new StringBuilder(") VALUES(");
 		String pKey = table.getPrimaryKey();
 		int count = 0;
 		for (Entry<String, Object> e: attrs.entrySet()) {
@@ -206,6 +206,6 @@ public class OracleDialect extends Dialect {
 	}
 	
 	public String getDefaultPrimaryKey() {
-		return "ID";
+		return "id";
 	}
 }
