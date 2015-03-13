@@ -1,6 +1,8 @@
 package goja.rapid.db;
 
+import goja.IntPool;
 import goja.castor.Castors;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
@@ -47,5 +49,26 @@ public class Model<M extends Model> extends com.jfinal.plugin.activerecord.Model
     public DateTime valDateTime(String attr) {
         Timestamp timestamp = getTimestamp(attr);
         return new DateTime(timestamp.getTime());
+    }
+
+    public boolean valBoolean(String attr) {
+        Object val = get(attr);
+        if (val == null) {
+            return false;
+        }
+        if (val instanceof Boolean) {
+            return (Boolean) val;
+        } else if (val instanceof Number) {
+            Number val_num = (Number) val;
+            return val_num.intValue() == IntPool.ONE;
+        } else if (val instanceof String) {
+            String val_str = (String) val;
+            return StringUtils.equalsIgnoreCase(val_str, "Y")
+                    || StringUtils.equalsIgnoreCase(val_str, "1")
+                    || StringUtils.equalsIgnoreCase(val_str, "ON");
+        } else {
+            return false;
+        }
+
     }
 }
