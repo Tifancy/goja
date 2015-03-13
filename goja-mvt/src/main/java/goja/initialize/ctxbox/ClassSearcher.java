@@ -79,7 +79,7 @@ public class ClassSearcher {
      * @param baseDirName    查找的文件夹路径
      * @param targetFileName 需要查找的文件名
      */
-    private static List<String> findFiles(String baseDirName, String targetFileName) {
+    private static List<String> findFiles(String baseDirName, String targetFileName, final String classpath) {
         /**
          * 算法简述： 从某个给定的需查找的文件夹出发，搜索该文件夹的所有子文件夹及文件，
          * 若为文件，则进行匹配，匹配成功则加入结果集，若为子文件夹，则进队列。 队列不空，重复上述操作，队列为空，程序结束，返回结果。
@@ -96,7 +96,7 @@ public class ClassSearcher {
             for (String file_path : files) {
                 file = new File(baseDirName + File.separator + file_path);
                 if (file.isDirectory()) {
-                    classFiles.addAll(findFiles(baseDirName + File.separator + file_path, targetFileName));
+                    classFiles.addAll(findFiles(baseDirName + File.separator + file_path, targetFileName,classpath));
                 } else {
                     if (wildcardMatch(targetFileName, file.getName())) {
                         fileName = file.getAbsolutePath();
@@ -153,10 +153,10 @@ public class ClassSearcher {
     public List<Class<?>> search() {
         List<String> classFileList = Lists.newArrayList();
         if (scanPackages.isEmpty()) {
-            classFileList = findFiles(classpath, "*.class");
+            classFileList = findFiles(classpath, "*.class",classpath);
         } else {
             for (String scanPackage : scanPackages) {
-                classFileList = findFiles(classpath + File.separator + scanPackage.replaceAll("\\.", "\\" + File.separator), "*.class");
+                classFileList = findFiles(classpath + File.separator + scanPackage.replaceAll("\\.", "\\" + File.separator), "*.class",classpath);
             }
         }
         classFileList.addAll(findjarFiles(libDir));
