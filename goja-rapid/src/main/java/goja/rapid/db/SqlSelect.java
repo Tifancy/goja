@@ -40,7 +40,7 @@ public class SqlSelect extends SqlQuery {
      */
     protected final SqlConcat limit;
 
-    public SqlSelect() {
+    private SqlSelect() {
         select = new SqlConcat("SELECT ", ", ").defaultValue(null);
         from = new SqlConcat("FROM ", ", ").defaultValue(null);
         join = new SqlConcat(null, null).defaultValue(null);
@@ -50,7 +50,7 @@ public class SqlSelect extends SqlQuery {
         limit = new SqlConcat("LIMIT ", null);
     }
 
-    public SqlSelect(SqlSelect src) {
+    private SqlSelect(SqlSelect src) {
         select = new SqlConcat(src.select);
         from = new SqlConcat(src.from);
         join = new SqlConcat(src.join);
@@ -60,6 +60,18 @@ public class SqlSelect extends SqlQuery {
         limit = new SqlConcat(src.limit);
 
         params.addAll(src.getParams());
+    }
+
+    /**
+     * Link Sql Select
+     * @return SQL SELECT
+     */
+    public static SqlSelect create(){
+        return new SqlSelect();
+    }
+
+    public static SqlSelect create(SqlSelect src){
+        return new SqlSelect(src);
     }
 
     @Override
