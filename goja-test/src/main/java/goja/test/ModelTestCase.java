@@ -95,9 +95,22 @@ public abstract class ModelTestCase {
         WallFilter wall = new WallFilter();
         wall.setDbType(dbtype);
         dp.addFilter(wall);
+        // set validator
+        if (!StringUtils.equals(JdbcConstants.MYSQL, dbtype)) {
+            if (StringUtils.equals(JdbcConstants.ORACLE, dbtype)) {
+                dp.setValidationQuery("SELECT 1 FROM dual");
+            } else if (StringUtils.equals(JdbcConstants.HSQL, dbtype)) {
+                dp.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+            } else if (StringUtils.equals(JdbcConstants.DB2, dbtype)) {
+                dp.setValidationQuery("SELECT 1 FROM sysibm.sysdummy1");
+            }
+        }
 
         dp.getDataSource();
         dp.start();
+
+
+
 
         activeRecord = new AutoTableBindPlugin(db_config, dp, SimpleNameStyles.LOWER_UNDERLINE);
         if (!StringUtils.equals(dbtype, JdbcConstants.MYSQL)) {
