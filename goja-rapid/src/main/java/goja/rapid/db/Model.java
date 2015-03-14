@@ -1,6 +1,5 @@
 package goja.rapid.db;
 
-import goja.IntPool;
 import goja.castor.Castors;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -58,7 +57,7 @@ public class Model<M extends Model> extends com.jfinal.plugin.activerecord.Model
             return (Boolean) val;
         } else if (val instanceof Number) {
             Number val_num = (Number) val;
-            return val_num.intValue() == IntPool.ONE;
+            return val_num.intValue() == 0;
         } else if (val instanceof String) {
             String val_str = (String) val;
             return StringUtils.equalsIgnoreCase(val_str, "Y")

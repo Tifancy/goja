@@ -6,8 +6,11 @@
 
 package goja;
 
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -21,9 +24,13 @@ import com.google.common.base.Splitter;
 public interface Func {
 
     /**
+     * Map JSON serialized objects
+     */
+    TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, Object>>() {};
+    /**
      * Will be set into a comma separated string.
      */
-    Joiner COMMA_JOINER = Joiner.on(StringPool.COMMA).skipNulls();
+    Joiner                             COMMA_JOINER       = Joiner.on(StringPool.COMMA).skipNulls();
 
     /**
      * Comma-separated string into a collection of instances.
@@ -36,11 +43,11 @@ public interface Func {
     Joiner DOT_JOINER = Joiner.on(StringPool.DOT).skipNulls();
 
 
-    Splitter DOT_SPLITTER = Splitter.on(StringPool.DOT).trimResults().omitEmptyStrings();
+    Splitter DOT_SPLITTER  = Splitter.on(StringPool.DOT).trimResults().omitEmptyStrings();
     /**
      *
      */
-    Joiner EQUALS_JOINER = Joiner.on(StringPool.EQUALS).skipNulls();
+    Joiner   EQUALS_JOINER = Joiner.on(StringPool.EQUALS).skipNulls();
 
 
     Splitter EQUALS_SPLITTER = Splitter.on(StringPool.EQUALS).trimResults().omitEmptyStrings();

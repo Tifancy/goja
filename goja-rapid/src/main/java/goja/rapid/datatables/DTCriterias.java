@@ -7,7 +7,6 @@ import com.google.common.primitives.Ints;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import goja.IntPool;
 import goja.StringPool;
 import goja.rapid.db.Condition;
 import goja.rapid.db.DaoKit;
@@ -84,10 +83,10 @@ public final class DTCriterias implements Serializable {
 
             boolean custom_search = !Strings.isNullOrEmpty(request.getParameter("multiquery"));
 
-            int draw = Strings.isNullOrEmpty(r_draw) ? IntPool.ONE : Ints.tryParse(r_draw);
-            int start = Strings.isNullOrEmpty(r_start) ? IntPool.ONE : Ints.tryParse(r_start);
-            int length = Strings.isNullOrEmpty(r_length) ? IntPool.ONE : Ints.tryParse(r_length);
-            start = start == IntPool.ZERO ? IntPool.ONE : start;
+            int draw = Strings.isNullOrEmpty(r_draw) ? 1 : Ints.tryParse(r_draw);
+            int start = Strings.isNullOrEmpty(r_start) ? 1 : Ints.tryParse(r_start);
+            int length = Strings.isNullOrEmpty(r_length) ? 1 : Ints.tryParse(r_length);
+            start = start == 0 ? 1 : start;
 
             DTSearch dtSearch = DTSearch.create(r_search_value, BooleanUtils.toBoolean(r_search_regex));
 

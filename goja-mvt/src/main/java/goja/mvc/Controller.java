@@ -20,7 +20,6 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
 import goja.Goja;
-import goja.IntPool;
 import goja.Logger;
 import goja.kits.base.DateKit;
 import goja.lang.Lang;
@@ -410,7 +409,7 @@ public class Controller extends com.jfinal.core.Controller {
      */
     protected void renderEmptyDataTables(DTCriterias criterias) {
         Preconditions.checkNotNull(criterias, "datatable criterias is must be not null.");
-        DTResponse response = DTResponse.build(criterias, Collections.EMPTY_LIST, IntPool.ZERO, IntPool.ZERO);
+        DTResponse response = DTResponse.build(criterias, Collections.EMPTY_LIST, 0, 0);
         renderJson(response);
     }
 

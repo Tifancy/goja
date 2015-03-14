@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static goja.IntPool.ZERO;
 import static goja.StringPool.SLASH;
 import static goja.date.DateProvider.DEFAULT;
 
@@ -122,7 +121,7 @@ public abstract class Storage {
             return Optional.absent();
         }
 
-        final String folder = getPath() + file_folder_path.substring(ZERO, file_folder_path.lastIndexOf(SLASH));
+        final String folder = getPath() + file_folder_path.substring(0, file_folder_path.lastIndexOf(SLASH));
         return Optional.of(FileDto.createFileInfo(file_path, folder, file_folder_path + ext));
     }
 
