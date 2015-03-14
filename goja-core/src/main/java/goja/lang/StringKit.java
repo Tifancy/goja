@@ -7,7 +7,7 @@
 package goja.lang;
 
 import com.google.common.base.Charsets;
-import goja.validator.ValidatorKit;
+import goja.Validator;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -691,7 +691,7 @@ public class StringKit {
      * @return true 如果是有效的邮箱地址
      */
     public static boolean isEmail(String input) {
-        return !StringKit.isBlank(input) && ValidatorKit.isEmail(input);
+        return !StringKit.isBlank(input) && Validator.isEmail(input);
     }
 
     /**
