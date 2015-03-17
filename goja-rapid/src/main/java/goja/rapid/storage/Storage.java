@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static goja.StringPool.SLASH;
-import static goja.date.DateProvider.DEFAULT;
+//import static goja.date.DateProvider.DEFAULT;
 
 /**
  * <p>
@@ -92,7 +93,7 @@ public abstract class Storage {
      */
     public Optional<FileDto> save(File f) {
         String ext = '.' + Files.getFileExtension(f.getName()).toLowerCase();
-        String parent_dir = FMT_FN.format(DEFAULT.getCurrentDate());
+        String parent_dir = FMT_FN.format(DateTime.now().toDate());
         final String filename = RandomStringUtils.randomAlphanumeric(6);
         String file_folder_path = parent_dir + filename;
         String file_path = getFolder() + file_folder_path + ext;

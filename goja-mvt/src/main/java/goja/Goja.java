@@ -60,7 +60,6 @@ import goja.plugins.redis.JedisPlugin;
 import goja.plugins.shiro.ShiroPlugin;
 import goja.plugins.sqlinxml.SqlInXmlPlugin;
 import goja.plugins.tablebind.AutoTableBindPlugin;
-import goja.plugins.tablebind.SimpleNameStyles;
 import goja.rapid.syslog.LogProcessor;
 import goja.rapid.syslog.SysLogInterceptor;
 import goja.security.shiro.SecurityUserData;
@@ -329,7 +328,7 @@ public class Goja extends JFinalConfig {
                 }
             }
         }
-        GojaConfig.clear();
+//        GojaConfig.clear();
     }
 
     @Override
@@ -346,7 +345,7 @@ public class Goja extends JFinalConfig {
      */
     private void initDataSource(final Plugins plugins) {
 
-        final Map<String, Properties> dbConfig = GojaConfig.getDbConfig();
+        final Map<String, Properties> dbConfig = GojaConfig.loadDBConfig(GojaConfig.getConfigProps());
         for (String db_config : dbConfig.keySet()) {
             final Properties db_props = dbConfig.get(db_config);
             if (db_props != null && !db_props.isEmpty()) {
@@ -430,7 +429,7 @@ public class Goja extends JFinalConfig {
             plugins.add(druidPlugin);
 
             //  setting db table name like 'dev_info'
-            final AutoTableBindPlugin atbp = new AutoTableBindPlugin(configName, druidPlugin, SimpleNameStyles.LOWER_UNDERLINE);
+            final AutoTableBindPlugin atbp = new AutoTableBindPlugin(configName, druidPlugin);
 
             if (!StringUtils.equals(dbtype, JdbcConstants.MYSQL)) {
                 if (StringUtils.equals(dbtype, JdbcConstants.ORACLE)) {

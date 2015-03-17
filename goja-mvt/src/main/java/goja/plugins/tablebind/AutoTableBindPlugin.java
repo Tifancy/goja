@@ -18,6 +18,7 @@ package goja.plugins.tablebind;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.IDataSourceProvider;
+import goja.StringPool;
 import goja.annotation.TableBind;
 import goja.initialize.ctxbox.ClassBox;
 import goja.initialize.ctxbox.ClassType;
@@ -26,11 +27,9 @@ import java.util.List;
 
 public class AutoTableBindPlugin extends ActiveRecordPlugin {
 
-    private final INameStyle nameStyle;
 
-    public AutoTableBindPlugin(String configName, IDataSourceProvider dataSourceProvider, INameStyle nameStyle) {
+    public AutoTableBindPlugin(String configName, IDataSourceProvider dataSourceProvider) {
         super(configName, dataSourceProvider);
-        this.nameStyle = nameStyle;
     }
 
 
@@ -44,7 +43,7 @@ public class AutoTableBindPlugin extends ActiveRecordPlugin {
                 tb = (TableBind) modelClass.getAnnotation(TableBind.class);
                 String tableName;
                 if (tb == null) {
-                    tableName = nameStyle.name(modelClass.getSimpleName());
+                    tableName = name(modelClass.getSimpleName());
                     this.addMapping(tableName, modelClass);
                 } else {
                     tableName = tb.tableName();
@@ -64,4 +63,19 @@ public class AutoTableBindPlugin extends ActiveRecordPlugin {
         return super.stop();
     }
 
+
+    public String name(String className) {
+        String tableName = StringPool.EMPTY;
+        for (int i = 0; i < className.length(); i++) {
+            char ch = className.charAt(i);
+            if (i == 0) {
+                tableName += Character.toLowerCase(ch);
+            } else if (Character.isUpperCase(ch)) {
+                tableName += StringPool.UNDERSCORE + Character.toLowerCase(ch);
+            } else {
+                tableName += ch;
+            }
+        }
+        return tableName;
+    }
 }

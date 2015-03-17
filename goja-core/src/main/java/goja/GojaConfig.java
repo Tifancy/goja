@@ -33,10 +33,6 @@ public final class GojaConfig {
 
     private static final Properties configProps;
 
-    /**
-     * The Database Config In application.conf.
-     */
-    private static final Map<String, Properties> DB_CONFIG = Maps.newHashMapWithExpectedSize(1);
 
     static {
         final Properties p = new Properties();
@@ -44,11 +40,12 @@ public final class GojaConfig {
         if (checkNullOrEmpty(p)) {
             throw new IllegalArgumentException("Properties file can not be empty. " + APPLICATION_PROP);
         }
-        loadDBConfig(p);
+//        loadDBConfig(p);
         configProps = p;
     }
 
-    private static void loadDBConfig(Properties p) {
+    public static Map<String, Properties> loadDBConfig(Properties p) {
+        Map<String, Properties> DB_CONFIG = Maps.newHashMapWithExpectedSize(1);
         for (Object o : p.keySet()) {
             String _key = String.valueOf(o);
             Object value = p.get(o);
@@ -81,6 +78,7 @@ public final class GojaConfig {
                 }
             }
         }
+        return  DB_CONFIG;
     }
 
     /**
@@ -92,9 +90,6 @@ public final class GojaConfig {
 //        readConf();
 //    }
 
-    public static void clear() {
-        DB_CONFIG.clear();
-    }
 
 
     /**
@@ -116,10 +111,6 @@ public final class GojaConfig {
         return configProps;
     }
 
-
-    public static Map<String, Properties> getDbConfig() {
-        return DB_CONFIG;
-    }
 
 
     public static String getProperty(String key) {

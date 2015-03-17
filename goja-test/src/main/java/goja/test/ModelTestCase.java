@@ -22,7 +22,6 @@ import goja.initialize.ctxbox.ClassFinder;
 import goja.kits.reflect.Reflect;
 import goja.plugins.sqlinxml.SqlKit;
 import goja.plugins.tablebind.AutoTableBindPlugin;
-import goja.plugins.tablebind.SimpleNameStyles;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -53,7 +52,7 @@ public abstract class ModelTestCase {
         ClassFinder.findWithTest();
         Reflect.on(Goja.class).call("initWithTest");
 
-        final Map<String, Properties> dbConfig = GojaConfig.getDbConfig();
+        final Map<String, Properties> dbConfig = GojaConfig.loadDBConfig(GojaConfig.getConfigProps());
         for (String db_config : dbConfig.keySet()) {
             final Properties db_props = dbConfig.get(db_config);
             if (db_props != null && !db_props.isEmpty()) {
@@ -110,9 +109,7 @@ public abstract class ModelTestCase {
         dp.start();
 
 
-
-
-        activeRecord = new AutoTableBindPlugin(db_config, dp, SimpleNameStyles.LOWER_UNDERLINE);
+        activeRecord = new AutoTableBindPlugin(db_config, dp);
         if (!StringUtils.equals(dbtype, JdbcConstants.MYSQL)) {
             if (StringUtils.equals(dbtype, JdbcConstants.ORACLE)) {
                 activeRecord.setDialect(new OracleDialect());
