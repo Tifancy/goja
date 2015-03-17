@@ -17,6 +17,7 @@ package goja.initialize.ctxbox;
 
 import com.google.common.collect.Lists;
 import com.jfinal.kit.PathKit;
+import goja.StringPool;
 import goja.kits.reflect.Reflect;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -194,7 +195,7 @@ public class ClassSearcher {
                                 String entryName = jarEntry.getName();
                                 if (scanPackages.isEmpty()) {
                                     if (!jarEntry.isDirectory() && entryName.endsWith(".class")) {
-                                        String className = StringUtils.replace(entryName, File.separator, ".").substring(0, entryName.length() - 6);
+                                        String className = StringUtils.replace(entryName, StringPool.SLASH, ".").substring(0, entryName.length() - 6);
                                         classFiles.add(className);
                                     }
                                 } else {
@@ -215,7 +216,7 @@ public class ClassSearcher {
                                     localJarFile.close();
                                 }
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                LOG.error("close jar file has error!", e);
                             }
                         }
                     }
