@@ -1,6 +1,7 @@
 package goja.security.shiro;
 
 import goja.GojaConfig;
+import goja.StringPool;
 import goja.lang.Lang;
 import goja.tuples.Pair;
 import org.apache.shiro.util.StringUtils;
@@ -18,6 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -125,4 +131,11 @@ public class GojaShiroFilter extends AbstractShiroFilter {
         applyUnauthorizedUrlIfNecessary(filter);
     }
 
+    @Override
+    protected void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
+        // Solving garbled form submission problem
+        servletRequest.setCharacterEncoding(StringPool.UTF_8);
+        servletResponse.setCharacterEncoding(StringPool.UTF_8);
+        super.doFilterInternal(servletRequest, servletResponse, chain);
+    }
 }

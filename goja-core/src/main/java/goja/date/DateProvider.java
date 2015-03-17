@@ -6,6 +6,7 @@ import java.util.Date;
  * Date provider, use it rather than directly obtain the system time.
  *
  * @author calvin
+ * @deprecated
  */
 public interface DateProvider {
 
