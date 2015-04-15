@@ -19,4 +19,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface On {
     String value();
+
+    boolean enabled() default true;
 }

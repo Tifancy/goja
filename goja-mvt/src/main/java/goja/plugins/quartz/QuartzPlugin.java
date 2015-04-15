@@ -6,6 +6,7 @@
 package goja.plugins.quartz;
 
 import com.jfinal.plugin.IPlugin;
+import goja.GojaConfig;
 import goja.Logger;
 import goja.annotation.On;
 import goja.initialize.ctxbox.ClassBox;
@@ -49,7 +50,12 @@ public class QuartzPlugin implements IPlugin {
                 on = (On) jobClass.getAnnotation(On.class);
                 if (on != null) {
                     String jobCronExp = on.value();
-                    addJob(jobClass, jobCronExp, jobClass.getName() + ".job");
+                    if (jobCronExp.startsWith("cron.")) {
+                        jobCronExp = GojaConfig.getProperty(jobCronExp);
+                    }
+                    if(on.enabled()) {
+                        addJob(jobClass, jobCronExp, jobClass.getName() + ".job");
+                    }
                 }
             }
         }
