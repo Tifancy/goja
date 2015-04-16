@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Job<V> extends Invoker.Invocation implements Callable<V> {
 
-    public static final String invocationType = "Goja_invocation";
+    public static final String invocationType = "goja_invocation";
 
     protected ExecutorService executor;
 
