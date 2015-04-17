@@ -14,6 +14,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
+import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.status.InfoStatus;
 import ch.qos.logback.core.status.StatusManager;
@@ -52,6 +53,9 @@ public class AppLogConfigurator {
         final TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();
         rollingPolicy.setParent(rfa);
         rollingPolicy.setFileNamePattern(StringUtils.replace(filename, ".log", ".%d{yyyy-MM-dd}.log"));
+        SizeAndTimeBasedFNATP timeBasedTriggering = new SizeAndTimeBasedFNATP();
+        timeBasedTriggering.setMaxFileSize("100MB");
+        rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(timeBasedTriggering);
         rollingPolicy.setContext(lc);
         rfa.setRollingPolicy(rollingPolicy);
         rfa.setContext(lc);
