@@ -87,7 +87,7 @@ public class JedisPlugin implements IPlugin {
         poolConfig.setTestOnReturn(getPropertyToBoolean("redis.testonreturn", DEFAULT_TEST_ON_RETURN));
         poolConfig.setTestOnBorrow(getPropertyToBoolean("redis.testonborrow", DEFAULT_TEST_ON_BORROW));
 
-        pool = new JedisPool(poolConfig, shardInfo.getHost(), shardInfo.getPort(), shardInfo.getTimeout(), shardInfo.getPassword());
+        pool = new JedisPool(poolConfig, shardInfo.getHost(), shardInfo.getPort(), shardInfo.getSoTimeout(), shardInfo.getPassword());
         JedisKit.init(pool);
         return true;
     }

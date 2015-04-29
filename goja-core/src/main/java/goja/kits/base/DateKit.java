@@ -7,7 +7,6 @@
 package goja.kits.base;
 
 import goja.date.DateFormatter;
-import goja.date.DateProvider;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;

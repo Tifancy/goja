@@ -3,7 +3,6 @@ package goja.castor.castor;
 
 
 import goja.date.DateFormatter;
-import goja.date.DateProvider;
 import goja.lang.Times;
 
 public class Datetime2String extends DateTimeCastor<java.util.Date, String> {

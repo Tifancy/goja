@@ -87,7 +87,7 @@
         <!-- the cache and database -->
         <ehcache-core.version>2.6.10</ehcache-core.version>
         <!-- The database connection poll util. -->
-        <druid.version>1.0.13</druid.version>
+        <druid.version>1.0.14</druid.version>
         <!-- the database jdbc driver. -->
         <mysql-connector-java.version>5.1.34</mysql-connector-java.version>
         <postgresql.version>9.3-1103-jdbc41</postgresql.version>
@@ -101,12 +101,11 @@
         <!-- nosql -->
         <mongo-java-driver.version>3.0.0</mongo-java-driver.version>
         <morphia.version>0.111</morphia.version>
-        <jedis.version>2.7.0</jedis.version>
+        <jedis.version>2.7.2</jedis.version>
 
         <ant.version>1.9.4</ant.version>
         <!--the office -->
         <poi.version>3.11</poi.version>
-        <jxls-core.version>1.0.6</jxls-core.version>
         <jetty.version>9.2.5.v20141112</jetty.version>
     </properties>
 

@@ -6,10 +6,10 @@
 
 package goja.kits.base;
 
-import goja.date.DateProvider;
 import goja.encry.EncodeKit;
 import goja.lang.Lang;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.DateTime;
 import sun.misc.BASE64Encoder;
 
 import java.security.MessageDigest;
@@ -36,7 +36,7 @@ public class KeyCodeKit {
         return digestPassword(Lang.limitLenStr(productSerialNo, 10)
                 + Lang.limitLenStr(codeKey, 5)
                 + RandomStringUtils.randomAlphanumeric(5)
-                + DateProvider.DEFAULT.getCurrentTimeInMillis());
+                + DateTime.now().getMillis());
     }
 
 
