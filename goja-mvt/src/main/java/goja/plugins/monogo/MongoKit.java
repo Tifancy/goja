@@ -96,8 +96,7 @@ public class MongoKit {
         if (totalRow % pageSize != 0) {
             totalPage++;
         }
-        Page<Record> page = new Page<Record>(records, pageNumber, pageSize, totalPage, totalRow);
-        return page;
+        return new Page<Record>(records, pageNumber, pageSize, totalPage, totalRow);
     }
 
     private static void page(int pageNumber, int pageSize, DBCursor dbCursor) {

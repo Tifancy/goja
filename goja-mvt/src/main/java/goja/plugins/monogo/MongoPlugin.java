@@ -7,13 +7,9 @@ package goja.plugins.monogo;
 
 import com.jfinal.plugin.IPlugin;
 import com.mongodb.MongoClient;
-import goja.StringPool;
-
-import java.net.UnknownHostException;
 
 public class MongoPlugin implements IPlugin {
 
-    public static final String DEFAULT_HOST = StringPool.LOCAL_HOST;
     public static final int    DEFAUL_PORT  = 27017;
     public static final String DEFAULT_PKGS = "app.entitys";
 
@@ -27,35 +23,6 @@ public class MongoPlugin implements IPlugin {
     private final  boolean     morphia;
     private static MongoClient client;
 
-    /**
-     * 初始化MongoDB插件
-     *
-     * @param database 数据库名称
-     */
-    public MongoPlugin(String database) {
-        this(database, false);
-    }
-
-    /**
-     * 初始化MongoDB插件，并确定是否启用Morphia功能
-     *
-     * @param database     数据库
-     * @param morphia_pkgs morphia package name.
-     */
-    public MongoPlugin(String database, String morphia_pkgs) {
-        this(DEFAULT_HOST, DEFAUL_PORT, database, true, morphia_pkgs);
-    }
-
-
-    /**
-     * 初始化MongoDB插件，并确定是否启用Morphia功能
-     *
-     * @param database 数据库
-     * @param morphia  true，启用Morphia，false，不启用
-     */
-    public MongoPlugin(String database, boolean morphia) {
-        this(DEFAULT_HOST, DEFAUL_PORT, database, morphia, DEFAULT_PKGS);
-    }
 
     /**
      * 给定地址、端口、数据库名称以及是否启动Morphia参数构建MongoDB插件
@@ -76,11 +43,7 @@ public class MongoPlugin implements IPlugin {
     @Override
     public boolean start() {
 
-        try {
-            client = new MongoClient(host, port);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException("can't connect mongodb, please check the host and port:" + host + StringPool.COMMA + port, e);
-        }
+        client = new MongoClient(host, port);
 
         MongoKit.init(client, database);
         if (morphia) {

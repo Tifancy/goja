@@ -23,4 +23,6 @@ public @interface TableBind {
     String pkName() default StringPool.EMPTY;
 
     String configName() default DbKit.MAIN_CONFIG_NAME;
+
+    boolean ignore() default false;
 }
