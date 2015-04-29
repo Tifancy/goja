@@ -19,6 +19,7 @@ import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.status.InfoStatus;
 import ch.qos.logback.core.status.StatusManager;
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import goja.GojaConfig;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,7 +48,11 @@ public class AppLogConfigurator {
         ca.setName("console");
 
         final RollingFileAppender rfa = new RollingFileAppender();
-        final String filename = GojaConfig.getProperty("logger.path", "../logs/" + GojaConfig.appName() + ".log");
+        String appname = GojaConfig.appName();
+        if (Strings.isNullOrEmpty(appname)) {
+            appname = "goja";
+        }
+        final String filename = GojaConfig.getProperty("logger.path", "../logs/" + appname + ".log");
         rfa.setFile(filename);
         final TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();
         rollingPolicy.setParent(rfa);
