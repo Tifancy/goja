@@ -17,6 +17,7 @@ import goja.GojaConfig;
 import goja.cache.Cache;
 import goja.castor.Castors;
 import goja.initialize.ctxbox.ClassFinder;
+import goja.logging.LoggerInit;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.SQLExec;
@@ -59,7 +60,7 @@ public class GojaInitializer implements ServletContainerInitializer {
                     .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         }
         // init logger
-        goja.Logger.init();
+        LoggerInit.init();
         //logger context destroy listener.
         ctx.addListener("ch.qos.logback.classic.selector.servlet.ContextDetachingSCL");
 

@@ -130,7 +130,7 @@ public abstract class ModelTestCase {
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void setUpAfterClass() throws Exception {
         activeRecord.stop();
         dp.stop();
     }
