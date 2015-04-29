@@ -10,6 +10,10 @@
     <artifactId>goja-jfinal</artifactId>
     <packaging>jar</packaging>
 
+    <description>
+        Note: From to www.jfinal.com
+    </description>
+
     <name>goja-jfinal</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

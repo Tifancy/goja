@@ -18,10 +18,10 @@ import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.status.InfoStatus;
 import ch.qos.logback.core.status.StatusManager;
+import com.google.common.base.Charsets;
 import goja.Goja;
 import goja.GojaConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -52,6 +52,7 @@ public class AppLogConfigurator {
         rfa.setFile(filename);
         final TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();
         rollingPolicy.setParent(rfa);
+        rollingPolicy.setMaxHistory(15);
         rollingPolicy.setFileNamePattern(StringUtils.replace(filename, ".log", ".%d{yyyy-MM-dd}.log"));
         SizeAndTimeBasedFNATP timeBasedTriggering = new SizeAndTimeBasedFNATP();
         timeBasedTriggering.setMaxFileSize("100MB");
@@ -63,7 +64,8 @@ public class AppLogConfigurator {
 
         PatternLayoutEncoder pl = new PatternLayoutEncoder();
         pl.setContext(lc);
-        pl.setPattern("%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");
+        pl.setCharset(Charsets.UTF_8);
+        pl.setPattern("%d{yyyy-MM-dd HH:mm:ss,SSS} [%thread] %-5level %logger{36} - %msg%n");
         pl.start();
 
         ca.setEncoder(pl);
@@ -101,8 +103,4 @@ public class AppLogConfigurator {
         }
     }
 
-    public static void configureDefaultContext() {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        configure(lc);
-    }
 }
