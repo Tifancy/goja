@@ -43,6 +43,7 @@ import goja.exceptions.DatabaseException;
 import goja.initialize.ctxbox.ClassBox;
 import goja.initialize.ctxbox.ClassType;
 import goja.job.JobsPlugin;
+import goja.logging.LoggerInit;
 import goja.mvc.AppLoadEvent;
 import goja.mvc.auto.AutoBindRoutes;
 import goja.mvc.auto.AutoOnLoadInterceptor;
@@ -84,7 +85,6 @@ import java.util.Properties;
 public class Goja extends JFinalConfig {
 
     public static final String FTL_HTML_PREFIX = ".ftl";
-    public static final String VERSION = "v0.1";
     /**
      * The list of supported locales
      */
@@ -119,7 +119,7 @@ public class Goja extends JFinalConfig {
 
         // dev_mode
         mode = Mode.DEV;
-        Logger.init();
+        LoggerInit.init();
     }
 
     @Override
@@ -140,9 +140,6 @@ public class Goja extends JFinalConfig {
 
         appName = GojaConfig.appName();
         appVersion = GojaConfig.appVersion();
-
-        // init logger.
-        Logger.init();
 
         // init wxchat config
         final String wx_url = GojaConfig.getProperty("wx.url");

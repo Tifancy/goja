@@ -7,10 +7,9 @@
 package goja.job;
 
 import goja.Invoker;
-import goja.Logger;
-import goja.exceptions.GojaException;
 import goja.libs.Promise;
 import goja.libs.Time;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -25,7 +24,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Job<V> extends Invoker.Invocation implements Callable<V> {
 
-    public static final String invocationType = "goja_invocation";
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Job.class);
+
+    public static final String invocationType = "GojaJob";
 
     protected ExecutorService executor;
 
@@ -66,15 +67,7 @@ public class Job<V> extends Invoker.Invocation implements Callable<V> {
      */
     public Promise<V> now() {
         final Promise<V> smartFuture = new Promise<V>();
-        JobsPlugin.executor.submit(new Callable<V>() {
-            public V call() throws Exception {
-                V result = Job.this.call();
-                smartFuture.invoke(result);
-                return result;
-            }
-
-        });
-
+        JobsPlugin.executor.submit(getJobCallingCallable(smartFuture));
         return smartFuture;
     }
 
@@ -95,18 +88,31 @@ public class Job<V> extends Invoker.Invocation implements Callable<V> {
     public Promise<V> in(int seconds) {
         final Promise<V> smartFuture = new Promise<V>();
 
-        JobsPlugin.executor.schedule(new Callable<V>() {
-
-            public V call() throws Exception {
-                V result = Job.this.call();
-                smartFuture.invoke(result);
-                return result;
-            }
-
-        }, seconds, TimeUnit.SECONDS);
+        JobsPlugin.executor.schedule(getJobCallingCallable(smartFuture), seconds, TimeUnit.SECONDS);
 
         return smartFuture;
     }
+
+
+    private Callable<V> getJobCallingCallable(final Promise<V> smartFuture) {
+        return new Callable<V>() {
+            public V call() throws Exception {
+                try {
+                    V result = Job.this.call();
+                    if (smartFuture != null) {
+                        smartFuture.invoke(result);
+                    }
+                    return result;
+                } catch (Exception e) {
+                    if (smartFuture != null) {
+                        smartFuture.invokeWithException(e);
+                    }
+                    return null;
+                }
+            }
+        };
+    }
+
 
     /**
      * Run this job every n seconds
@@ -130,7 +136,7 @@ public class Job<V> extends Invoker.Invocation implements Callable<V> {
         try {
             super.onException(e);
         } catch (Throwable ex) {
-            Logger.error(ex, "Error during job execution (%s)", this);
+            logger.error("Error during job execution (%s)", this, ex);
         }
     }
 
@@ -146,17 +152,10 @@ public class Job<V> extends Invoker.Invocation implements Callable<V> {
                 before();
                 V result;
 
-                try {
-                    lastException = null;
-                    lastRun = System.currentTimeMillis();
-                    result = doJobWithResult();
-                    wasError = false;
-                } catch (GojaException e) {
-                    throw e;
-                } catch (Exception e) {
-
-                    throw e;
-                }
+                lastException = null;
+                lastRun = System.currentTimeMillis();
+                result = doJobWithResult();
+                wasError = false;
                 after();
                 return result;
             }

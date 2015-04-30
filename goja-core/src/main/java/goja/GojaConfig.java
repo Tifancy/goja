@@ -232,4 +232,8 @@ public final class GojaConfig {
     public static Object get(String key) {
         return configProps.get(key);
     }
+
+    public static String getWebEncoding() {
+        return getProperty("app.web_encoding", StringPool.UTF_8);
+    }
 }

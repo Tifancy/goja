@@ -35,21 +35,23 @@ import java.util.concurrent.TimeUnit;
 
 public class JobsPlugin implements IPlugin {
 
-    public static final Predicate<Class> JOB_CLASS_PREDICATE = new Predicate<Class>() {
+    public static final  Predicate<Class> JOB_CLASS_PREDICATE = new Predicate<Class>() {
         @Override
         public boolean apply(Class input) {
             return Job.class.isAssignableFrom(input);
         }
     };
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JobsPlugin.class);
-    public static ScheduledThreadPoolExecutor executor;
-    public static List<Job> scheduledJobs = null;
-    private static Class stopJob;
+    private static final org.slf4j.Logger logger              = LoggerFactory.getLogger(JobsPlugin.class);
+    protected static ScheduledThreadPoolExecutor executor;
+    protected static List<Job>   scheduledJobs       = null;
+    private static   List<Class> applicationStopJobs = Lists.newArrayList();
 
 
     public JobsPlugin() {
-        int core = GojaConfig.getPropertyToInt("app.jobs.pool", 10);
-        executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("goja-executor"), new ThreadPoolExecutor.AbortPolicy());
+
+        int corePoolSize = GojaConfig.getPropertyToInt("app.jobs.pool", 10);
+        PThreadFactory threadFactory = new PThreadFactory("goja-jobs");
+        executor = new ScheduledThreadPoolExecutor(corePoolSize, threadFactory, new ThreadPoolExecutor.AbortPolicy());
 
     }
 
@@ -149,7 +151,7 @@ public class JobsPlugin implements IPlugin {
                 }
                 // @OnApplicationStop
                 if (clazz.isAnnotationPresent(OnApplicationStop.class)) {
-                    stopJob = clazz;
+                    applicationStopJobs.add(clazz);
                 }
                 // @On
                 if (clazz.isAnnotationPresent(On.class)) {
@@ -191,34 +193,34 @@ public class JobsPlugin implements IPlugin {
     @Override
     public boolean stop() {
 
-        if (scheduledJobs == null) {
-            scheduledJobs = Lists.newArrayList();
-        }
-        if (stopJob != null) {
-            // @OnApplicationStop
-            try {
-                Job<?> job = ((Job<?>) stopJob.newInstance());
-                scheduledJobs.add(job);
-                job.run();
-                if (job.wasError) {
-                    if (job.lastException != null) {
-                        throw job.lastException;
+        if (!Lang.isEmpty(applicationStopJobs)) {
+            for (Class clazz : applicationStopJobs) {
+                try {
+                    Job<?> job = ((Job<?>) clazz.newInstance());
+                    job.run();
+                    if (job.wasError) {
+                        if (job.lastException != null) {
+                            throw job.lastException;
+                        }
+                        throw new RuntimeException("@OnApplicationStop Job has failed");
                     }
-                    throw new RuntimeException("@OnApplicationStop Job has failed");
+                } catch (InstantiationException e) {
+                    throw new UnexpectedException("ApplicationStop job could not be instantiated", e);
+                } catch (IllegalAccessException e) {
+                    throw new UnexpectedException("ApplicationStop job could not be instantiated", e);
+                } catch (Throwable ex) {
+                    if (ex instanceof GojaException) {
+                        throw (GojaException) ex;
+                    }
+                    throw new UnexpectedException(ex);
                 }
-            } catch (InstantiationException e) {
-                throw new UnexpectedException("Job could not be instantiated", e);
-            } catch (IllegalAccessException e) {
-                throw new UnexpectedException("Job could not be instantiated", e);
-            } catch (Throwable ex) {
-                if (ex instanceof GojaException) {
-                    throw (GojaException) ex;
-                }
-                throw new UnexpectedException(ex);
             }
         }
 
-
+        if (scheduledJobs != null) {
+            scheduledJobs.clear();
+            scheduledJobs = null;
+        }
         executor.shutdownNow();
         executor.getQueue().clear();
         return true;
