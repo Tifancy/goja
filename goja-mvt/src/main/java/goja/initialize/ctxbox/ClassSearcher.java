@@ -227,7 +227,7 @@ public class ClassSearcher {
         return classFiles;
     }
 
-    public ClassSearcher injars(List<String> jars) {
+    public ClassSearcher inJars(List<String> jars) {
         if (jars != null) {
             includeJars.addAll(jars);
         }

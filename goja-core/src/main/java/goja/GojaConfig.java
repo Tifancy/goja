@@ -1,6 +1,7 @@
 package goja;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -208,8 +210,13 @@ public final class GojaConfig {
         return getProperty("db.password");
     }
 
-    public static String getAppJars(){
-        return getProperty("app.jars");
+    public static List<String> getAppJars() {
+        String appJarsConfigStr = getProperty("app.jars");
+        if(Strings.isNullOrEmpty(appJarsConfigStr)){
+            return Collections.EMPTY_LIST;
+        } else {
+            return Func.COMMA_SPLITTER.splitToList(appJarsConfigStr);
+        }
     }
 
     public static boolean containsKey(String key) {

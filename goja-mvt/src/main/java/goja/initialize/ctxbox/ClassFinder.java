@@ -14,8 +14,8 @@ import com.jfinal.plugin.IPlugin;
 import com.jfinal.plugin.activerecord.Model;
 import goja.GojaConfig;
 import goja.StringPool;
-import goja.mvc.AppLoadEvent;
 import goja.job.Job;
+import goja.mvc.AppLoadEvent;
 import goja.rapid.syslog.LogProcessor;
 import goja.security.shiro.SecurityUserData;
 

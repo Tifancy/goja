@@ -7,9 +7,7 @@
 package goja.plugins.sqlinxml;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 import com.google.common.io.Resources;
-import goja.Func;
 import goja.GojaConfig;
 import goja.kits.JaxbKit;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
@@ -68,36 +66,33 @@ public class SqlXmlFileListener extends FileAlterationListenerAdaptor {
         if (change_file.isFile()) {
             if (absolutePath.endsWith(".jar")) {
                 // Search Jar file xml config.
-                String jars = GojaConfig.getAppJars();
-                if (!Strings.isNullOrEmpty(jars)) {
-                    List<String> jarlist = Func.COMMA_SPLITTER.splitToList(jars);
-                    String file_name = change_file.getName();
-                    if (jarlist.contains(file_name)) {
-                        try {
-                            JarFile jarFile = new JarFile(change_file);
-                            Enumeration<JarEntry> entrys = jarFile.entries();
-                            while (entrys.hasMoreElements()) {
-                                JarEntry jarEntry = entrys.nextElement();
-                                final String jar_file_name = jarEntry.getName();
-                                if (jar_file_name.endsWith(SqlKit.CONFIG_SUFFIX)) {
-                                    try {
-                                        String xml_content = Resources.toString(Resources.getResource(jar_file_name), Charsets.UTF_8);
-                                        group = JaxbKit.unmarshal(xml_content, SqlGroup.class);
-                                        String name = group.name;
-                                        if (StringUtils.isBlank(name)) {
-                                            name = change_file.getName();
-                                        }
-                                        for (SqlItem sqlItem : group.sqlItems) {
-                                            SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
-                                        }
-                                    } catch (IOException e) {
-                                        logger.error("reade jar xml config has error!");
+                List<String> jarlist = GojaConfig.getAppJars();
+                String file_name = change_file.getName();
+                if (jarlist.contains(file_name)) {
+                    try {
+                        JarFile jarFile = new JarFile(change_file);
+                        Enumeration<JarEntry> entrys = jarFile.entries();
+                        while (entrys.hasMoreElements()) {
+                            JarEntry jarEntry = entrys.nextElement();
+                            final String jar_file_name = jarEntry.getName();
+                            if (jar_file_name.endsWith(SqlKit.CONFIG_SUFFIX)) {
+                                try {
+                                    String xml_content = Resources.toString(Resources.getResource(jar_file_name), Charsets.UTF_8);
+                                    group = JaxbKit.unmarshal(xml_content, SqlGroup.class);
+                                    String name = group.name;
+                                    if (StringUtils.isBlank(name)) {
+                                        name = change_file.getName();
                                     }
+                                    for (SqlItem sqlItem : group.sqlItems) {
+                                        SqlKit.putOver(name + DOT + sqlItem.id, sqlItem.value);
+                                    }
+                                } catch (IOException e) {
+                                    logger.error("reade jar xml config has error!");
                                 }
                             }
-                        } catch (IOException e) {
-                            logger.error("Error in finding {} the SQL configuration file", file_name);
                         }
+                    } catch (IOException e) {
+                        logger.error("Error in finding {} the SQL configuration file", file_name);
                     }
                 }
             } else if (absolutePath.endsWith(SqlKit.CONFIG_SUFFIX)) {
