@@ -57,12 +57,8 @@ public class ModelBuilder {
 					value = handleBlob(rs.getBlob(i));
 				else
 					value = rs.getObject(i);
-				
-				/* # edit by sogyf. */
-				/* @description:  labelNames[i] lowcase*/
-				attrs.put(labelNames[i].toLowerCase(), value);
-				/* # end edited. */
-				//attrs.put(labelNames[i], value);
+
+				attrs.put(labelNames[i], value);
 			}
 			result.add((T)ar);
 		}

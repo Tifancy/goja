@@ -24,7 +24,7 @@ import goja.plugins.sqlinxml.SqlKit;
 import goja.plugins.tablebind.AutoTableBindPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -45,7 +45,7 @@ public abstract class ModelTestCase {
     protected static DruidPlugin dp;
 
 
-    @BeforeClass
+    @Before
     public static void setUpBeforeClass() throws Exception {
 
         GojaConfig.getConfigProps();

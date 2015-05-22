@@ -23,6 +23,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.CaseInsensitiveContainerFactory;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
 import com.jfinal.plugin.activerecord.dialect.OracleDialect;
 import com.jfinal.plugin.activerecord.dialect.PostgreSqlDialect;
@@ -431,10 +432,13 @@ public class Goja extends JFinalConfig {
             if (!StringUtils.equals(dbtype, JdbcConstants.MYSQL)) {
                 if (StringUtils.equals(dbtype, JdbcConstants.ORACLE)) {
                     atbp.setDialect(new OracleDialect());
+                    atbp.setContainerFactory(new CaseInsensitiveContainerFactory(true));
                 } else if (StringUtils.equals(dbtype, JdbcConstants.POSTGRESQL)) {
                     atbp.setDialect(new PostgreSqlDialect());
+                    atbp.setContainerFactory(new CaseInsensitiveContainerFactory(true));
                 } else if (StringUtils.equals(dbtype, JdbcConstants.H2)) {
                     atbp.setDialect(new AnsiSqlDialect());
+                    atbp.setContainerFactory(new CaseInsensitiveContainerFactory(true));
                 } else if (StringUtils.equals(dbtype, "sqlite")) {
                     atbp.setDialect(new Sqlite3Dialect());
                 } else {

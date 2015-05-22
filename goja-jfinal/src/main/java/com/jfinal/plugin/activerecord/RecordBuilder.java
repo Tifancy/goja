@@ -54,11 +54,7 @@ public class RecordBuilder {
 				else
 					value = rs.getObject(i);
 
-				/* # edit by sogyf. */
-				/* @description:  labelNames[i] lowcase*/
-                columns.put(labelNames[i].toLowerCase(), value);
-				/* # end edited. */
-//				columns.put(labelNames[i], value);
+				columns.put(labelNames[i], value);
 			}
 			result.add(record);
 		}

@@ -64,11 +64,7 @@ class TableBuilder {
 		ResultSetMetaData rsmd = rs.getMetaData();
 		
 		for (int i=1; i<=rsmd.getColumnCount(); i++) {
-			/* # edit by sogyf. */
-			/* @description: lowcase */
-			//			String colName = rsmd.getColumnName(i);
-			String colName = rsmd.getColumnName(i).toLowerCase();
-			/* # end edited. */
+			String colName = rsmd.getColumnName(i);
 			String colClassName = rsmd.getColumnClassName(i);
 			if ("java.lang.String".equals(colClassName)) {
 				// varchar, char, enum, set, text, tinytext, mediumtext, longtext
