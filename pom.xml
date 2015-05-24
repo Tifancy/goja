@@ -116,7 +116,7 @@
         <module>goja-lucene</module>
         <module>goja-wxchat</module>
         <module>goja-rapid</module>
-        <module>goja-mvt</module>
+        <module>goja-boot</module>
         <module>goja-test</module>
     </modules>
 

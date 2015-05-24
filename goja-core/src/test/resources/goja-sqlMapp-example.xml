@@ -1,0 +1,18 @@
+<sqlMap model="">
+    <sql id="">
+        <if test="">
+        </if>
+        <choose>
+            <when test="">
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+        </trim>
+
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </sql>
+</sqlMap>
